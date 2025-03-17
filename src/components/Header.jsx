@@ -38,7 +38,7 @@ const Header = () => {
       pagination={{ clickable: true }}
       navigation={true}
       autoplay={{ delay: 3000 }}
-      className="w-full h-[400px] sm:h-[500px] md:h-screen"
+      className="w-full h-[400px] sm:h-[500px] md:h-screen "
     >
       {images.map((img, index) => (
         <SwiperSlide key={index}>
@@ -50,7 +50,7 @@ const Header = () => {
             <div className="absolute bottom-0 left-0 w-full">
               <div className="bg-gradient-to-r from-custom-red to-transparent py-6 px-4">
                 <span
-                  className="block text-white text-left whitespace-pre-line text-xl sm:text-2xl md:text-3xl font-bold"
+                  className="block text-white text-left whitespace-pre-line text-md sm:text-2xl md:text-3xl font-bold"
                   dangerouslySetInnerHTML={{ __html: texts[index] }}
                 />
               </div>
