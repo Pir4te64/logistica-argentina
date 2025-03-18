@@ -1,14 +1,17 @@
 import React from "react";
-import Navbar from "../components/Navbar";
 import Header from "../components/Header";
 import HeaderBottom from "../components/HeaderBottom";
+import Trabajos from "../components/Trabajos/Trabajos";
+import Beneficios from "../components/Beneficios/Beneficios";
+import Layout from "../components/Layout";
 const Home = () => {
   return (
-    <div className="flex flex-col  ">
-      <Navbar />
+    <Layout>
       <Header />
       <HeaderBottom />
-    </div>
+      <Trabajos />
+      <Beneficios />
+    </Layout>
   );
 };
 
