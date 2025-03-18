@@ -15,8 +15,8 @@ const Footer = () => {
       {/* Contenedor principal en modo grid */}
       <div className="mx-auto px-4 max-w-6xl grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
         {/* Columna 1: Logo */}
-        <div>
-          <img src={logo} alt="Logística Argentina" className="h-48 mb-4" />
+        <div className=" ">
+          <img src={logo} alt="Logística Argentina" className="h-28 md:h-48 " />
         </div>
 
         {/* Columna 2 */}
