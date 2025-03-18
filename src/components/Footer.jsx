@@ -12,14 +12,15 @@ import logo from "../assets/Logo.png";
 const Footer = () => {
   return (
     <footer className="bg-custom-dark text-white py-12">
-      <div className="mx-auto px-4 flex flex-col md:flex-row justify-between items-start max-w-6xl">
+      {/* Contenedor principal en modo grid */}
+      <div className="mx-auto px-4 max-w-6xl grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
         {/* Columna 1: Logo */}
-        <div className="mb-8 md:mb-0 md:w-1/4 ">
+        <div>
           <img src={logo} alt="Logística Argentina" className="h-48 mb-4" />
         </div>
 
         {/* Columna 2 */}
-        <div className="mb-8 md:mb-0 md:w-1/4">
+        <div>
           <h3 className="text-lg font-semibold mb-2">Logística Argentina</h3>
           <ul>
             <li className="text-sm mb-1 text-gray-300">Lorem</li>
@@ -29,8 +30,8 @@ const Footer = () => {
           </ul>
         </div>
 
-        {/* Columna 3: Contacto con iconos */}
-        <div className="mb-8 md:mb-0 md:w-1/4">
+        {/* Columna 3: Contacto con íconos */}
+        <div>
           <h3 className="text-lg font-semibold mb-4">Contacto</h3>
           <ul className="space-y-3 text-gray-300">
             <li className="flex items-center">
@@ -53,7 +54,7 @@ const Footer = () => {
         </div>
 
         {/* Columna 4: Redes sociales */}
-        <div className="md:w-1/4">
+        <div>
           <h3 className="text-lg font-semibold mb-2">Síguenos</h3>
           <div className="flex space-x-4">
             <a
@@ -72,6 +73,7 @@ const Footer = () => {
         </div>
       </div>
 
+      {/* Línea y derechos reservados */}
       <div className="border-t border-gray-700 mt-8 pt-4">
         <p className="text-center text-sm text-gray-500">
           © 2020 - Logística Argentina - Todos los derechos reservados
