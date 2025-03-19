@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { FaBars } from "react-icons/fa";
 import Logo from "../assets/Logo.png";
+import { Link } from "react-router-dom";
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -9,7 +10,9 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 flex items-center justify-between h-16">
         {/* Sección Izquierda: Logo + Título */}
         <div className="flex items-center space-x-2">
-          <img src={Logo} alt="Logo" className="w-full h-28" />
+          <Link to="/">
+            <img src={Logo} alt="Logo" className="w-full h-28" />
+          </Link>
         </div>
 
         {/* Menú Desktop */}
@@ -29,9 +32,12 @@ const Navbar = () => {
           >
             Registrarse
           </a>
-          <button className="bg-custom-red hover:bg-custom-red/80 px-4 py-2 rounded transition-colors">
+          <Link
+            to="/login"
+            className="bg-custom-red hover:bg-custom-red/80 px-4 py-2 rounded transition-colors"
+          >
             Iniciar sesión
-          </button>
+          </Link>
         </div>
 
         {/* Botón Hamburguesa (Mobile) */}
@@ -62,9 +68,12 @@ const Navbar = () => {
           >
             Registrarse
           </a>
-          <button className="bg-custom-red hover:bg-custom-red/80 px-4 py-2 rounded transition-colors">
+          <Link
+            to="/login"
+            className="bg-custom-red hover:bg-custom-red/80 px-4 py-2 rounded transition-colors"
+          >
             Iniciar sesión
-          </button>
+          </Link>
         </div>
       )}
     </nav>
