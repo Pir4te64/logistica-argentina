@@ -12,7 +12,7 @@ const Navbar = () => {
         {/* Sección Izquierda: Logo + Título */}
         <div className="flex items-center space-x-2">
           <Link to="/">
-            <img src={Logo} alt="Logo" className="w-full h-32" />
+            <img src={Logo} alt="Logo" className="w-auto h-16 md:h-32" />
           </Link>
         </div>
 
