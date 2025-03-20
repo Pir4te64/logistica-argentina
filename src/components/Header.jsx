@@ -1,14 +1,15 @@
 import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 
-// Importa estilos de Swiper y de navegación
+// Importa estilos de Swiper y de sus módulos
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import "swiper/css/autoplay";
 import "swiper/css/effect-fade";
 
-import { EffectFade, Navigation } from "swiper/modules";
+// Importa los módulos necesarios de Swiper
+import { EffectFade, Navigation, Autoplay } from "swiper/modules";
 
 import header from "../assets/Header/header.jpg";
 import header2 from "../assets/Header/header2.jpg";
@@ -20,25 +21,24 @@ import header45 from "../assets/Header/header45.jpg";
 const Header = () => {
   const images = [header, header2, header3, header35, header4, header45];
   const texts = [
-    "Chofer y Ayudante", // Slide 1
+    "Chofer y Ayudante",
     "Postúlate <br /> Si queres trabajar anotate como Chofer o ayudante ¿Qué esperas?",
-    "Comisionista", // Slide 3
+    "Comisionista",
     "Postúlate <br /> Si queres trabajar anotate como Chofer o ayudante ¿Qué esperas?",
-    "Publicita tu marca", // Slide 5
+    "Publicita tu marca",
     "Postúlate <br /> Si queres trabajar anotate como Chofer o ayudante ¿Qué esperas?",
   ];
 
   return (
     <Swiper
-      modules={[EffectFade, Navigation]}
+      modules={[EffectFade, Navigation, Autoplay]}
       effect="fade"
       spaceBetween={0}
       slidesPerView={1}
       loop={true}
       pagination={{ clickable: true }}
-      navigation={true}
-      autoplay={{ delay: 3000 }}
-      className="w-full h-[400px] sm:h-[500px] md:h-screen "
+      autoplay={{ delay: 2000, disableOnInteraction: false }}
+      className="w-full h-[400px] sm:h-[500px] md:h-screen"
     >
       {images.map((img, index) => (
         <SwiperSlide key={index}>

@@ -23,13 +23,13 @@ const Testimonials = () => {
   const next = () => setCurrent((current + 1) % total);
 
   return (
-    <section className="py-16 bg-white">
+    <section className="py-16 bg-white" id="testimonios">
       <h2 className="text-2xl font-semibold text-center mb-12">Testimonios</h2>
 
       <div className="relative max-w-6xl mx-auto px-4 flex flex-col lg:flex-row items-center">
         {/* Tarjeta de testimonio */}
         <div className="relative bg-white rounded-lg shadow-lg p-8 lg:w-1/2 w-full">
-          <FaQuoteLeft className="text-custom-blue text-6xl absolute -left-8 top-4" />
+          <FaQuoteLeft className="text-custom-blue md:text-4xl text-2xl absolute md:-left-8 md:top-4 top-0 -left-2" />
           <p className="text-gray-700 leading-relaxed">{text}</p>
 
           {/* Navegación de testimonios */}

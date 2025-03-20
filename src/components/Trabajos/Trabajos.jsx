@@ -27,7 +27,7 @@ const Trabajos = () => {
   };
 
   return (
-    <div className="container mx-auto justify-center flex flex-col w-11/12 mt-10">
+    <div className="container mx-auto justify-center flex flex-col w-11/12 mt-10" id="trabajos">
       <div className="bg-custom-dark p-4 rounded">
         <form onSubmit={formik.handleSubmit}>
           {/* Contenedor para alinear los campos */}

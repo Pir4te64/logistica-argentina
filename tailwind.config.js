@@ -8,6 +8,7 @@ export default {
         "custom-red": "#FF1B27",
         "custom-blue": "#89B9BD",
         "custom-gray": "#818181",
+        "custom-blue-medium": "#3AA9D9",
       },
     },
   },
