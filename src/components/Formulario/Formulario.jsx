@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import img1 from "../../assets/formulario/img1.jpeg";
 import img2 from "../../assets/formulario/img2.jpeg";
 import img3 from "../../assets/beneficios/1.jpg";
@@ -11,6 +11,9 @@ import FormularioCard from "./FormularioCard";
 import FormularioDocumentacion from "./FormularioDocumentacion";
 
 const Formulario = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   return (
     <div className="w-full">
       {/* Sección Superior: Imágenes (ocultar en mobile, mostrar desde md) */}

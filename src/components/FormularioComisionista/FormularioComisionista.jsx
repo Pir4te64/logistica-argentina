@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import header from "../../assets/Header/header.jpg"; // Ajusta la ruta a tu imagen
 import FormularioCV from "./FormularioCV";
 
 const FormularioComisionista = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   return (
     <div className="w-full min-h-screen">
       {/* Imagen superior (oculta en mobile, visible en md en adelante) */}

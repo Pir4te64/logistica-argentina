@@ -8,6 +8,7 @@ import {
   FaPhone,
 } from "react-icons/fa";
 import logo from "../assets/Logo.png";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
@@ -20,13 +21,18 @@ const Footer = () => {
         </div>
 
         {/* Columna 2 */}
-        <div>
+        <div className="flex flex-col gap-2 space-y-4">
           <h3 className="text-lg font-semibold mb-2">Logística Argentina</h3>
           <ul>
-            <li className="text-sm mb-1 text-gray-300">Lorem</li>
-            <li className="text-sm mb-1 text-gray-300">Lorem</li>
-            <li className="text-sm mb-1 text-gray-300">Lorem</li>
-            <li className="text-sm mb-1 text-gray-300">Lorem</li>
+            <li className="text-sm my-2 text-gray-300">
+              <Link to="/formulario">Transportista</Link>
+            </li>
+            <li className="text-sm my-2 text-gray-300">
+              <Link to="/formulario-choferes">Choferes</Link>
+            </li>
+            <li className="text-sm my-2 text-gray-300">
+              <Link to="/formulario-comisionista">Comisionista</Link>
+            </li>
           </ul>
         </div>
 
