@@ -1,5 +1,5 @@
 import React from "react";
-import MensajeImg from "../assets/Gracias.jpeg"; // Ajusta la ruta y nombre de tu imagen
+import MensajeImg from "../assets/gracias.jpeg"; // Ajusta la ruta y nombre de tu imagen
 import { Link } from "react-router-dom"; // Solo si deseas usar React Router
 
 const Mensaje = () => {
