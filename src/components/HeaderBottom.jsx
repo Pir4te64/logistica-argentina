@@ -11,9 +11,10 @@ import img2 from "../assets/empresas/loginter1.jpg";
 import img3 from "../assets/empresas/oca.jpg";
 import img4 from "../assets/empresas/pavetron.jpg";
 import img5 from "../assets/empresas/urbano.jpg";
+import img6 from "../assets/empresas/ocasa.jpg";
 
 function HeaderBottom() {
-  const images = [img1, img2, img3, img4, img5];
+  const images = [img1, img2, img3, img4, img5, img6];
 
   return (
     <div className="w-full px-2">

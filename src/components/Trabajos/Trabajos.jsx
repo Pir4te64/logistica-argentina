@@ -1,8 +1,9 @@
 // Trabajos.jsx
 import React, { useState } from "react";
 import { useFormik } from "formik";
-import { initialValues, validationSchema } from "./trabajos.data"; // archivo separado
-import CustomInput from "./CustomInput"; // componente reutilizable
+import { initialValues, validationSchema } from "./trabajos.data";
+import CustomInput from "./CustomInput";
+import CustomSelect from "./CustomSelect";
 import TarjetaAplicar from "./TarjetaAplicar";
 
 const Trabajos = () => {
@@ -15,7 +16,54 @@ const Trabajos = () => {
     },
   });
 
-  // Array con 8 tarjetas (puedes usar datos reales si lo deseas)
+  // Opciones para el select de "Vehículos" con grupos
+  const vehiculosOptions = [
+    {
+      label: "Chico",
+      options: [
+        { label: "Kangoo", value: "Kangoo" },
+        { label: "Fiorino", value: "Fiorino" },
+        { label: "Partner", value: "Partner" },
+      ],
+    },
+    {
+      label: "Mediano",
+      options: [
+        { label: "Master", value: "Master" },
+        { label: "Ducato", value: "Ducato" },
+        { label: "Transit", value: "Transit" },
+      ],
+    },
+    {
+      label: "Grande",
+      options: [
+        { label: "Accelo 815", value: "Accelo815" },
+        { label: "Mercedes 710", value: "Mercedes710" },
+        { label: "Atego", value: "Atego" },
+      ],
+    },
+    {
+      label: "Semis",
+      options: [
+        { label: "Scania", value: "Scania" },
+        { label: "Actros", value: "Actros" },
+        { label: "Iveco Stralis", value: "IvecoStralis" },
+        { label: "Volvo FM", value: "VolvoFM" },
+      ],
+    },
+  ];
+
+  // Opciones para "Empresas"
+  const empresasOptions = [
+    { label: "Loginter", value: "Loginter" },
+    { label: "OCA", value: "OCA" },
+    { label: "Urbano", value: "Urbano" },
+    { label: "Ocasa", value: "Ocasa" },
+    { label: "Pavetron", value: "Pavetron" },
+    { label: "Intermepro", value: "Intermepro" },
+  ];
+
+  // Array con 8 tarjetas
   const tarjetas = Array.from({ length: 8 }, (_, i) => i);
 
   // Estado para controlar cuántas tarjetas se muestran
@@ -27,14 +75,33 @@ const Trabajos = () => {
   };
 
   return (
-    <div className="container mx-auto justify-center flex flex-col w-11/12 mt-10" id="trabajos">
+    <div
+      className="container mx-auto justify-center flex flex-col w-11/12 mt-10"
+      id="trabajos"
+    >
       <div className="bg-custom-dark p-4 rounded">
         <form onSubmit={formik.handleSubmit}>
-          {/* Contenedor para alinear los campos */}
+          {/* Contenedor para alinear los campos y darles proporción */}
           <div className="flex flex-col gap-4 md:flex-row">
-            <CustomInput label="Ciudad" name="ciudad" formik={formik} />
-            <CustomInput label="Vehículo" name="vehiculo" formik={formik} />
-            <CustomInput label="Empresa" name="empresa" formik={formik} />
+            <div className="flex-1">
+              <CustomInput label="Ciudad" name="ciudad" formik={formik} />
+            </div>
+            <div className="flex-1">
+              <CustomSelect
+                label="Vehículo"
+                name="vehiculo"
+                formik={formik}
+                options={vehiculosOptions}
+              />
+            </div>
+            <div className="flex-1">
+              <CustomSelect
+                label="Empresa"
+                name="empresa"
+                formik={formik}
+                options={empresasOptions}
+              />
+            </div>
           </div>
 
           {/* Botón para enviar */}

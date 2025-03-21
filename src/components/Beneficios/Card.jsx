@@ -43,7 +43,7 @@ const MiniCard = () => {
       {miniCardsData.map((card, index) => (
         <div
           key={index}
-          className="block w-full max-w-xs rounded overflow-hidden shadow hover:shadow-md transition-shadow bg-white"
+          className="block w-full max-w-xs rounded overflow-hidden shadow hover:shadow-md transition-shadow bg-custom-blue-medium"
         >
           {/* Imagen en la parte superior */}
           <img
@@ -53,11 +53,9 @@ const MiniCard = () => {
           />
 
           {/* Contenido de texto */}
-          <div className="p-4">
-            <h3 className="text-lg font-semibold text-gray-800">
-              {card.title}
-            </h3>
-            <p className="text-gray-600 mt-2 text-sm">{card.description}</p>
+          <div className="p-4 ">
+            <h3 className="text-lg  text-white">{card.title}</h3>
+            <p className="text-custom-dark mt-2 text-sm">{card.description}</p>
           </div>
         </div>
       ))}
