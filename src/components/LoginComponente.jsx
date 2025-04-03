@@ -99,18 +99,20 @@ const LoginComponente = () => {
           {/* Registro */}
           <p className='text-center text-sm mb-4 text-white'>
             ¿No tienes cuenta?{" "}
-            <a href='#' className='text-white hover:underline'>
+            <a
+              href='/register
+            '
+              className='text-white hover:underline'>
               Regístrate
             </a>
           </p>
 
-          {/* Opciones de acceso adicionales */}
-          <div className='flex flex-col gap-2'>
+          {/* <div className='flex flex-col gap-2'>
             <button className='flex items-center justify-center gap-2 bg-white border border-gray-300 rounded py-2 px-4 hover:bg-gray-50'>
               <FcGoogle size={20} />
               <span>Continuar con Google</span>
             </button>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
