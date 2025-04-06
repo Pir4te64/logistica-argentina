@@ -10,6 +10,7 @@ const LoginComponente = () => {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const { login } = useContext(AuthContext);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const data = { email, password };
@@ -91,11 +92,6 @@ const LoginComponente = () => {
             </button>
           </form>
 
-          {/* Mensaje con la respuesta de la petición */}
-          {message && (
-            <div className='mt-4 text-center text-white'>{message}</div>
-          )}
-
           {/* Registro */}
           <p className='text-center text-sm mb-4 text-white'>
             ¿No tienes cuenta?{" "}
@@ -106,6 +102,12 @@ const LoginComponente = () => {
               Regístrate
             </a>
           </p>
+          {/* Mensaje con la respuesta de la petición */}
+          {message && (
+            <div className='my-4 text-center text-red-500 bg-white p-1 rounded-lg'>
+              {message}
+            </div>
+          )}
 
           {/* <div className='flex flex-col gap-2'>
             <button className='flex items-center justify-center gap-2 bg-white border border-gray-300 rounded py-2 px-4 hover:bg-gray-50'>

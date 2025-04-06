@@ -3,4 +3,5 @@ export const API_URL = {
   LOGIN: `${BASE_URL}/api/login`,
   REGISTER: `${BASE_URL}/api/register`,
   LOGOUT: `${BASE_URL}/api/logout`,
+  UPLOAD_IMAGE: `${BASE_URL}/api/upload-file`,
 };
