@@ -47,21 +47,20 @@ const FormularioCV = () => {
   };
 
   // Envía el archivo y el email usando axios y FormData
+  // FormularioCV.jsx (fragmento)
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     if (selectedFile) {
       const formData = new FormData();
-      // El backend espera estos campos:
-      // "file": el archivo
-      // "filename": el nombre del archivo
-      // "tipo_archivo": valor fijo "5"
-      // "correo": el email del usuario
+
       formData.append("file", selectedFile);
       formData.append("filename", selectedFile.name);
       formData.append("tipo_archivo", "5");
 
-      // Obtiene el email del usuario desde localStorage
+      // Agrega tipo_usuario = 6
+      formData.append("tipo_usuario", "6");
+
       const storedUser = localStorage.getItem("user");
       if (storedUser) {
         const user = JSON.parse(storedUser);
@@ -72,12 +71,10 @@ const FormularioCV = () => {
 
       try {
         const response = await axios.post(API_URL.UPLOAD_IMAGE, formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
+          headers: { "Content-Type": "multipart/form-data" },
         });
         console.log("Archivo subido correctamente", response.data);
-        // Si la respuesta es exitosa (código 200), redirige a /gracias
+
         if (response.status === 200) {
           navigate("/mensaje");
         }
