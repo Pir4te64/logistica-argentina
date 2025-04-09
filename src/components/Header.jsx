@@ -26,9 +26,9 @@ const Header = () => {
     "Chofer y Ayudante",
     "Postúlate <br /> Si queres trabajar anotate como Chofer o ayudante ¿Qué esperas?",
     "Comisionista",
-    "Postúlate <br /> Si queres trabajar anotate como Chofer o ayudante ¿Qué esperas?",
+    "Genera ingresos, si queres ser comisionista <br /> ¿Qué esperas?",
     "Publicita tu marca",
-    "Postúlate <br /> Si queres trabajar anotate como Chofer o ayudante ¿Qué esperas?",
+    "¡Crece con nosotros! Expandi el alcance de tu marca, trabajamos en todo el país, que todos te conozcan",
   ];
 
   return (
@@ -42,18 +42,23 @@ const Header = () => {
       autoplay={{ delay: 3000, disableOnInteraction: false }}
       className='w-full h-[400px] sm:h-[500px] md:h-screen'>
       {images.map((img, index) => {
-        const isComisionista = texts[index].includes("Comisionista");
-        const isChofer = texts[index].includes("Chofer y Ayudante");
+        // Convertir el texto a minúsculas para facilitar la comparación
+        const textLower = texts[index].toLowerCase();
+        // Determinar a qué formulario redirigir en función del contenido
+        let redirectPath = "";
+        if (textLower.includes("chofer") || textLower.includes("ayudante")) {
+          redirectPath = "/formulario-choferes";
+        } else if (textLower.includes("comisionista")) {
+          redirectPath = "/formulario-comisionista";
+        }
         return (
           <SwiperSlide key={index}>
             <div
               className='relative w-full h-full bg-cover bg-center cursor-pointer'
               style={{ backgroundImage: `url(${img})` }}
               onClick={() => {
-                if (isChofer) {
-                  navigate("/formulario-choferes");
-                } else if (isComisionista) {
-                  navigate("/formulario-comisionista");
+                if (redirectPath) {
+                  navigate(redirectPath);
                 }
               }}>
               {/* Barra degradada de fondo a lo ancho con el texto */}

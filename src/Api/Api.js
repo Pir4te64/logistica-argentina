@@ -4,4 +4,5 @@ export const API_URL = {
   REGISTER: `${BASE_URL}/api/register`,
   LOGOUT: `${BASE_URL}/api/logout`,
   UPLOAD_IMAGE: `${BASE_URL}/api/upload-file`,
+  TIPO_ARCHIVO: `${BASE_URL}/api/tipo-archivos`,
 };

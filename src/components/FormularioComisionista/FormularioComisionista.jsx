@@ -18,7 +18,7 @@ const FormularioComisionista = () => {
       </div>
 
       {/* Contenedor principal (texto en rojo) */}
-      <div className='md:p-4 p-2 max-w-5xl mx-auto text-center bg-custom-red md:rounded-2xl rounded-t-none shadow-lg'>
+      <div className='md:p-4 p-2 max-w-4xl mx-auto text-center bg-custom-red md:rounded-2xl rounded-t-none shadow-lg'>
         <p className='md:text-lg text-sm mb-6 text-white'>
           Buscamos personas con habilidades en venta, que quieran aprovechar la
           oportunidad de trabajar desde tu casa. Comisiona dando de alta

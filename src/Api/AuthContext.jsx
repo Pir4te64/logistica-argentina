@@ -15,8 +15,10 @@ export const AuthProvider = ({ children }) => {
     const storedUser = localStorage.getItem("user");
     const storedToken = localStorage.getItem("token");
 
-    if (storedUser && storedToken) {
+    if (storedUser && storedUser !== "undefined") {
       setUser(JSON.parse(storedUser));
+    }
+    if (storedToken && storedToken !== "undefined") {
       setToken(storedToken);
     }
   }, []);
@@ -32,7 +34,6 @@ export const AuthProvider = ({ children }) => {
   // Función para cerrar sesión, limpiando el estado, el localStorage y llamando al endpoint de logout
   const logout = async () => {
     try {
-      // Llamada al endpoint de logout, enviando el token en los headers para la autorización
       await axios.post(
         API_URL.LOGOUT,
         {},
