@@ -11,13 +11,13 @@ import img2 from "../assets/empresas/loginter1.jpg";
 import img3 from "../assets/empresas/oca.jpg";
 import img4 from "../assets/empresas/pavetron.jpg";
 import img5 from "../assets/empresas/urbano.jpg";
-import img6 from "../assets/empresas/ocasa.jpg";
+import img6 from "../assets/empresas/OCASA.jpg";
 
 function HeaderBottom() {
   const images = [img1, img2, img3, img4, img5, img6];
 
   return (
-    <div className="w-full px-2">
+    <div className='w-full px-2'>
       <Swiper
         modules={[Autoplay]}
         spaceBetween={20}
@@ -30,14 +30,13 @@ function HeaderBottom() {
           768: { slidesPerView: 3, spaceBetween: 20 },
           1024: { slidesPerView: 5, spaceBetween: 20 },
         }}
-        className="mySwiper"
-      >
+        className='mySwiper'>
         {images.map((img, index) => (
           <SwiperSlide key={index}>
             <img
               src={img}
               alt={`Logo ${index}`}
-              className="w-full h-auto rounded-lg shadow-md"
+              className='w-full h-auto rounded-lg shadow-md'
             />
           </SwiperSlide>
         ))}
