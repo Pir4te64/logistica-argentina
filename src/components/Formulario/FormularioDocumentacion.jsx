@@ -1,43 +1,35 @@
+// FormularioDocumentacion.jsx
 import React, { useState } from "react";
-import FileUploader from "./FileUploader"; // Asegúrate de ajustar la ruta si es necesario
+import FileUploader from "./FileUploader"; // Asegúrate de ajustar la ruta según tu estructura
+import { docMapping, documentos } from "./estaticos";
+import { submitDocumentation } from "./submitDocumentation";
 
 const FormularioDocumentacion = () => {
-  // Estado para almacenar la información de cada carga
+  // Estado para almacenar la información de cada archivo subido
   const [uploadedFiles, setUploadedFiles] = useState([]);
 
-  // Función para manejar la actualización de los archivos
+  // Función para manejar la actualización de los archivos subidos desde FileUploader
   const handleFileAccepted = (docTitle, campo, file) => {
+    // Se determina el id según el documento y (si existe) su subcampo
+    let docId = null;
+    if (typeof docMapping[docTitle] === "object") {
+      docId = docMapping[docTitle][campo];
+    } else {
+      docId = docMapping[docTitle];
+    }
+
     setUploadedFiles((prevFiles) => {
-      // Se busca si ya existe un archivo para ese docTitle y campo,
-      // en cuyo caso se actualiza, o si se agrega uno nuevo.
+      // Se reemplaza o agrega el archivo para ese documento y campo
       const updatedFiles = prevFiles.filter(
         (item) => item.docTitle !== docTitle || item.campo !== campo
       );
-      return [...updatedFiles, { docTitle, campo, file }];
+      return [...updatedFiles, { id: docId, docTitle, campo, file }];
     });
   };
 
-  // Datos de los documentos que se requieren
-  const documentos = [
-    { title: "DNI", campos: ["Frontal", "Dorso"] },
-    { title: "LICENCIA", campos: ["Frontal", "Dorso"] },
-    { title: "CEDULA VERDE", campos: ["Frontal", "Dorso"] },
-    {
-      title: "CEDULA AZUL / AUTORIZACION DE MANEJO",
-      campos: ["Frontal", "Dorso"],
-    },
-    { title: "RTO, VTV, ITV", campos: [] },
-    { title: "TITULO", campos: [] },
-    { title: "POLIZA", campos: [] },
-    { title: "FOTOS DEL VEHÍCULO", campos: ["Frente", "Laterales", "Trasera"] },
-    { title: "CERTIFICADO DE ANTECEDENTES PENALES NACIONAL", campos: [] },
-  ];
-
-  // Función para manejar la acción del botón de envío.
+  // Se invoca la función externa para el envío cuando se presione el botón.
   const handleSubmit = () => {
-    // Por ahora mostramos la información en consola,
-    // pero también se puede renderizar en la interfaz.
-    console.log("Archivos subidos:", uploadedFiles);
+    submitDocumentation(uploadedFiles);
   };
 
   return (
@@ -54,7 +46,7 @@ const FormularioDocumentacion = () => {
             </h3>
             <div className='flex flex-col gap-2'>
               {doc.campos.length > 0 ? (
-                // Renderiza múltiples inputs si existen sub-campos
+                // Para documentos con subcampos (ejemplo: DNI: Frontal y Dorso)
                 doc.campos.map((campo, j) => (
                   <FileUploader
                     key={j}
@@ -65,7 +57,7 @@ const FormularioDocumentacion = () => {
                   />
                 ))
               ) : (
-                // Renderiza un único input para documentos sin sub-campos
+                // Para documentos sin subcampos
                 <FileUploader
                   label=''
                   onFilesAccepted={(file) =>
