@@ -1,6 +1,6 @@
 import React from "react";
-import Layout from "../components/Layout";
-import LoginComponente from "../components/LoginComponente";
+import Layout from "@/components/Layout";
+import LoginComponente from "@/components/LoginComponente";
 const Login = () => {
   return (
     <Layout>

@@ -1,5 +1,5 @@
 import React from "react";
-import tarjeta from "../../assets/tarjeta.jpg";
+import tarjeta from "@/assets/tarjeta.jpg";
 
 const TarjetaAplicar = () => {
   return (

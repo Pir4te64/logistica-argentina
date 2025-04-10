@@ -1,7 +1,7 @@
 // Testimonials.jsx
 import React, { useState } from "react";
 import { FaChevronLeft, FaChevronRight, FaQuoteLeft } from "react-icons/fa";
-import testimonialImg from "../../assets/testimonials.png"; // reemplazá por tu asset real
+import testimonialImg from "@/assets/testimonials.png"; // reemplazá por tu asset real
 
 const testimonialsData = [
   {

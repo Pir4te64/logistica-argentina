@@ -1,6 +1,6 @@
 import React from "react";
-import Layout from "../components/Layout";
-import Formulario from "../components/Formulario/Formulario";
+import Layout from "@/components/Layout";
+import Formulario from "@/components/Formulario/Formulario";
 const FormularioPage = () => {
   return (
     <Layout>

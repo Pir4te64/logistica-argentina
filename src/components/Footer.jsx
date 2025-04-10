@@ -7,7 +7,7 @@ import {
   FaEnvelope,
   FaPhone,
 } from "react-icons/fa";
-import logo from "../assets/Logo.png";
+import logo from "@/assets/Logo.png";
 import { Link } from "react-router-dom";
 
 const Footer = () => {

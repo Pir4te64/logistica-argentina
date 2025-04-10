@@ -1,14 +1,14 @@
 import React, { useEffect } from "react";
-import img1 from "../../assets/formulario/img1.jpeg";
-import img2 from "../../assets/formulario/img2.jpeg";
-import img3 from "../../assets/beneficios/1.jpg";
+import img1 from "@/assets/formulario/img1.jpeg";
+import img2 from "@/assets/formulario/img2.jpeg";
+import img3 from "@/assets/beneficios/1.jpg";
 
 // Íconos
 import { FaDollarSign, FaCalendarAlt, FaRoute } from "react-icons/fa";
 
 // Componentes
-import FormularioCard from "./FormularioCard";
-import FormularioDocumentacion from "./FormularioDocumentacion";
+import FormularioCard from "@/components/Formulario/FormularioCard";
+import FormularioDocumentacion from "@/components/Formulario/FormularioDocumentacion";
 
 const Formulario = () => {
   useEffect(() => {

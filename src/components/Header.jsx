@@ -11,12 +11,12 @@ import "swiper/css/effect-fade";
 // Importa los módulos necesarios de Swiper
 import { EffectFade, Navigation, Autoplay } from "swiper/modules";
 
-import header from "../assets/Header/header.jpg";
-import header2 from "../assets/Header/header2.jpg";
-import header3 from "../assets/Header/header3.jpg";
-import header35 from "../assets/Header/header3-5.jpg";
-import header4 from "../assets/Header/header4.jpg";
-import header45 from "../assets/Header/header45.jpg";
+import header from "@/assets/Header/header.jpg";
+import header2 from "@/assets/Header/header2.jpg";
+import header3 from "@/assets/Header/header3.jpg";
+import header35 from "@/assets/Header/header3-5.jpg";
+import header4 from "@/assets/Header/header4.jpg";
+import header45 from "@/assets/Header/header45.jpg";
 
 const Header = () => {
   const images = [header, header2, header3, header35, header4, header45];

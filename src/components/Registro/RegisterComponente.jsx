@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { useFormik } from "formik";
 import axios from "axios";
-import RegisterImg from "../../assets/Login.jpg"; // Ajusta la ruta según corresponda
-import { API_URL } from "../../Api/Api";
-import { initialValues, validationSchema } from "./registerValidation";
+import RegisterImg from "@/assets/Login.jpg"; // Ajusta la ruta según corresponda
+import { API_URL } from "@/Api/Api";
+import { initialValues, validationSchema } from "@/components/Registro/registerValidation";
 
 const RegisterComponente = () => {
   const [message, setMessage] = useState("");

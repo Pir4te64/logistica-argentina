@@ -1,9 +1,9 @@
 import React, { useContext, useState } from "react";
 import axios from "axios";
-import LoginImg from "../assets/Login.jpg";
+import LoginImg from "@/assets/Login.jpg";
 import { FcGoogle } from "react-icons/fc";
-import { API_URL } from "../Api/Api";
-import { AuthContext } from "../Api/AuthContext";
+import { API_URL } from "@/Api/Api";
+import { AuthContext } from "@/Api/AuthContext";
 
 const LoginComponente = () => {
   const [email, setEmail] = useState("");

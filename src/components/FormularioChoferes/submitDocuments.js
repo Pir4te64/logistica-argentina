@@ -1,6 +1,6 @@
 // submitDocuments.js
 import axios from "axios";
-import { API_URL } from "../../Api/Api";
+import { API_URL } from "@/Api/Api";
 
 export async function submitDocuments({
   fileDNIFrontal,

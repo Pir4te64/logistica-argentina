@@ -1,15 +1,15 @@
 // FormularioDocumentacionChoferes.jsx (fragmento)
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import BotonEnviarDocumentacion from "./BotonEnviar";
-import { documentos } from "./estaticos";
-import useDocumentStore from "./useDocumentStore";
-import useDragDrop from "./dragDropHandlers";
-import { submitDocuments } from "./submitDocuments";
-import CertificadoUploader from "./CertificadoUploader";
-import DniUploader from "./DniUploader";
-import LicenciaUploader from "./LicenciaUploader";
-import { documentTypes } from "./documentConstants";
+import BotonEnviarDocumentacion from "@/components/FormularioChoferes/BotonEnviar";
+import { documentos } from "@/components/FormularioChoferes/estaticos";
+import useDocumentStore from "@/components/FormularioChoferes/useDocumentStore";
+import useDragDrop from "@/components/FormularioChoferes/dragDropHandlers";
+import { submitDocuments } from "@/components/FormularioChoferes/submitDocuments";
+import CertificadoUploader from "@/components/FormularioChoferes/CertificadoUploader";
+import DniUploader from "@/components/FormularioChoferes/DniUploader";
+import LicenciaUploader from "@/components/FormularioChoferes/LicenciaUploader";
+import { documentTypes } from "@/components/FormularioChoferes/documentConstants";
 
 const FormularioDocumentacionChoferes = () => {
   // Constantes para identificar el tipo de archivo

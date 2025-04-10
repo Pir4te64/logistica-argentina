@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { FaUpload } from "react-icons/fa";
-import { API_URL } from "../../Api/Api";
+import { API_URL } from "@/Api/Api";
 import { useNavigate } from "react-router-dom";
 
 const FormularioCV = () => {

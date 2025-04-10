@@ -1,10 +1,10 @@
 // MiniCard.jsx
 import React from "react";
-import beneficio1 from "../../assets/beneficios/1.jpg";
-import beneficio2 from "../../assets/beneficios/2.jpg";
-import beneficio3 from "../../assets/beneficios/3.jpg";
-import beneficio4 from "../../assets/beneficios/4.jpg";
-import beneficio5 from "../../assets/beneficios/5.jpg";
+import beneficio1 from "@/assets/beneficios/1.jpg";
+import beneficio2 from "@/assets/beneficios/2.jpg";
+import beneficio3 from "@/assets/beneficios/3.jpg";
+import beneficio4 from "@/assets/beneficios/4.jpg";
+import beneficio5 from "@/assets/beneficios/5.jpg";
 
 const MiniCard = () => {
   const miniCardsData = [

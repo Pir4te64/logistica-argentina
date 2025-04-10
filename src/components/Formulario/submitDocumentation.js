@@ -1,6 +1,6 @@
 // submitDocumentation.js
 import axios from "axios";
-import { API_URL } from "../../Api/Api";
+import { API_URL } from "@/Api/Api";
 
 // Reemplaza esta URL con el endpoint real de tu API para subir la imagen
 // const UPLOAD_IMAGE = "https://tudominio.com/api/upload_image";

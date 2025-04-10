@@ -6,12 +6,12 @@ import "swiper/css";
 import "swiper/css/autoplay";
 import { Autoplay } from "swiper/modules";
 
-import img1 from "../assets/empresas/inter.jpg";
-import img2 from "../assets/empresas/loginter1.jpg";
-import img3 from "../assets/empresas/oca.jpg";
-import img4 from "../assets/empresas/pavetron.jpg";
-import img5 from "../assets/empresas/urbano.jpg";
-import img6 from "../assets/empresas/OCASA.jpg";
+import img1 from "@/assets/empresas/inter.jpg";
+import img2 from "@/assets/empresas/loginter1.jpg";
+import img3 from "@/assets/empresas/oca.jpg";
+import img4 from "@/assets/empresas/pavetron.jpg";
+import img5 from "@/assets/empresas/urbano.jpg";
+import img6 from "@/assets/empresas/OCASA.jpg";
 
 function HeaderBottom() {
   const images = [img1, img2, img3, img4, img5, img6];

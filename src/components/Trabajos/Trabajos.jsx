@@ -1,10 +1,10 @@
 // Trabajos.jsx
 import React, { useState } from "react";
 import { useFormik } from "formik";
-import { initialValues, validationSchema } from "./trabajos.data";
-import CustomInput from "./CustomInput";
-import CustomSelect from "./CustomSelect";
-import TarjetaAplicar from "./TarjetaAplicar";
+import { initialValues, validationSchema } from "@/components/Trabajos/trabajos.data";
+import CustomInput from "@/components/Trabajos/CustomInput";
+import CustomSelect from "@/components/Trabajos/CustomSelect";
+import TarjetaAplicar from "@/components/Trabajos/TarjetaAplicar";
 
 const Trabajos = () => {
   const formik = useFormik({

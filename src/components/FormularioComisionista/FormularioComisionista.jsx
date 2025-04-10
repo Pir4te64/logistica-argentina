@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
-import header from "../../assets/Header/header.jpg"; // Ajusta la ruta a tu imagen
-import FormularioCV from "./FormularioCV";
+import header from "@/assets/Header/header.jpg"; // Ajusta la ruta a tu imagen
+import FormularioCV from "@/components/FormularioComisionista/FormularioCV";
 
 const FormularioComisionista = () => {
   useEffect(() => {

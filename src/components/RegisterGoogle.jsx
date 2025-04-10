@@ -1,5 +1,5 @@
 import React from "react";
-import RegisterImg from "../assets/Login.jpg"; // Ajusta la ruta de la imagen si es necesario
+import RegisterImg from "@/assets/Login.jpg"; // Ajusta la ruta de la imagen si es necesario
 
 const RegisterGoogle = () => {
   return (

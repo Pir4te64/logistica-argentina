@@ -1,9 +1,9 @@
 import React, { useState, useContext } from "react";
 import { FaBars } from "react-icons/fa";
-import Logo from "../assets/Logo.png";
+import Logo from "@/assets/Logo.png";
 import { Link } from "react-router-dom";
 import { HashLink } from "react-router-hash-link";
-import { AuthContext } from "../Api/AuthContext";
+import { AuthContext } from "@/Api/AuthContext";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -53,11 +53,20 @@ const Navbar = () => {
               </Link>
             </>
           ) : (
-            <button
-              onClick={logout}
-              className='bg-custom-red hover:bg-custom-red/80 px-4 py-2 rounded transition-colors'>
-              Cerrar sesión
-            </button>
+            <>
+              {(user.id === 1 || user.id === 2) && (
+                <Link
+                  to='/dashboard'
+                  className='bg-custom-red hover:bg-custom-red/80 px-4 py-2 rounded transition-colors'>
+                  Dashboard
+                </Link>
+              )}
+              <button
+                onClick={logout}
+                className='bg-custom-red hover:bg-custom-red/80 px-4 py-2 rounded transition-colors'>
+                Cerrar sesión
+              </button>
+            </>
           )}
         </div>
 
@@ -105,11 +114,20 @@ const Navbar = () => {
               </Link>
             </>
           ) : (
-            <button
-              onClick={logout}
-              className='bg-custom-red hover:bg-custom-red/80 px-4 py-2 rounded transition-colors'>
-              Cerrar sesión
-            </button>
+            <>
+              {(user.id === 1 || user.id === 2) && (
+                <Link
+                  to='/dashboard'
+                  className='bg-custom-red hover:bg-custom-red/80 px-4 py-2 rounded transition-colors'>
+                  Dashboard
+                </Link>
+              )}
+              <button
+                onClick={logout}
+                className='bg-custom-red hover:bg-custom-red/80 px-4 py-2 rounded transition-colors'>
+                Cerrar sesión
+              </button>
+            </>
           )}
         </div>
       )}

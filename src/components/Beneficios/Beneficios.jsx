@@ -1,6 +1,6 @@
 // BeneficiosHeader.jsx
 import React from "react";
-import MiniCard from "./Card";
+import MiniCard from "@/components/Beneficios/Card";
 
 const BeneficiosHeader = () => {
   return (

@@ -1,8 +1,8 @@
 // FormularioDocumentacion.jsx
 import React, { useState } from "react";
-import FileUploader from "./FileUploader"; // Asegúrate de ajustar la ruta según tu estructura
-import { docMapping, documentos } from "./estaticos";
-import { submitDocumentation } from "./submitDocumentation";
+import FileUploader from "@/components/Formulario/FileUploader"; // Asegúrate de ajustar la ruta según tu estructura
+import { docMapping, documentos } from "@/components/Formulario/estaticos";
+import { submitDocumentation } from "@/components/Formulario/submitDocumentation";
 
 const FormularioDocumentacion = () => {
   // Estado para almacenar la información de cada archivo subido
