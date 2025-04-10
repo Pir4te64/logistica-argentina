@@ -14,14 +14,31 @@ const LoginComponente = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const data = { email, password };
+
     try {
       const response = await axios.post(API_URL.LOGIN, data);
       console.log("Respuesta del servidor:", response.data);
-      // Guardamos el token y los datos del usuario en el localStorage
+
+      // Verificamos si la respuesta indica error.
+      // Por ejemplo, si response.data.message contiene "Error en Login"
+      if (
+        response.data &&
+        response.data.message &&
+        response.data.message.toLowerCase().includes("error")
+      ) {
+        // Se asume que en "data" viene un array con mensajes de error
+        const errorMessage = Array.isArray(response.data.data)
+          ? response.data.data.join(", ")
+          : response.data.data;
+        setMessage(errorMessage);
+        return;
+      }
+
+      // Si todo va bien, se llama a la función login y se redirige
       login(response.data.data.user, response.data.data.token);
-      // Actualizamos el mensaje con la respuesta
       setMessage(response.data.message);
-      // Redirigir a la página de inicio o a otra ruta
+
+      // Redirige a la página de inicio u otra ruta
       window.location.href = "/";
     } catch (error) {
       console.error("Error al iniciar sesión:", error);
@@ -95,13 +112,11 @@ const LoginComponente = () => {
           {/* Registro */}
           <p className='text-center text-sm mb-4 text-white'>
             ¿No tienes cuenta?{" "}
-            <a
-              href='/register
-            '
-              className='text-white hover:underline'>
+            <a href='/register' className='text-white hover:underline'>
               Regístrate
             </a>
           </p>
+
           {/* Mensaje con la respuesta de la petición */}
           {message && (
             <div className='my-4 text-center text-red-500 bg-white p-1 rounded-lg'>
@@ -109,6 +124,7 @@ const LoginComponente = () => {
             </div>
           )}
 
+          {/* Opcional: botón para iniciar sesión con Google */}
           {/* <div className='flex flex-col gap-2'>
             <button className='flex items-center justify-center gap-2 bg-white border border-gray-300 rounded py-2 px-4 hover:bg-gray-50'>
               <FcGoogle size={20} />
