@@ -19,14 +19,14 @@ const FileUploader = ({ label, onFilesAccepted }) => {
         } else {
           setPreview(null);
         }
-        if (onFilesAccepted) onFilesAccepted(acceptedFiles);
+        // Llama al callback del componente padre con la información del archivo.
+        if (onFilesAccepted) onFilesAccepted(selectedFile);
       }
     },
     [onFilesAccepted]
   );
 
   useEffect(() => {
-    // Cuando el componente se desmonte o el archivo cambie, revocamos el objeto URL si existe.
     return () => {
       if (preview) {
         URL.revokeObjectURL(preview);

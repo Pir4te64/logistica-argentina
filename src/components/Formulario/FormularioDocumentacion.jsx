@@ -1,8 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
 import FileUploader from "./FileUploader"; // Asegúrate de ajustar la ruta si es necesario
 
 const FormularioDocumentacion = () => {
-  // Estructura que define cada documento y, si aplica, sus campos separados.
+  // Estado para almacenar la información de cada carga
+  const [uploadedFiles, setUploadedFiles] = useState([]);
+
+  // Función para manejar la actualización de los archivos
+  const handleFileAccepted = (docTitle, campo, file) => {
+    setUploadedFiles((prevFiles) => {
+      // Se busca si ya existe un archivo para ese docTitle y campo,
+      // en cuyo caso se actualiza, o si se agrega uno nuevo.
+      const updatedFiles = prevFiles.filter(
+        (item) => item.docTitle !== docTitle || item.campo !== campo
+      );
+      return [...updatedFiles, { docTitle, campo, file }];
+    });
+  };
+
+  // Datos de los documentos que se requieren
   const documentos = [
     { title: "DNI", campos: ["Frontal", "Dorso"] },
     { title: "LICENCIA", campos: ["Frontal", "Dorso"] },
@@ -18,6 +33,13 @@ const FormularioDocumentacion = () => {
     { title: "CERTIFICADO DE ANTECEDENTES PENALES NACIONAL", campos: [] },
   ];
 
+  // Función para manejar la acción del botón de envío.
+  const handleSubmit = () => {
+    // Por ahora mostramos la información en consola,
+    // pero también se puede renderizar en la interfaz.
+    console.log("Archivos subidos:", uploadedFiles);
+  };
+
   return (
     <div className='p-4 max-w-7xl mx-auto'>
       <h2 className='text-center text-2xl mb-6'>Documentación Requerida</h2>
@@ -30,7 +52,6 @@ const FormularioDocumentacion = () => {
             <h3 className='text-sm md:text-lg font-bold text-center'>
               {doc.title}
             </h3>
-
             <div className='flex flex-col gap-2'>
               {doc.campos.length > 0 ? (
                 // Renderiza múltiples inputs si existen sub-campos
@@ -38,17 +59,17 @@ const FormularioDocumentacion = () => {
                   <FileUploader
                     key={j}
                     label={campo}
-                    onFilesAccepted={(files) =>
-                      console.log(`${doc.title} ${campo}:`, files)
+                    onFilesAccepted={(file) =>
+                      handleFileAccepted(doc.title, campo, file)
                     }
                   />
                 ))
               ) : (
-                // Un único input para documentos sin sub-campos
+                // Renderiza un único input para documentos sin sub-campos
                 <FileUploader
                   label=''
-                  onFilesAccepted={(files) =>
-                    console.log(`${doc.title}:`, files)
+                  onFilesAccepted={(file) =>
+                    handleFileAccepted(doc.title, "", file)
                   }
                 />
               )}
@@ -58,7 +79,9 @@ const FormularioDocumentacion = () => {
       </div>
 
       <div className='text-center mt-4 md:mt-8'>
-        <button className='bg-red-500 text-white py-1 px-3 md:py-2 md:px-4 rounded hover:bg-red-600 transition-colors'>
+        <button
+          onClick={handleSubmit}
+          className='bg-red-500 text-white py-1 px-3 md:py-2 md:px-4 rounded hover:bg-red-600 transition-colors'>
           Enviar Documentación
         </button>
       </div>
