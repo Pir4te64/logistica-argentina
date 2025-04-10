@@ -1,6 +1,5 @@
 import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { useNavigate } from "react-router-dom";
 
 // Importa estilos de Swiper y de sus módulos
 import "swiper/css";
@@ -20,7 +19,6 @@ import header4 from "../assets/Header/header4.jpg";
 import header45 from "../assets/Header/header45.jpg";
 
 const Header = () => {
-  const navigate = useNavigate();
   const images = [header, header2, header3, header35, header4, header45];
   const texts = [
     "Chofer y Ayudante",

@@ -1,46 +1,62 @@
 import React from "react";
-import { FaUpload } from "react-icons/fa";
+import FileUploader from "./FileUploader"; // Asegúrate de ajustar la ruta si es necesario
 
 const FormularioDocumentacion = () => {
-  // Lista de documentos requeridos
+  // Estructura que define cada documento y, si aplica, sus campos separados.
   const documentos = [
-    "DNI (frente y dorso)",
-    "LICENCIA (frente y dorso)",
-    "CEDULA VERDE (frente y dorso)",
-    "CEDULA AZUL/AUTORIZACION DE MANEJO (frente y dorso)",
-    "RVTV Y Identificación, NO oblea",
-    "TITULO",
-    "POLIZA",
-    "FOTOS DEL VEHÍCULO (frente, laterales, trasera y 1 interior)",
-    "CERTIFICADO DE ANTECEDENTES PENALES NACIONAL",
+    { title: "DNI", campos: ["Frontal", "Dorso"] },
+    { title: "LICENCIA", campos: ["Frontal", "Dorso"] },
+    { title: "CEDULA VERDE", campos: ["Frontal", "Dorso"] },
+    {
+      title: "CEDULA AZUL / AUTORIZACION DE MANEJO",
+      campos: ["Frontal", "Dorso"],
+    },
+    { title: "RTO, VTV, ITV", campos: [] },
+    { title: "TITULO", campos: [] },
+    { title: "POLIZA", campos: [] },
+    { title: "FOTOS DEL VEHÍCULO", campos: ["Frente", "Laterales", "Trasera"] },
+    { title: "CERTIFICADO DE ANTECEDENTES PENALES NACIONAL", campos: [] },
   ];
 
   return (
     <div className='p-4 max-w-7xl mx-auto'>
-      {/* Título o descripción adicional */}
       <h2 className='text-center text-2xl mb-6'>Documentación Requerida</h2>
 
-      {/* Grid con 9 tarjetas */}
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6'>
         {documentos.map((doc, i) => (
           <div
             key={i}
-            className='bg-white shadow-lg p-2 md:p-4 flex flex-col justify-between gap-2 md:gap-4 rounded-md h-64 md:h-80'>
-            {/* Título del documento */}
-            <h3 className='text-sm md:text-lg'>{doc}</h3>
+            className='bg-white shadow-lg p-2 md:p-4 flex flex-col gap-2 md:gap-4 rounded-md'>
+            <h3 className='text-sm md:text-lg font-bold text-center'>
+              {doc.title}
+            </h3>
 
-            {/* Zona para subir archivo */}
-            <div className='flex flex-col items-center justify-center  border-2 border-dashed border-gray-300 rounded-md p-6 md:p-4   h-60 md:h-40'>
-              <FaUpload className='text-2xl md:text-3xl text-gray-400 mb-1 md:mb-2' />
-              <p className='text-gray-500 text-xs md:text-sm text-center'>
-                Arrastre y suelte su archivo o haga clic
-              </p>
+            <div className='flex flex-col gap-2'>
+              {doc.campos.length > 0 ? (
+                // Renderiza múltiples inputs si existen sub-campos
+                doc.campos.map((campo, j) => (
+                  <FileUploader
+                    key={j}
+                    label={campo}
+                    onFilesAccepted={(files) =>
+                      console.log(`${doc.title} ${campo}:`, files)
+                    }
+                  />
+                ))
+              ) : (
+                // Un único input para documentos sin sub-campos
+                <FileUploader
+                  label=''
+                  onFilesAccepted={(files) =>
+                    console.log(`${doc.title}:`, files)
+                  }
+                />
+              )}
             </div>
           </div>
         ))}
       </div>
 
-      {/* Botón al final, por ejemplo para “Enviar Documentación” */}
       <div className='text-center mt-4 md:mt-8'>
         <button className='bg-red-500 text-white py-1 px-3 md:py-2 md:px-4 rounded hover:bg-red-600 transition-colors'>
           Enviar Documentación
