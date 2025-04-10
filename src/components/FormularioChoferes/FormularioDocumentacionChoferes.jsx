@@ -1,107 +1,189 @@
-import React, { useState } from "react";
+// FormularioDocumentacionChoferes.jsx
+import React from "react";
 import axios from "axios";
 import { FaUpload } from "react-icons/fa";
 import { API_URL } from "../../Api/Api";
 import { useNavigate } from "react-router-dom";
+import BotonEnviarDocumentacion from "./BotonEnviar";
+import { documentos } from "./estaticos";
+import useDocumentStore from "./useDocumentStore";
 
 const FormularioDocumentacionChoferes = () => {
-  // Nombres para cada tipo de documento
-  const documentos = [
-    "DNI (frente y dorso)",
-    "LICENCIA (frente y dorso)",
-    "CERTIFICADO DE ANTECEDENTES PENALES NACIONAL",
-  ];
-  // Constantes que se enviarán en el formData (tipo_archivo)
+  // Constantes para identificar el tipo de archivo
   const dni = "1";
   const licencia = "2";
   const certificado = "3";
+  const dnidorso = "4";
+  const licenciaDorso = "5";
 
-  // Estados para guardar los archivos seleccionados
-  const [fileDNI, setFileDNI] = useState(null);
-  const [fileLicencia, setFileLicencia] = useState(null);
-  const [fileCertificado, setFileCertificado] = useState(null);
-
-  // Estados para manejar drag & drop por tarjeta
-  const [dragActiveDNI, setDragActiveDNI] = useState(false);
-  const [dragActiveLicencia, setDragActiveLicencia] = useState(false);
-  const [dragActiveCertificado, setDragActiveCertificado] = useState(false);
-
-  const [uploading, setUploading] = useState(false);
   const navigate = useNavigate();
 
-  // ----------------------
-  // Funciones para DNI
-  // ----------------------
-  const handleDragOverDNI = (e) => {
+  // Extraer estados y setters desde el store de Zustand
+  const {
+    // Estados para DNI
+    fileDNIFrontal,
+    dragActiveDNIFrontal,
+    setFileDNIFrontal,
+    setDragActiveDNIFrontal,
+    fileDNIDorso,
+    dragActiveDNIDorso,
+    setFileDNIDorso,
+    setDragActiveDNIDorso,
+
+    // Estados para Licencia
+    fileLicenciaFrontal,
+    dragActiveLicenciaFrontal,
+    setFileLicenciaFrontal,
+    setDragActiveLicenciaFrontal,
+    fileLicenciaDorso,
+    dragActiveLicenciaDorso,
+    setFileLicenciaDorso,
+    setDragActiveLicenciaDorso,
+
+    // Estados para Certificado
+    fileCertificado,
+    dragActiveCertificado,
+    setFileCertificado,
+    setDragActiveCertificado,
+
+    // Estado de carga
+    uploading,
+    setUploading,
+  } = useDocumentStore();
+
+  // ---------- Funciones para DNI Frontal ----------
+  const handleDragOverDNIFrontal = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    setDragActiveDNI(true);
+    setDragActiveDNIFrontal(true);
   };
 
-  const handleDragLeaveDNI = (e) => {
+  const handleDragLeaveDNIFrontal = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    setDragActiveDNI(false);
+    setDragActiveDNIFrontal(false);
   };
 
-  const handleDropDNI = (e) => {
+  const handleDropDNIFrontal = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    setDragActiveDNI(false);
+    setDragActiveDNIFrontal(false);
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      setFileDNI(e.dataTransfer.files[0]);
+      setFileDNIFrontal(e.dataTransfer.files[0]);
     }
   };
 
-  const handleAreaClickDNI = () => {
-    document.getElementById("fileInputDNI").click();
+  const handleAreaClickDNIFrontal = () => {
+    document.getElementById("fileInputDNIFrontal").click();
   };
 
-  const handleFileChangeDNI = (e) => {
+  const handleFileChangeDNIFrontal = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setFileDNI(file);
+      setFileDNIFrontal(file);
     }
   };
 
-  // ----------------------
-  // Funciones para Licencia
-  // ----------------------
-  const handleDragOverLicencia = (e) => {
+  // ---------- Funciones para DNI Dorso ----------
+  const handleDragOverDNIDorso = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    setDragActiveLicencia(true);
+    setDragActiveDNIDorso(true);
   };
 
-  const handleDragLeaveLicencia = (e) => {
+  const handleDragLeaveDNIDorso = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    setDragActiveLicencia(false);
+    setDragActiveDNIDorso(false);
   };
 
-  const handleDropLicencia = (e) => {
+  const handleDropDNIDorso = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    setDragActiveLicencia(false);
+    setDragActiveDNIDorso(false);
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      setFileLicencia(e.dataTransfer.files[0]);
+      setFileDNIDorso(e.dataTransfer.files[0]);
     }
   };
 
-  const handleAreaClickLicencia = () => {
-    document.getElementById("fileInputLicencia").click();
+  const handleAreaClickDNIDorso = () => {
+    document.getElementById("fileInputDNIDorso").click();
   };
 
-  const handleFileChangeLicencia = (e) => {
+  const handleFileChangeDNIDorso = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setFileLicencia(file);
+      setFileDNIDorso(file);
     }
   };
 
-  // ----------------------
-  // Funciones para Certificado
-  // ----------------------
+  // ---------- Funciones para Licencia Frontal ----------
+  const handleDragOverLicenciaFrontal = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActiveLicenciaFrontal(true);
+  };
+
+  const handleDragLeaveLicenciaFrontal = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActiveLicenciaFrontal(false);
+  };
+
+  const handleDropLicenciaFrontal = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActiveLicenciaFrontal(false);
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      setFileLicenciaFrontal(e.dataTransfer.files[0]);
+    }
+  };
+
+  const handleAreaClickLicenciaFrontal = () => {
+    document.getElementById("fileInputLicenciaFrontal").click();
+  };
+
+  const handleFileChangeLicenciaFrontal = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setFileLicenciaFrontal(file);
+    }
+  };
+
+  // ---------- Funciones para Licencia Dorso ----------
+  const handleDragOverLicenciaDorso = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActiveLicenciaDorso(true);
+  };
+
+  const handleDragLeaveLicenciaDorso = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActiveLicenciaDorso(false);
+  };
+
+  const handleDropLicenciaDorso = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActiveLicenciaDorso(false);
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      setFileLicenciaDorso(e.dataTransfer.files[0]);
+    }
+  };
+
+  const handleAreaClickLicenciaDorso = () => {
+    document.getElementById("fileInputLicenciaDorso").click();
+  };
+
+  const handleFileChangeLicenciaDorso = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setFileLicenciaDorso(file);
+    }
+  };
+
+  // ---------- Funciones para Certificado ----------
   const handleDragOverCertificado = (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -134,9 +216,7 @@ const FormularioDocumentacionChoferes = () => {
     }
   };
 
-  // ----------------------
-  // Función para extraer email del usuario
-  // ----------------------
+  // ---------- Función para extraer el email del usuario ----------
   const getUserEmail = () => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
@@ -151,65 +231,103 @@ const FormularioDocumentacionChoferes = () => {
     return "";
   };
 
-  // ----------------------
-  // Función para imprimir en consola el contenido de un FormData
-  // ----------------------
+  // ---------- Función para imprimir el contenido de FormData ----------
   const logFormData = (formData) => {
     for (let pair of formData.entries()) {
       console.log(`${pair[0]}: ${pair[1]}`);
     }
   };
 
-  // ----------------------
-  // Función para enviar los archivos uno a uno
-  // ----------------------
+  // ---------- Función para enviar los archivos ----------
   const handleSubmit = async (event) => {
     event.preventDefault();
     setUploading(true);
     const email = getUserEmail();
 
     try {
-      // Envío de DNI
-      if (fileDNI) {
-        const formDataDNI = new FormData();
-        formDataDNI.append("file", fileDNI);
-        formDataDNI.append("filename", fileDNI.name);
-        formDataDNI.append("tipo_archivo", dni);
-        formDataDNI.append("tipo_usuario", "6");
-        if (email) formDataDNI.append("correo", email);
+      // Enviar DNI Frontal
+      if (fileDNIFrontal) {
+        const formDataDNIFrontal = new FormData();
+        formDataDNIFrontal.append("file", fileDNIFrontal);
+        formDataDNIFrontal.append("filename", fileDNIFrontal.name);
+        formDataDNIFrontal.append("tipo_archivo", dni);
+        formDataDNIFrontal.append("detalle", "frontal");
+        formDataDNIFrontal.append("tipo_usuario", "6");
+        if (email) formDataDNIFrontal.append("correo", email);
 
-        console.log("Objeto enviado para DNI:");
-        logFormData(formDataDNI);
-
-        await axios.post(API_URL.UPLOAD_IMAGE, formDataDNI, {
+        console.log("Enviando DNI Frontal:");
+        logFormData(formDataDNIFrontal);
+        await axios.post(API_URL.UPLOAD_IMAGE, formDataDNIFrontal, {
           headers: { "Content-Type": "multipart/form-data" },
         });
-        console.log("DNI enviado");
+        console.log("DNI Frontal enviado");
       } else {
-        console.warn("No se seleccionó archivo para DNI");
+        console.warn("No se seleccionó archivo para DNI Frontal");
       }
 
-      // Envío de Licencia
-      if (fileLicencia) {
-        const formDataLicencia = new FormData();
-        formDataLicencia.append("file", fileLicencia);
-        formDataLicencia.append("filename", fileLicencia.name);
-        formDataLicencia.append("tipo_archivo", licencia);
-        formDataLicencia.append("tipo_usuario", "6");
-        if (email) formDataLicencia.append("correo", email);
+      // Enviar DNI Dorso
+      if (fileDNIDorso) {
+        const formDataDNIDorso = new FormData();
+        formDataDNIDorso.append("file", fileDNIDorso);
+        formDataDNIDorso.append("filename", fileDNIDorso.name);
+        // Ahora se usa la constante "dnidorso" para el envío del dorso
+        formDataDNIDorso.append("tipo_archivo", dnidorso);
+        formDataDNIDorso.append("detalle", "dorso");
+        formDataDNIDorso.append("tipo_usuario", "6");
+        if (email) formDataDNIDorso.append("correo", email);
 
-        console.log("Objeto enviado para Licencia:");
-        logFormData(formDataLicencia);
-
-        await axios.post(API_URL.UPLOAD_IMAGE, formDataLicencia, {
+        console.log("Enviando DNI Dorso:");
+        logFormData(formDataDNIDorso);
+        await axios.post(API_URL.UPLOAD_IMAGE, formDataDNIDorso, {
           headers: { "Content-Type": "multipart/form-data" },
         });
-        console.log("Licencia enviada");
+        console.log("DNI Dorso enviado");
       } else {
-        console.warn("No se seleccionó archivo para Licencia");
+        console.warn("No se seleccionó archivo para DNI Dorso");
       }
 
-      // Envío de Certificado
+      // Enviar Licencia Frontal
+      if (fileLicenciaFrontal) {
+        const formDataLicenciaFrontal = new FormData();
+        formDataLicenciaFrontal.append("file", fileLicenciaFrontal);
+        formDataLicenciaFrontal.append("filename", fileLicenciaFrontal.name);
+        formDataLicenciaFrontal.append("tipo_archivo", licencia);
+        formDataLicenciaFrontal.append("detalle", "frontal");
+        formDataLicenciaFrontal.append("tipo_usuario", "6");
+        if (email) formDataLicenciaFrontal.append("correo", email);
+
+        console.log("Enviando Licencia Frontal:");
+        logFormData(formDataLicenciaFrontal);
+        await axios.post(API_URL.UPLOAD_IMAGE, formDataLicenciaFrontal, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+        console.log("Licencia Frontal enviado");
+      } else {
+        console.warn("No se seleccionó archivo para Licencia Frontal");
+      }
+
+      // Enviar Licencia Dorso
+      if (fileLicenciaDorso) {
+        const formDataLicenciaDorso = new FormData();
+        formDataLicenciaDorso.append("file", fileLicenciaDorso);
+        formDataLicenciaDorso.append("filename", fileLicenciaDorso.name);
+        // Se usa la constante "licenciaDorso" para el envío del dorso
+        formDataLicenciaDorso.append("tipo_archivo", licenciaDorso);
+        formDataLicenciaDorso.append("detalle", "dorso");
+        formDataLicenciaDorso.append("tipo_usuario", "6");
+        if (email) formDataLicenciaDorso.append("correo", email);
+
+        console.log("Enviando Licencia Dorso:");
+        logFormData(formDataLicenciaDorso);
+        await axios.post(API_URL.UPLOAD_IMAGE, formDataLicenciaDorso, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+        console.log("Licencia Dorso enviado");
+      } else {
+        console.warn("No se seleccionó archivo para Licencia Dorso");
+      }
+
+      // Enviar Certificado
       if (fileCertificado) {
         const formDataCertificado = new FormData();
         formDataCertificado.append("file", fileCertificado);
@@ -218,9 +336,8 @@ const FormularioDocumentacionChoferes = () => {
         formDataCertificado.append("tipo_usuario", "6");
         if (email) formDataCertificado.append("correo", email);
 
-        console.log("Objeto enviado para Certificado:");
+        console.log("Enviando Certificado:");
         logFormData(formDataCertificado);
-
         await axios.post(API_URL.UPLOAD_IMAGE, formDataCertificado, {
           headers: { "Content-Type": "multipart/form-data" },
         });
@@ -242,73 +359,131 @@ const FormularioDocumentacionChoferes = () => {
     <form onSubmit={handleSubmit} className='w-full max-w-5xl mx-auto p-4'>
       {/* Contenedor de Tarjetas */}
       <div className='grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4 mb-6'>
-        {/* Tarjeta 1: DNI */}
+        {/* Tarjeta: DNI (Frontal y Dorso) */}
         <div className='bg-white p-2 md:p-4 rounded shadow flex flex-col gap-2 md:gap-4'>
           <h3 className='text-xs md:text-base text-black'>{documentos[0]}</h3>
-          <div
-            className={`border-2 ${
-              dragActiveDNI ? "border-blue-500" : "border-gray-300"
-            } border-dashed rounded-md p-6 md:p-4 flex flex-col items-center justify-center h-60 md:h-40 cursor-pointer`}
-            onClick={handleAreaClickDNI}
-            onDragOver={handleDragOverDNI}
-            onDragLeave={handleDragLeaveDNI}
-            onDrop={handleDropDNI}>
-            <FaUpload className='text-gray-400 text-2xl md:text-3xl mb-1 md:mb-2' />
-            <p className='text-gray-500 text-xs md:text-sm text-center'>
-              Arrastre y suelte su archivo o haga clic
-            </p>
-            <input
-              type='file'
-              id='fileInputDNI'
-              className='hidden'
-              accept='.jpg,.jpeg,.png,.pdf'
-              onChange={handleFileChangeDNI}
-            />
-            {fileDNI && (
-              <p className='mt-2 text-green-500 text-sm'>
-                Archivo seleccionado: {fileDNI.name}
+          <div className='grid grid-cols-2 gap-2'>
+            {/* Sub-box: DNI Frontal */}
+            <div
+              className={`border-2 ${
+                dragActiveDNIFrontal ? "border-blue-500" : "border-gray-300"
+              } border-dashed rounded-md p-4 flex flex-col items-center justify-center h-40 cursor-pointer`}
+              onClick={handleAreaClickDNIFrontal}
+              onDragOver={handleDragOverDNIFrontal}
+              onDragLeave={handleDragLeaveDNIFrontal}
+              onDrop={handleDropDNIFrontal}>
+              <FaUpload className='text-gray-400 text-2xl mb-1' />
+              <p className='text-gray-500 text-xs text-center'>
+                DNI Frontal: Arrastre y suelte o haga clic
               </p>
-            )}
+              <input
+                type='file'
+                id='fileInputDNIFrontal'
+                className='hidden'
+                accept='.jpg,.jpeg,.png,.pdf'
+                onChange={handleFileChangeDNIFrontal}
+              />
+              {fileDNIFrontal && (
+                <p className='mt-2 text-green-500 text-sm'>
+                  {fileDNIFrontal.name}
+                </p>
+              )}
+            </div>
+            {/* Sub-box: DNI Dorso */}
+            <div
+              className={`border-2 ${
+                dragActiveDNIDorso ? "border-blue-500" : "border-gray-300"
+              } border-dashed rounded-md p-4 flex flex-col items-center justify-center h-40 cursor-pointer`}
+              onClick={handleAreaClickDNIDorso}
+              onDragOver={handleDragOverDNIDorso}
+              onDragLeave={handleDragLeaveDNIDorso}
+              onDrop={handleDropDNIDorso}>
+              <FaUpload className='text-gray-400 text-2xl mb-1' />
+              <p className='text-gray-500 text-xs text-center'>
+                DNI Dorso: Arrastre y suelte o haga clic
+              </p>
+              <input
+                type='file'
+                id='fileInputDNIDorso'
+                className='hidden'
+                accept='.jpg,.jpeg,.png,.pdf'
+                onChange={handleFileChangeDNIDorso}
+              />
+              {fileDNIDorso && (
+                <p className='mt-2 text-green-500 text-sm'>
+                  {fileDNIDorso.name}
+                </p>
+              )}
+            </div>
           </div>
         </div>
-
-        {/* Tarjeta 2: LICENCIA */}
+        {/* Tarjeta: Licencia (Frontal y Dorso) */}
         <div className='bg-white p-2 md:p-4 rounded shadow flex flex-col gap-2 md:gap-4'>
           <h3 className='text-xs md:text-base text-black'>{documentos[1]}</h3>
-          <div
-            className={`border-2 ${
-              dragActiveLicencia ? "border-blue-500" : "border-gray-300"
-            } border-dashed rounded-md p-6 md:p-4 flex flex-col items-center justify-center h-60 md:h-40 cursor-pointer`}
-            onClick={handleAreaClickLicencia}
-            onDragOver={handleDragOverLicencia}
-            onDragLeave={handleDragLeaveLicencia}
-            onDrop={handleDropLicencia}>
-            <FaUpload className='text-gray-400 text-2xl md:text-3xl mb-1 md:mb-2' />
-            <p className='text-gray-500 text-xs md:text-sm text-center'>
-              Arrastre y suelte su archivo o haga clic
-            </p>
-            <input
-              type='file'
-              id='fileInputLicencia'
-              className='hidden'
-              accept='.jpg,.jpeg,.png,.pdf'
-              onChange={handleFileChangeLicencia}
-            />
-            {fileLicencia && (
-              <p className='mt-2 text-green-500 text-sm'>
-                Archivo seleccionado: {fileLicencia.name}
+          <div className='grid grid-cols-2 gap-2'>
+            {/* Sub-box: Licencia Frontal */}
+            <div
+              className={`border-2 ${
+                dragActiveLicenciaFrontal
+                  ? "border-blue-500"
+                  : "border-gray-300"
+              } border-dashed rounded-md p-4 flex flex-col items-center justify-center h-40 cursor-pointer`}
+              onClick={handleAreaClickLicenciaFrontal}
+              onDragOver={handleDragOverLicenciaFrontal}
+              onDragLeave={handleDragLeaveLicenciaFrontal}
+              onDrop={handleDropLicenciaFrontal}>
+              <FaUpload className='text-gray-400 text-2xl mb-1' />
+              <p className='text-gray-500 text-xs text-center'>
+                Licencia Frontal: Arrastre y suelte o haga clic
               </p>
-            )}
+              <input
+                type='file'
+                id='fileInputLicenciaFrontal'
+                className='hidden'
+                accept='.jpg,.jpeg,.png,.pdf'
+                onChange={handleFileChangeLicenciaFrontal}
+              />
+              {fileLicenciaFrontal && (
+                <p className='mt-2 text-green-500 text-sm'>
+                  {fileLicenciaFrontal.name}
+                </p>
+              )}
+            </div>
+            {/* Sub-box: Licencia Dorso */}
+            <div
+              className={`border-2 ${
+                dragActiveLicenciaDorso ? "border-blue-500" : "border-gray-300"
+              } border-dashed rounded-md p-4 flex flex-col items-center justify-center h-40 cursor-pointer`}
+              onClick={handleAreaClickLicenciaDorso}
+              onDragOver={handleDragOverLicenciaDorso}
+              onDragLeave={handleDragLeaveLicenciaDorso}
+              onDrop={handleDropLicenciaDorso}>
+              <FaUpload className='text-gray-400 text-2xl mb-1' />
+              <p className='text-gray-500 text-xs text-center'>
+                Licencia Dorso: Arrastre y suelte o haga clic
+              </p>
+              <input
+                type='file'
+                id='fileInputLicenciaDorso'
+                className='hidden'
+                accept='.jpg,.jpeg,.png,.pdf'
+                onChange={handleFileChangeLicenciaDorso}
+              />
+              {fileLicenciaDorso && (
+                <p className='mt-2 text-green-500 text-sm'>
+                  {fileLicenciaDorso.name}
+                </p>
+              )}
+            </div>
           </div>
         </div>
-
-        {/* Tarjeta 3: CERTIFICADO (ocupa toda la fila en md) */}
+        {/* Tarjeta: Certificado */}
         <div className='bg-white p-2 md:p-4 rounded shadow flex flex-col gap-2 md:gap-4 md:col-span-2'>
           <h3 className='text-xs md:text-base text-black'>{documentos[2]}</h3>
           <div
             className={`border-2 ${
               dragActiveCertificado ? "border-blue-500" : "border-gray-300"
-            } border-dashed rounded-md p-6 md:p-4 flex flex-col items-center justify-center h-60 md:h-40 cursor-pointer`}
+            } border-dashed rounded-md p-6 md:p-4 flex flex-col items-center justify-center h-60 cursor-pointer`}
             onClick={handleAreaClickCertificado}
             onDragOver={handleDragOverCertificado}
             onDragLeave={handleDragLeaveCertificado}
@@ -332,16 +507,7 @@ const FormularioDocumentacionChoferes = () => {
           </div>
         </div>
       </div>
-
-      {/* Botón Enviar Documentación */}
-      <div className='text-center'>
-        <button
-          type='submit'
-          disabled={uploading}
-          className='bg-red-500 text-white px-4 py-1 md:px-6 md:py-2 rounded hover:bg-red-600 transition-colors text-xs md:text-sm'>
-          {uploading ? "Enviando..." : "Enviar documentación"}
-        </button>
-      </div>
+      <BotonEnviarDocumentacion uploading={uploading} />
     </form>
   );
 };
