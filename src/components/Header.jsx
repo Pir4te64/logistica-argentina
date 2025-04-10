@@ -58,7 +58,7 @@ const Header = () => {
               style={{ backgroundImage: `url(${img})` }}
               onClick={() => {
                 if (redirectPath) {
-                  navigate(redirectPath);
+                  window.location = redirectPath;
                 }
               }}>
               {/* Barra degradada de fondo a lo ancho con el texto */}

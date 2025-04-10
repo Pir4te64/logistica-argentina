@@ -39,3 +39,10 @@ html,
 body {
     font-family: 'Averta Std', sans-serif;
 }
+
+.multiline-ellipsis {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+}
