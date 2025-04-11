@@ -23,7 +23,7 @@ export async function submitDocuments({
       formDataDNIFrontal.append("filename", fileDNIFrontal.name);
       formDataDNIFrontal.append("tipo_archivo", dni);
       formDataDNIFrontal.append("detalle", "frontal");
-      formDataDNIFrontal.append("tipo_usuario", "6");
+      formDataDNIFrontal.append("tipo_usuario", "4");
       if (email) formDataDNIFrontal.append("correo", email);
 
       await axios.post(API_URL.UPLOAD_IMAGE, formDataDNIFrontal, {
@@ -40,7 +40,7 @@ export async function submitDocuments({
       formDataDNIDorso.append("filename", fileDNIDorso.name);
       formDataDNIDorso.append("tipo_archivo", dnidorso);
       formDataDNIDorso.append("detalle", "dorso");
-      formDataDNIDorso.append("tipo_usuario", "6");
+      formDataDNIDorso.append("tipo_usuario", "4");
       if (email) formDataDNIDorso.append("correo", email);
 
       await axios.post(API_URL.UPLOAD_IMAGE, formDataDNIDorso, {
@@ -57,7 +57,7 @@ export async function submitDocuments({
       formDataLicenciaFrontal.append("filename", fileLicenciaFrontal.name);
       formDataLicenciaFrontal.append("tipo_archivo", licencia);
       formDataLicenciaFrontal.append("detalle", "frontal");
-      formDataLicenciaFrontal.append("tipo_usuario", "6");
+      formDataLicenciaFrontal.append("tipo_usuario", "4");
       if (email) formDataLicenciaFrontal.append("correo", email);
 
       await axios.post(API_URL.UPLOAD_IMAGE, formDataLicenciaFrontal, {
@@ -74,7 +74,7 @@ export async function submitDocuments({
       formDataLicenciaDorso.append("filename", fileLicenciaDorso.name);
       formDataLicenciaDorso.append("tipo_archivo", licenciaDorso);
       formDataLicenciaDorso.append("detalle", "dorso");
-      formDataLicenciaDorso.append("tipo_usuario", "6");
+      formDataLicenciaDorso.append("tipo_usuario", "4");
       if (email) formDataLicenciaDorso.append("correo", email);
 
       await axios.post(API_URL.UPLOAD_IMAGE, formDataLicenciaDorso, {
@@ -90,7 +90,7 @@ export async function submitDocuments({
       formDataCertificado.append("file", fileCertificado);
       formDataCertificado.append("filename", fileCertificado.name);
       formDataCertificado.append("tipo_archivo", certificado);
-      formDataCertificado.append("tipo_usuario", "6");
+      formDataCertificado.append("tipo_usuario", "4");
       if (email) formDataCertificado.append("correo", email);
 
       await axios.post(API_URL.UPLOAD_IMAGE, formDataCertificado, {

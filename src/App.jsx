@@ -22,7 +22,6 @@ function App() {
       <Route path='/formulario' element={<FormularioPage />} />
       <Route path='/mensaje' element={<Mensaje />} />
       <Route path='/formulario-choferes' element={<FormularioChoferes />} />
-      {/* Duplicado de formulario-choferes eliminado o revisado */}
       <Route
         path='/dashboard'
         element={

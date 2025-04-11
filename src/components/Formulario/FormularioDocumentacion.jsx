@@ -7,10 +7,10 @@ import { submitDocumentation } from "@/components/Formulario/submitDocumentation
 const FormularioDocumentacion = () => {
   // Estado para almacenar la información de cada archivo subido
   const [uploadedFiles, setUploadedFiles] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Función para manejar la actualización de los archivos subidos desde FileUploader
-  const handleFileAccepted = (docTitle, campo, file) => {
-    // Se determina el id según el documento y (si existe) su subcampo
+  const handleFileAccepted = (docTitle, campo, fileData) => {
+    // Se determina el id según el documento y, si existe, su subcampo.
     let docId = null;
     if (typeof docMapping[docTitle] === "object") {
       docId = docMapping[docTitle][campo];
@@ -18,18 +18,36 @@ const FormularioDocumentacion = () => {
       docId = docMapping[docTitle];
     }
 
-    setUploadedFiles((prevFiles) => {
-      // Se reemplaza o agrega el archivo para ese documento y campo
-      const updatedFiles = prevFiles.filter(
-        (item) => item.docTitle !== docTitle || item.campo !== campo
-      );
-      return [...updatedFiles, { id: docId, docTitle, campo, file }];
-    });
+    if (Array.isArray(fileData)) {
+      // Si se subieron múltiples archivos, se agregan todos
+      setUploadedFiles((prev) => [
+        ...prev,
+        ...fileData.map((file) => ({ id: docId, docTitle, campo, file })),
+      ]);
+    } else {
+      // Para carga única: se reemplaza cualquier archivo existente para ese documento/campo
+      setUploadedFiles((prevFiles) => {
+        const updatedFiles = prevFiles.filter(
+          (item) => item.docTitle !== docTitle || item.campo !== campo
+        );
+        return [
+          ...updatedFiles,
+          { id: docId, docTitle, campo, file: fileData },
+        ];
+      });
+    }
   };
 
   // Se invoca la función externa para el envío cuando se presione el botón.
-  const handleSubmit = () => {
-    submitDocumentation(uploadedFiles);
+  const handleSubmit = async () => {
+    setIsSubmitting(true);
+    try {
+      await submitDocumentation(uploadedFiles);
+      window.location.href = "/mensaje";
+    } catch (error) {
+      console.error("Error al enviar documentación:", error);
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -46,7 +64,6 @@ const FormularioDocumentacion = () => {
             </h3>
             <div className='flex flex-col gap-2'>
               {doc.campos.length > 0 ? (
-                // Para documentos con subcampos (ejemplo: DNI: Frontal y Dorso)
                 doc.campos.map((campo, j) => (
                   <FileUploader
                     key={j}
@@ -57,9 +74,9 @@ const FormularioDocumentacion = () => {
                   />
                 ))
               ) : (
-                // Para documentos sin subcampos
                 <FileUploader
                   label=''
+                  multiple={doc.multiple || false}
                   onFilesAccepted={(file) =>
                     handleFileAccepted(doc.title, "", file)
                   }
@@ -71,11 +88,36 @@ const FormularioDocumentacion = () => {
       </div>
 
       <div className='text-center mt-4 md:mt-8'>
-        <button
-          onClick={handleSubmit}
-          className='bg-red-500 text-white py-1 px-3 md:py-2 md:px-4 rounded hover:bg-red-600 transition-colors'>
-          Enviar Documentación
-        </button>
+        {isSubmitting ? (
+          <div className='flex items-center justify-center space-x-2'>
+            <svg
+              className='animate-spin h-6 w-6 text-red-500'
+              xmlns='http://www.w3.org/2000/svg'
+              fill='none'
+              viewBox='0 0 24 24'>
+              <circle
+                className='opacity-25'
+                cx='12'
+                cy='12'
+                r='10'
+                stroke='currentColor'
+                strokeWidth='4'></circle>
+              <path
+                className='opacity-75'
+                fill='currentColor'
+                d='M4 12a8 8 0 018-8v8H4z'></path>
+            </svg>
+            <span className='text-red-500 font-semibold'>
+              Enviando documentación...
+            </span>
+          </div>
+        ) : (
+          <button
+            onClick={handleSubmit}
+            className='bg-red-500 text-white py-1 px-3 md:py-2 md:px-4 rounded hover:bg-red-600 transition-colors'>
+            Enviar Documentación
+          </button>
+        )}
       </div>
     </div>
   );

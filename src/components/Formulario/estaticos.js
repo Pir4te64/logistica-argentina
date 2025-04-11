@@ -1,5 +1,4 @@
-export // Datos de los documentos que se requieren
-const documentos = [
+export const documentos = [
   { title: "DNI", campos: ["Frontal", "Dorso"] },
   { title: "LICENCIA", campos: ["Frontal", "Dorso"] },
   { title: "CEDULA VERDE", campos: ["Frontal", "Dorso"] },
@@ -7,12 +6,16 @@ const documentos = [
     title: "CEDULA AZUL / AUTORIZACION DE MANEJO",
     campos: ["Frontal", "Dorso"],
   },
-  { title: "RTO, VTV, ITV", campos: [] },
-  { title: "TITULO", campos: [] },
-  { title: "POLIZA", campos: [] },
-  { title: "FOTOS DEL VEHÍCULO", campos: ["Frente", "Laterales", "Trasera"] },
+  { title: "RTO, VTV, ITV", campos: [], multiple: true },
+  { title: "TITULO", campos: [], multiple: true },
+  { title: "POLIZA", campos: [], multiple: true },
+  {
+    title: "FOTOS DEL VEHÍCULO",
+    campos: ["Frente", "Laterales", "Trasera", "Laterales dos"],
+  },
   { title: "CERTIFICADO DE ANTECEDENTES PENALES NACIONAL", campos: [] },
 ];
+
 export // Diccionario para mapear cada documento y subcampo a un ID
 const docMapping = {
   DNI: {
@@ -38,6 +41,7 @@ const docMapping = {
     Frente: 13,
     Laterales: 14,
     Trasera: 15,
+    Laterales_dos: 17,
   },
   "CERTIFICADO DE ANTECEDENTES PENALES NACIONAL": 16,
 };

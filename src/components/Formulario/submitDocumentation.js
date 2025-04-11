@@ -24,7 +24,7 @@ export const submitDocumentation = async (uploadedFiles) => {
     file: item.file, // Objeto File
     filename: item.file.name, // Nombre del archivo
     tipo_archivo: item.id, // ID del documento (por ejemplo, DNI Frontal, DNI Dorso, etc.)
-    tipo_usuario: 6,
+    tipo_usuario: 3,
     // Si deseas usar el userId del usuario del localStorage, reemplaza el valor estático:
     correo: correo || "no-email@example.com",
   }));
@@ -52,5 +52,4 @@ export const submitDocumentation = async (uploadedFiles) => {
 
   console.log("Todos los archivos han sido procesados.");
   // Redirige a la página /mensaje si se completó la operación
-  window.location.href = "/mensaje";
 };
