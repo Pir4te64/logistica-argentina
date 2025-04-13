@@ -39,23 +39,22 @@ const MiniCard = () => {
   ];
 
   return (
-    <div className="grid grid-cols-1 gap-4 lg:grid-cols-5 -mt-10 w-11/12 mx-auto justify-items-center">
+    <div className='grid grid-cols-1 gap-4 lg:grid-cols-5 -mt-10 container mx-auto justify-items-center'>
       {miniCardsData.map((card, index) => (
         <div
           key={index}
-          className="block w-full max-w-xs rounded overflow-hidden shadow hover:shadow-md transition-shadow bg-custom-blue-medium"
-        >
+          className='block w-full max-w-xs rounded overflow-hidden shadow hover:shadow-md transition-shadow bg-custom-blue-medium'>
           {/* Imagen en la parte superior */}
           <img
             src={card.imageUrl}
             alt={card.title}
-            className="w-full h-40 object-cover"
+            className='w-full h-40 object-cover'
           />
 
           {/* Contenido de texto */}
-          <div className="p-4 ">
-            <h3 className="text-lg  text-white">{card.title}</h3>
-            <p className="text-custom-dark mt-2 text-sm">{card.description}</p>
+          <div className='p-4 '>
+            <h3 className='text-lg  text-white'>{card.title}</h3>
+            <p className='text-custom-dark mt-2 text-sm'>{card.description}</p>
           </div>
         </div>
       ))}

@@ -6,8 +6,11 @@ import { AuthContext } from "@/Api/AuthContext";
 const ProtectedRoute = ({ children, allowedIds }) => {
   const { user } = useContext(AuthContext);
 
-  // Si no hay usuario o el id del usuario no está en la lista de permitidos, redirige
-  if (!user || (allowedIds && !allowedIds.includes(user.id))) {
+  // Si no hay usuario o si no se encuentra ningún rol del usuario que esté en allowedIds, redirige
+  if (
+    !user ||
+    (allowedIds && !user.roles.some((role) => allowedIds.includes(role.id)))
+  ) {
     return <Navigate to='/' replace />;
   }
 

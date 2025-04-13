@@ -54,13 +54,16 @@ const Navbar = () => {
             </>
           ) : (
             <>
-              {(user.id === 1 || user.id === 2) && (
-                <Link
-                  to='/dashboard'
-                  className='bg-custom-red hover:bg-custom-red/80 px-4 py-2 rounded transition-colors'>
-                  Dashboard
-                </Link>
-              )}
+              {user &&
+                user.roles &&
+                user.roles.some((role) => role.id === 1 || role.id === 2) && (
+                  <Link
+                    to='/dashboard'
+                    className='bg-custom-red hover:bg-custom-red/80 px-4 py-2 rounded transition-colors'>
+                    Dashboard
+                  </Link>
+                )}
+
               <button
                 onClick={logout}
                 className='bg-custom-red hover:bg-custom-red/80 px-4 py-2 rounded transition-colors'>
@@ -115,13 +118,16 @@ const Navbar = () => {
             </>
           ) : (
             <>
-              {(user.id === 1 || user.id === 2) && (
-                <Link
-                  to='/dashboard'
-                  className='bg-custom-red hover:bg-custom-red/80 px-4 py-2 rounded transition-colors'>
-                  Dashboard
-                </Link>
-              )}
+              {user &&
+                user.roles &&
+                user.roles.some((role) => role.id === 1 || role.id === 2) && (
+                  <Link
+                    to='/dashboard'
+                    className='bg-custom-red hover:bg-custom-red/80 px-4 py-2 rounded transition-colors'>
+                    Dashboard
+                  </Link>
+                )}
+
               <button
                 onClick={logout}
                 className='bg-custom-red hover:bg-custom-red/80 px-4 py-2 rounded transition-colors'>
