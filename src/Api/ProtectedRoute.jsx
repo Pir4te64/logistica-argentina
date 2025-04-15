@@ -4,9 +4,14 @@ import { Navigate } from "react-router-dom";
 import { AuthContext } from "@/Api/AuthContext";
 
 const ProtectedRoute = ({ children, allowedIds }) => {
-  const { user } = useContext(AuthContext);
+  const { user, authLoading } = useContext(AuthContext);
 
-  // Si no hay usuario o si no se encuentra ningún rol del usuario que esté en allowedIds, redirige
+  // Mientras se carga la autenticación, se muestra un mensaje (o spinner) y no se redirige.
+  if (authLoading) {
+    return <div>Cargando...</div>;
+  }
+
+  // Si no hay usuario o si el usuario no posee alguno de los roles permitidos, redirige a la raíz.
   if (
     !user ||
     (allowedIds && !user.roles.some((role) => allowedIds.includes(role.id)))

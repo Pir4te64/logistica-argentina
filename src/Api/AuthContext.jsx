@@ -9,6 +9,7 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
+  const [authLoading, setAuthLoading] = useState(true); // Estado para cargar autenticación
 
   // Al montar el componente, verificamos si existen datos de autenticación en el localStorage
   useEffect(() => {
@@ -21,9 +22,10 @@ export const AuthProvider = ({ children }) => {
     if (storedToken && storedToken !== "undefined") {
       setToken(storedToken);
     }
+    setAuthLoading(false); // Finalizamos la carga una vez leído el localStorage
   }, []);
 
-  // Función para iniciar sesión y guardar datos en el estado y en el localStorage
+  // Función para iniciar sesión
   const login = (userData, tokenData) => {
     setUser(userData);
     setToken(tokenData);
@@ -31,7 +33,7 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem("token", tokenData);
   };
 
-  // Función para cerrar sesión, limpiando el estado, el localStorage y llamando al endpoint de logout
+  // Función para cerrar sesión
   const logout = async () => {
     try {
       await axios.post(
@@ -55,7 +57,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, login, logout }}>
+    <AuthContext.Provider value={{ user, token, authLoading, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

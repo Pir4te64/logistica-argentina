@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { FaBars } from "react-icons/fa";
+import { FaBars, FaSignOutAlt } from "react-icons/fa";
 import Logo from "@/assets/Logo.png";
 import { Link } from "react-router-dom";
 import { HashLink } from "react-router-hash-link";
@@ -63,11 +63,11 @@ const Navbar = () => {
                     Dashboard
                   </Link>
                 )}
-
               <button
                 onClick={logout}
-                className='bg-custom-red hover:bg-custom-red/80 px-4 py-2 rounded transition-colors'>
-                Cerrar sesión
+                className='bg-custom-red hover:bg-custom-red/80 px-4 py-2 rounded transition-colors'
+                aria-label='Cerrar sesión'>
+                <FaSignOutAlt size={20} />
               </button>
             </>
           )}
@@ -127,11 +127,11 @@ const Navbar = () => {
                     Dashboard
                   </Link>
                 )}
-
               <button
                 onClick={logout}
-                className='bg-custom-red hover:bg-custom-red/80 px-4 py-2 rounded transition-colors'>
-                Cerrar sesión
+                className='bg-custom-red hover:bg-custom-red/80 px-4 py-2 rounded transition-colors'
+                aria-label='Cerrar sesión'>
+                <FaSignOutAlt size={20} />
               </button>
             </>
           )}
