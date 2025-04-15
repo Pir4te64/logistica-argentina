@@ -3,6 +3,7 @@ import Layout from "@/components/Layout";
 import BeneficioRepartidor from "@/components/Dashboard/BeneficioRepartidor";
 import CategoriaVehiculos from "@/components/Dashboard/CategoriaVehiculos";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import Logo from "@/assets/Logo.png";
 
 const Dashboard = () => {
   const [activeView, setActiveView] = useState("default");
@@ -23,7 +24,11 @@ const Dashboard = () => {
       case "categoriaVehiculos":
         return <CategoriaVehiculos />;
       default:
-        return <h1 className='text-2xl font-bold'>Bienvenido!</h1>;
+        return (
+          <div className='flex items-center justify-center h-full'>
+            <img src={Logo} alt='Logo' className='w-1/2 opacity-50' />
+          </div>
+        );
     }
   };
 
