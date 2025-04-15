@@ -6,4 +6,5 @@ export const API_URL = {
   UPLOAD_IMAGE: `${BASE_URL}/api/upload-file`,
   TIPO_ARCHIVO: `${BASE_URL}/api/tipo-archivos`,
   BENEFICIO_REPARTIDOR: `${BASE_URL}/api/beneficio-repartidor`,
+  CATEGORIA_VEHICULOS: `${BASE_URL}/api/categoria-vehiculos`,
 };
