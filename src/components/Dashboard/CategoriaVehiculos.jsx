@@ -1,184 +1,192 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { FaPlus, FaTrash } from "react-icons/fa";
-import { API_URL } from "../../Api/Api";
+// components/CategoriaVehiculos.jsx
+import React from "react";
+import { FaPlus, FaTrash, FaEdit } from "react-icons/fa";
+import useCategoriaVehiculos from "./useCategoriaVehiculos";
 
 const CategoriaVehiculos = () => {
-  const [data, setData] = useState(null); // Respuesta de la API
-  const [loading, setLoading] = useState(true); // Estado de carga
-  const [error, setError] = useState(null); // Estado para errores
-
-  // Estados para la creación de un nuevo beneficio
-  const [showForm, setShowForm] = useState(false);
-  const [formData, setFormData] = useState({ nombre: "", descripcion: "" });
-  const [creating, setCreating] = useState(false);
-  const [createError, setCreateError] = useState(null);
-
-  // Función para obtener los datos de la API
-  const fetchData = async () => {
-    const token = localStorage.getItem("token");
-    try {
-      const response = await axios.get(API_URL.CATEGORIA_VEHICULOS, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      console.log("Respuesta de la API:", response.data);
-
-      setData(response.data);
-    } catch (err) {
-      console.error("Error al obtener los datos:", err);
-      setError(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  // Manejo de cambios en el formulario
-  const handleFormChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  // Función para enviar el POST y crear un nuevo beneficio
-  const handleFormSubmit = async (e) => {
-    e.preventDefault();
-    setCreating(true);
-    setCreateError(null);
-    const token = localStorage.getItem("token");
-    try {
-      const response = await axios.post(API_URL.CATEGORIA_VEHICULOS, formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
-      // Se asume que la respuesta tiene la propiedad "data" con el nuevo beneficio
-      setData({
-        ...data,
-        data: [...data.data, response.data.data],
-      });
-      setFormData({ nombre: "", descripcion: "" });
-      setShowForm(false);
-    } catch (err) {
-      console.error("Error al crear el beneficio:", err);
-      setCreateError(err);
-    } finally {
-      setCreating(false);
-    }
-  };
-
-  // Función para borrar un beneficio
-  const handleDelete = async (id) => {
-    const token = localStorage.getItem("token");
-    try {
-      // Se realiza la petición DELETE enviando el id en la URL
-      await axios.delete(`${API_URL.CATEGORIA_VEHICULOS}/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      // Se actualiza la lista filtrando el beneficio eliminado
-      setData({
-        ...data,
-        data: data.data.filter((beneficio) => beneficio.id !== id),
-      });
-    } catch (err) {
-      console.error("Error al eliminar el beneficio:", err);
-    }
-  };
+  const {
+    data,
+    loading,
+    error,
+    showForm,
+    formData,
+    creating,
+    createError,
+    isEditing,
+    editFormData,
+    editing,
+    setShowForm,
+    handleFormChange,
+    handleFormSubmit,
+    handleEditClick,
+    handleEditFormChange,
+    handleEditSubmit,
+    handleDelete,
+  } = useCategoriaVehiculos();
 
   if (loading) {
     return (
-      <div className='px-4'>
-        <h1 className='text-2xl font-bold mb-4'>Beneficio Repartidor</h1>
-        <p>Cargando...</p>
+      <div className="container mx-auto px-4 py-8">
+        <h1 className="text-3xl font-extrabold text-gray-800 mb-6">
+          Categorías de Vehículos
+        </h1>
+        <p className="text-gray-600">Cargando...</p>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className='px-4'>
-        <p>Error al obtener los datos.</p>
+      <div className="container mx-auto px-4 py-8">
+        <p className="text-red-600">Error al obtener los datos.</p>
       </div>
     );
   }
 
   return (
-    <div className='px-4'>
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-3xl font-extrabold text-gray-800 mb-6">
+        Categorías de Vehículos
+      </h1>
+
       {/* Encabezado y botón para abrir el formulario de creación */}
-      <div className='flex flex-col sm:flex-row items-center justify-between mb-4'>
+      <div className="flex flex-col sm:flex-row items-center justify-between mb-6">
         <button
           onClick={() => setShowForm(!showForm)}
-          className='flex items-center gap-2 px-4 py-2 bg-custom-blue text-white rounded hover:bg-custom-blue-medium transition-colors'>
-          <FaPlus /> Agregar Vehiculo
+          className="flex items-center gap-2 px-5 py-2 bg-custom-blue text-white rounded-md shadow hover:bg-custom-blue-medium transition-colors"
+        >
+          <FaPlus /> Agregar Vehículo
         </button>
       </div>
 
-      {/* Formulario para agregar un nuevo beneficio */}
+      {/* Formulario para agregar un nuevo vehículo */}
       {showForm && (
         <form
           onSubmit={handleFormSubmit}
-          className='mb-4 p-4 rounded shadow bg-gray-100'>
-          <div className='mb-2'>
-            <label className='block mb-1 font-medium'>Nombre</label>
+          className="mb-6 p-6 bg-white rounded-lg shadow-lg border border-gray-200"
+        >
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Nombre
+            </label>
             <input
-              type='text'
-              name='nombre'
+              type="text"
+              name="nombre"
               value={formData.nombre}
               onChange={handleFormChange}
-              className='w-full px-3 py-2 border rounded'
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
               required
             />
           </div>
-          <div className='mb-2'>
-            <label className='block mb-1 font-medium'>Descripción</label>
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Descripción
+            </label>
             <textarea
-              name='descripcion'
+              name="descripcion"
               value={formData.descripcion}
               onChange={handleFormChange}
-              className='w-full px-3 py-2 border rounded'
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
               required
             />
           </div>
           {createError && (
-            <p className='text-red-500 mb-2'>Error al crear el beneficio.</p>
+            <p className="mb-4 text-sm text-red-600">
+              Error al crear el vehículo.
+            </p>
           )}
           <button
-            type='submit'
+            type="submit"
             disabled={creating}
-            className='w-full sm:w-auto px-4 py-2 bg-custom-blue text-white rounded hover:bg-custom-blue-medium transition-colors'>
-            {creating ? "Creando..." : "Crear Vehiculo"}
+            className="w-full sm:w-auto px-5 py-2 bg-custom-blue text-white rounded-md shadow hover:bg-custom-blue-medium transition-colors"
+          >
+            {creating ? "Creando..." : "Crear Vehículo"}
           </button>
         </form>
       )}
 
-      {/* Tabla que lista los beneficios */}
-      <div className='overflow-x-auto'>
-        <table className='min-w-full bg-white border border-gray-200'>
-          <thead>
+      {/* Formulario para editar un vehículo existente */}
+      {isEditing && (
+        <form
+          onSubmit={handleEditSubmit}
+          className="mb-6 p-6 bg-white rounded-lg shadow-lg border border-gray-200"
+        >
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Nombre
+            </label>
+            <input
+              type="text"
+              name="nombre"
+              value={editFormData.nombre}
+              onChange={handleEditFormChange}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Descripción
+            </label>
+            <textarea
+              name="descripcion"
+              value={editFormData.descripcion}
+              onChange={handleEditFormChange}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              required
+            />
+          </div>
+       
+          <button
+            type="submit"
+            disabled={editing}
+            className="w-full sm:w-auto px-5 py-2 bg-custom-blue text-white rounded-md shadow hover:bg-custom-blue-medium transition-colors"
+          >
+            {editing ? "Actualizando..." : "Actualizar Vehículo"}
+          </button>
+        </form>
+      )}
+
+      {/* Tabla que lista los vehículos */}
+      <div className="overflow-x-auto">
+        <table className="min-w-full divide-y divide-gray-200 bg-white shadow rounded-lg">
+          <thead className="bg-gray-50">
             <tr>
-              <th className='px-4 py-2 border-b'>Nombre</th>
-              <th className='px-4 py-2 border-b'>Descripción</th>
-              <th className='px-4 py-2 border-b'>Acciones</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Nombre
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Descripción
+              </th>
+              <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Acciones
+              </th>
             </tr>
           </thead>
-          <tbody>
-            {data.data && data.data.length > 0 ? (
-              data.data.map((beneficio) => (
-                <tr key={beneficio.id}>
-                  <td className='px-4 py-2 border-b'>{beneficio.nombre}</td>
-                  <td className='px-4 py-2 border-b'>
-                    {beneficio.descripcion}
+          <tbody className="divide-y divide-gray-200">
+            {data?.data && data.data.length > 0 ? (
+              data.data.map((vehiculo) => (
+                <tr
+                  key={vehiculo.id}
+                  className="hover:bg-gray-100 transition-colors"
+                >
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                    {vehiculo.nombre}
                   </td>
-                  <td className='px-4 py-2 border-b'>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                    {vehiculo.descripcion}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 flex items-center justify-center gap-4">
                     <button
-                      onClick={() => handleDelete(beneficio.id)}
-                      className='text-red-500 hover:text-red-700'>
+                      onClick={() => handleEditClick(vehiculo)}
+                      className="text-indigo-600 hover:text-indigo-800 transition-colors"
+                    >
+                      <FaEdit />
+                    </button>
+                    <button
+                      onClick={() => handleDelete(vehiculo.id)}
+                      className="text-red-600 hover:text-red-800 transition-colors"
+                    >
                       <FaTrash />
                     </button>
                   </td>
@@ -186,8 +194,11 @@ const CategoriaVehiculos = () => {
               ))
             ) : (
               <tr>
-                <td className='px-4 py-2 border-b' colSpan='3'>
-                  No hay registros
+                <td
+                  className="px-6 py-4 text-center text-sm text-gray-500"
+                  colSpan="3"
+                >
+                  No hay registros.
                 </td>
               </tr>
             )}
