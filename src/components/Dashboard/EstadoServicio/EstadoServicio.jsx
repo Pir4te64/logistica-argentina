@@ -1,7 +1,7 @@
 // components/BeneficioRepartidor.jsx
 import React from "react";
 import { FaPlus, FaTrash, FaEdit } from "react-icons/fa";
-import useEstadoServicio from "./useEstadoServicio";
+import useEstadoServicio from "@/components/Dashboard/EstadoServicio/useEstadoServicio";
 
 const BeneficioRepartidor = () => {
   const {

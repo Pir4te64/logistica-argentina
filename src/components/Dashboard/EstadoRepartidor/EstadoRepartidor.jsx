@@ -1,7 +1,7 @@
 // components/CategoriaVehiculos.jsx
 import React from "react";
 import { FaPlus, FaTrash, FaEdit } from "react-icons/fa";
-import useEstadoRepartidor from "./useEstadoRepartidor";
+import useEstadoRepartidor from "@/components/Dashboard/EstadoRepartidor/useEstadoRepartidor";
 
 const EstadoRepartidor = () => {
   const {

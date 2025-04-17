@@ -10,4 +10,5 @@ export const API_URL = {
   ESTADO_SERVICIO: `${BASE_URL}/api/estado-servicio`,
   ESTADO_REPARTIDOR: `${BASE_URL}/api/estado-repartidor`,
   TIPO_ARCHIVOS: `${BASE_URL}/api/tipo-archivos`,
+  RESALTADOR_ANUNCIO: `${BASE_URL}/api/resaltador-anuncio`,
 };

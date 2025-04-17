@@ -1,7 +1,7 @@
 // components/CategoriaVehiculos.jsx
 import React from "react";
 import { FaPlus, FaTrash, FaEdit } from "react-icons/fa";
-import useTipoArchivos from "./useTipoArchivos";
+import useTipoArchivos from "@/components/Dashboard/TipoArchivos/useTipoArchivos";
 
 const TipoArchivo = () => {
   const {

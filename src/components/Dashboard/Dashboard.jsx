@@ -4,9 +4,10 @@ import BeneficioRepartidor from "@/components/Dashboard/Beneficios/BeneficioRepa
 import CategoriaVehiculos from "@/components/Dashboard/Categoria/CategoriaVehiculos";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import Logo from "@/assets/Logo.png";
-import EstadoServicio from "./EstadoServicio/EstadoServicio";
-import EstadoRepartidor from "./EstadoRepartidor/EstadoRepartidor";
-import TipoArchivo from "./TipoArchivos/TipoArchivo";
+import EstadoServicio from "@/components/Dashboard/EstadoServicio/EstadoServicio";
+import EstadoRepartidor from "@/components/Dashboard/EstadoRepartidor/EstadoRepartidor";
+import TipoArchivo from "@/components/Dashboard/TipoArchivos/TipoArchivo";
+import ResaltarAnuncio from "@/components/Dashboard/ResaltarAnuncio/ResaltarAnuncio";
 
 const Dashboard = () => {
   const [activeView, setActiveView] = useState("default");
@@ -32,6 +33,8 @@ const Dashboard = () => {
         return <EstadoRepartidor />;
       case "tipoArchivo":
         return <TipoArchivo />;
+      case "resaltadoAnuncio":
+        return <ResaltarAnuncio />;
       default:
         return (
           <div className='flex items-center justify-center h-full'>
@@ -71,6 +74,11 @@ const Dashboard = () => {
               onClick={() => handleViewChange("tipoArchivo")}
               className='block w-full mb-4 px-4 py-2 bg-custom-dark text-white rounded hover:bg-custom-gray transition-colors'>
               Tipo Archivo
+            </button>
+            <button
+              onClick={() => handleViewChange("resaltadoAnuncio")}
+              className='block w-full mb-4 px-4 py-2 bg-custom-dark text-white rounded hover:bg-custom-gray transition-colors'>
+              Resaltado Anuncio
             </button>
           </aside>
         )}
