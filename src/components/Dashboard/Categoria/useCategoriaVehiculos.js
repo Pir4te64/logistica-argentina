@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
-import { API_URL } from "../../Api/Api";
+import { API_URL } from "@/Api/Api";
 
 const useCategoriaVehiculos = () => {
   // Estados generales
@@ -32,7 +32,6 @@ const useCategoriaVehiculos = () => {
       const response = await axios.get(API_URL.CATEGORIA_VEHICULOS, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      console.log("Respuesta de la API:", response.data);
       setData(response.data);
     } catch (err) {
       console.error("Error al obtener los datos:", err);
@@ -106,39 +105,46 @@ const useCategoriaVehiculos = () => {
     setEditFormData({ ...editFormData, [e.target.name]: e.target.value });
   };
 
-  const handleEditSubmit = async (e) => {
-    e.preventDefault();
-    setEditing(true);
-    setEditError(null);
-    const token = localStorage.getItem("token");
+ // --------------------------------------------
+// 3. Editar vehículo (PUT)
+// --------------------------------------------
+const handleEditSubmit = async (e) => {
+  e.preventDefault();
+  setEditing(true);
+  setEditError(null);
+  const token = localStorage.getItem("token");
 
-    try {
-      // Se envía el id dentro del body junto con el resto de los datos
-      const response = await axios.put(
-        API_URL.CATEGORIA_VEHICULOS,
-        { id: editId, ...editFormData },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      const updatedItem = response.data.data;
-      const updatedList = data.data.map((item) =>
-        item.id === editId ? updatedItem : item
-      );
+  try {
+    // Enviamos el id como parte de la ruta, y solo el form data en el body
+    const response = await axios.put(
+      `${API_URL.CATEGORIA_VEHICULOS}/${editId}`,
+      editFormData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
-      setData({ ...data, data: updatedList });
-      setIsEditing(false);
-      setEditId(null);
-    } catch (err) {
-      console.error("Error al editar el vehículo:", err);
-      setEditError(err);
-    } finally {
-      setEditing(false);
-    }
-  };
+    // Actualizamos la lista con el ítem modificado
+    const updatedItem = response.data.data;
+    const updatedList = data.data.map((item) =>
+      item.id === editId ? updatedItem : item
+    );
+    setData({ ...data, data: updatedList });
+
+    // Limpiamos estado de edición
+    setIsEditing(false);
+    setEditId(null);
+  } catch (err) {
+    console.error("Error al editar el vehículo:", err);
+    setEditError(err);
+  } finally {
+    setEditing(false);
+  }
+};
+
 
   // --------------------------------------------
   // 4. Eliminar vehículo (DELETE)

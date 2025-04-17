@@ -109,39 +109,44 @@ const useBeneficioRepartidor = () => {
     setEditFormData({ ...editFormData, [e.target.name]: e.target.value });
   };
 
-  const handleEditSubmit = async (e) => {
-    e.preventDefault();
-    setEditing(true);
-    setEditError(null);
-    const token = localStorage.getItem("token");
+ // 3. EDITAR (PUT)
+const handleEditSubmit = async (e) => {
+  e.preventDefault();
+  setEditing(true);
+  setEditError(null);
+  const token = localStorage.getItem("token");
 
-    try {
-      // Enviamos el id dentro del body junto con los datos de edición
-      const response = await axios.put(
-        API_URL.BENEFICIO_REPARTIDOR,
-        { id: editId, ...editFormData },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      // Asumimos que la API devuelve en response.data.data el beneficio actualizado
-      const updatedBeneficio = response.data.data;
-      const updatedList = data.data.map((item) =>
-        item.id === editId ? updatedBeneficio : item
-      );
-      setData({ ...data, data: updatedList });
-      setIsEditing(false);
-      setEditId(null);
-    } catch (err) {
-      console.error("Error al editar el beneficio:", err);
-      setEditError(err);
-    } finally {
-      setEditing(false);
-    }
-  };
+  try {
+    // 🔸 id va como parte de la ruta, NO en el body
+    const response = await axios.put(
+      `${API_URL.BENEFICIO_REPARTIDOR}/${editId}`,
+      editFormData,                                   // solo los campos a editar
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    // La API devuelve el beneficio actualizado en response.data.data
+    const updatedBeneficio = response.data.data;
+    const updatedList = data.data.map((item) =>
+      item.id === editId ? updatedBeneficio : item
+    );
+    setData({ ...data, data: updatedList });
+
+    // Restablecer estados
+    setIsEditing(false);
+    setEditId(null);
+  } catch (err) {
+    console.error("Error al editar el beneficio:", err);
+    setEditError(err);
+  } finally {
+    setEditing(false);
+  }
+};
+
 
   // =============================================
   // 4. ELIMINAR (DELETE)

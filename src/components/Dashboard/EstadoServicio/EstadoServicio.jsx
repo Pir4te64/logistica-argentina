@@ -1,9 +1,9 @@
-// components/CategoriaVehiculos.jsx
+// components/BeneficioRepartidor.jsx
 import React from "react";
 import { FaPlus, FaTrash, FaEdit } from "react-icons/fa";
-import useCategoriaVehiculos from "./useCategoriaVehiculos";
+import useEstadoServicio from "./useEstadoServicio";
 
-const CategoriaVehiculos = () => {
+const BeneficioRepartidor = () => {
   const {
     data,
     loading,
@@ -22,14 +22,11 @@ const CategoriaVehiculos = () => {
     handleEditFormChange,
     handleEditSubmit,
     handleDelete,
-  } = useCategoriaVehiculos();
+  } = useEstadoServicio();
 
   if (loading) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-extrabold text-gray-800 mb-6">
-          Categorías de Vehículos
-        </h1>
         <p className="text-gray-600">Cargando...</p>
       </div>
     );
@@ -46,21 +43,27 @@ const CategoriaVehiculos = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-extrabold text-gray-800 mb-6">
-        Categorías de Vehículos
+        Estado Servicio
       </h1>
 
-      {/* Encabezado y botón para abrir el formulario de creación */}
+      {/* Botón para abrir el formulario de creación */}
       <div className="flex flex-col sm:flex-row items-center justify-between mb-6">
         <button
           onClick={() => setShowForm(!showForm)}
-          className="flex items-center gap-2 px-5 py-2 bg-custom-blue text-white rounded-md shadow hover:bg-custom-blue-medium transition-colors"
+          disabled={isEditing}
+          className={`flex items-center gap-2 px-5 py-2 rounded-md shadow-md transition-colors
+            ${
+              isEditing
+                ? "bg-gray-300 text-gray-600 cursor-not-allowed"
+                : "bg-custom-blue text-white hover:bg-custom-blue-medium"
+            }`}
         >
-          <FaPlus /> Agregar Vehículo
+          <FaPlus /> Agregar Servicio
         </button>
       </div>
 
-      {/* Formulario para agregar un nuevo vehículo */}
-      {showForm && (
+      {/* Formulario para crear un nuevo servicio (solo si NO estoy editando) */}
+      {showForm && !isEditing && (
         <form
           onSubmit={handleFormSubmit}
           className="mb-6 p-6 bg-white rounded-lg shadow-lg border border-gray-200"
@@ -92,7 +95,7 @@ const CategoriaVehiculos = () => {
           </div>
           {createError && (
             <p className="mb-4 text-sm text-red-600">
-              Error al crear el vehículo.
+              Error al crear el servicio.
             </p>
           )}
           <button
@@ -100,12 +103,12 @@ const CategoriaVehiculos = () => {
             disabled={creating}
             className="w-full sm:w-auto px-5 py-2 bg-custom-blue text-white rounded-md shadow hover:bg-custom-blue-medium transition-colors"
           >
-            {creating ? "Creando..." : "Crear Vehículo"}
+            {creating ? "Creando..." : "Crear Estado Servicio"}
           </button>
         </form>
       )}
 
-      {/* Formulario para editar un vehículo existente */}
+      {/* Formulario para editar un servicio existente */}
       {isEditing && (
         <form
           onSubmit={handleEditSubmit}
@@ -136,18 +139,17 @@ const CategoriaVehiculos = () => {
               required
             />
           </div>
-       
           <button
             type="submit"
             disabled={editing}
             className="w-full sm:w-auto px-5 py-2 bg-custom-blue text-white rounded-md shadow hover:bg-custom-blue-medium transition-colors"
           >
-            {editing ? "Actualizando..." : "Actualizar Vehículo"}
+            {editing ? "Guardando..." : "Guardar Cambios"}
           </button>
         </form>
       )}
 
-      {/* Tabla que lista los vehículos */}
+      {/* Tabla que lista los servicios */}
       <div className="overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200 bg-white shadow rounded-lg">
           <thead className="bg-gray-50">
@@ -165,26 +167,23 @@ const CategoriaVehiculos = () => {
           </thead>
           <tbody className="divide-y divide-gray-200">
             {data?.data && data.data.length > 0 ? (
-              data.data.map((vehiculo) => (
-                <tr
-                  key={vehiculo.id}
-                  className="hover:bg-gray-100 transition-colors"
-                >
+              data.data.map((item) => (
+                <tr key={item.id} className="hover:bg-gray-100 transition-colors">
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                    {vehiculo.nombre}
+                    {item.nombre}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                    {vehiculo.descripcion}
+                    {item.descripcion}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 flex items-center justify-center gap-4">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 flex items-center justify-center gap-3">
                     <button
-                      onClick={() => handleEditClick(vehiculo)}
+                      onClick={() => handleEditClick(item)}
                       className="text-indigo-600 hover:text-indigo-800 transition-colors"
                     >
                       <FaEdit />
                     </button>
                     <button
-                      onClick={() => handleDelete(vehiculo.id)}
+                      onClick={() => handleDelete(item.id)}
                       className="text-red-600 hover:text-red-800 transition-colors"
                     >
                       <FaTrash />
@@ -209,4 +208,4 @@ const CategoriaVehiculos = () => {
   );
 };
 
-export default CategoriaVehiculos;
+export default BeneficioRepartidor;

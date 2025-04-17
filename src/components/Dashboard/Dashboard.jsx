@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import Layout from "@/components/Layout";
-import BeneficioRepartidor from "@/components/Dashboard/BeneficioRepartidor";
-import CategoriaVehiculos from "@/components/Dashboard/CategoriaVehiculos";
+import BeneficioRepartidor from "@/components/Dashboard/Beneficios/BeneficioRepartidor";
+import CategoriaVehiculos from "@/components/Dashboard/Categoria/CategoriaVehiculos";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import Logo from "@/assets/Logo.png";
+import EstadoServicio from "./EstadoServicio/EstadoServicio";
+import EstadoRepartidor from "./EstadoRepartidor/EstadoRepartidor";
+import TipoArchivo from "./TipoArchivos/TipoArchivo";
 
 const Dashboard = () => {
   const [activeView, setActiveView] = useState("default");
@@ -23,6 +26,12 @@ const Dashboard = () => {
         return <BeneficioRepartidor />;
       case "categoriaVehiculos":
         return <CategoriaVehiculos />;
+      case "estadoServicio":
+        return <EstadoServicio />;
+      case "estadoRepartidor":
+        return <EstadoRepartidor />;
+      case "tipoArchivo":
+        return <TipoArchivo />;
       default:
         return (
           <div className='flex items-center justify-center h-full'>
@@ -48,10 +57,25 @@ const Dashboard = () => {
               className='block w-full mb-4 px-4 py-2 bg-custom-dark text-white rounded hover:bg-custom-gray transition-colors'>
               Categoria Vehiculos
             </button>
+            <button
+              onClick={() => handleViewChange("estadoServicio")}
+              className='block w-full mb-4 px-4 py-2 bg-custom-dark text-white rounded hover:bg-custom-gray transition-colors'>
+              Estado Servicio
+            </button>
+            <button
+              onClick={() => handleViewChange("estadoRepartidor")}
+              className='block w-full mb-4 px-4 py-2 bg-custom-dark text-white rounded hover:bg-custom-gray transition-colors'>
+              Estado Repartidor
+            </button>
+            <button
+              onClick={() => handleViewChange("tipoArchivo")}
+              className='block w-full mb-4 px-4 py-2 bg-custom-dark text-white rounded hover:bg-custom-gray transition-colors'>
+              Tipo Archivo
+            </button>
           </aside>
         )}
 
-        <main className='flex-1 p-5'>
+        <main className='flex-1 p-5 overflow-auto'>
           {/* Botón para abrir o cerrar el menú, visible solo en móviles */}
           <div className='sm:hidden mb-4'>
             <button
