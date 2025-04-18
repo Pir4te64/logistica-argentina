@@ -1,4 +1,3 @@
-// hooks/useBeneficioRepartidor.js
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -43,7 +42,6 @@ const useBeneficioRepartidor = () => {
 
   useEffect(() => {
     fetchData();
-    // eslint-disable-next-line
   }, []);
 
   // =============================================

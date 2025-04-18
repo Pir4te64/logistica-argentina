@@ -43,7 +43,6 @@ const useTipoArchivos = () => {
 
   useEffect(() => {
     fetchData();
-    // eslint-disable-next-line
   }, []);
 
   // --------------------------------------------

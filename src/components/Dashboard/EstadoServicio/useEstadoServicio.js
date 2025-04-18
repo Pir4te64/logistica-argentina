@@ -42,7 +42,6 @@ const useEstadoServicio = () => {
 
   useEffect(() => {
     fetchData();
-    // eslint-disable-next-line
   }, []);
 
   // =============================================

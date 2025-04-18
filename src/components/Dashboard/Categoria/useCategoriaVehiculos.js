@@ -43,7 +43,6 @@ const useCategoriaVehiculos = () => {
 
   useEffect(() => {
     fetchData();
-    // eslint-disable-next-line
   }, []);
 
   // --------------------------------------------

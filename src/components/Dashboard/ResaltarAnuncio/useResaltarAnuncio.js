@@ -43,7 +43,6 @@ const useResaltarAnuncio = () => {
 
   useEffect(() => {
     fetchData();
-    // eslint-disable-next-line
   }, []);
 
   // --------------------------------------------

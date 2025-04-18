@@ -1,13 +1,7 @@
 import React from "react";
 
-/**
- * Componente reutilizable para mostrar una tarjeta con ícono, título y descripción.
- * @param {object} props - Propiedades del componente.
- * @param {React.ElementType} props.icon - El ícono a mostrar (importado de react-icons).
- * @param {string} props.title - El título de la tarjeta.
- * @param {string} props.description - El texto descriptivo o detalles de la tarjeta.
- */
-const FormularioCard = ({ icon: Icon, title, description }) => {
+
+const FormularioCard = ({ Icon, title, description }) => {
   return (
     <div className="bg-custom-red text-white p-2 md:p-4 rounded-2xl w-full md:w-1/3 flex flex-col justify-start h-48 md:h-64">
       {/* Ícono */}

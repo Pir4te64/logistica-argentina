@@ -43,7 +43,6 @@ const useEstadoRepartidor = () => {
 
   useEffect(() => {
     fetchData();
-    // eslint-disable-next-line
   }, []);
 
   // --------------------------------------------
