@@ -177,7 +177,7 @@ const ServicioAnuncioItem = ({ servicio, index, onUpdated }) => {
                         <button
                             onClick={handleDelete}
                             disabled={deleting}
-                            className="text-red-600 hover:text-red-800 flex items-center gap-1 disabled:opacity-60"
+                            className="text-custom-red hover:text-custom-red/80 flex items-center gap-1 disabled:opacity-60"
                         >
                             <FaTrash /> {deleting ? "Eliminando…" : "Eliminar"}
                         </button>
@@ -187,7 +187,7 @@ const ServicioAnuncioItem = ({ servicio, index, onUpdated }) => {
                         <button
                             onClick={handleSave}
                             disabled={saving}
-                            className="bg-green-600 text-white px-2 py-1 rounded flex items-center gap-1 disabled:opacity-60"
+                            className="bg-custom-blue text-white px-2 py-1 rounded flex items-center gap-1 disabled:opacity-60"
                         >
                             <FaCheck size={14} /> {saving ? "Guardando…" : "Guardar"}
                         </button>
