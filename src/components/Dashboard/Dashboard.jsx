@@ -8,6 +8,8 @@ import EstadoServicio from "@/components/Dashboard/EstadoServicio/EstadoServicio
 import EstadoRepartidor from "@/components/Dashboard/EstadoRepartidor/EstadoRepartidor";
 import TipoArchivo from "@/components/Dashboard/TipoArchivos/TipoArchivo";
 import ResaltarAnuncio from "@/components/Dashboard/ResaltarAnuncio/ResaltarAnuncio";
+import ServicioAnuncio from "@/components/Dashboard/ServicioAnuncio/ServicioAnuncio";
+import Sidebar from "@/components/Dashboard/Dashboard/Sidebar";
 
 const Dashboard = () => {
   const [activeView, setActiveView] = useState("default");
@@ -35,6 +37,8 @@ const Dashboard = () => {
         return <TipoArchivo />;
       case "resaltadoAnuncio":
         return <ResaltarAnuncio />;
+      case "servicioAnuncio":
+        return <ServicioAnuncio />;
       default:
         return (
           <div className='flex items-center justify-center h-full'>
@@ -48,40 +52,7 @@ const Dashboard = () => {
     <Layout>
       <div className='flex h-screen'>
         {/* Sidebar: se muestra siempre en pantallas grandes; en móviles se controla con sidebarOpen */}
-        {sidebarOpen && (
-          <aside className='w-64 bg-gray-100 p-5 border-r border-gray-300'>
-            <button
-              onClick={() => handleViewChange("beneficioRepartidor")}
-              className='block w-full mb-4 px-4 py-2 bg-custom-dark text-white rounded hover:bg-custom-gray transition-colors'>
-              Beneficio repartidor
-            </button>
-            <button
-              onClick={() => handleViewChange("categoriaVehiculos")}
-              className='block w-full mb-4 px-4 py-2 bg-custom-dark text-white rounded hover:bg-custom-gray transition-colors'>
-              Categoria Vehiculos
-            </button>
-            <button
-              onClick={() => handleViewChange("estadoServicio")}
-              className='block w-full mb-4 px-4 py-2 bg-custom-dark text-white rounded hover:bg-custom-gray transition-colors'>
-              Estado Servicio
-            </button>
-            <button
-              onClick={() => handleViewChange("estadoRepartidor")}
-              className='block w-full mb-4 px-4 py-2 bg-custom-dark text-white rounded hover:bg-custom-gray transition-colors'>
-              Estado Repartidor
-            </button>
-            <button
-              onClick={() => handleViewChange("tipoArchivo")}
-              className='block w-full mb-4 px-4 py-2 bg-custom-dark text-white rounded hover:bg-custom-gray transition-colors'>
-              Tipo Archivo
-            </button>
-            <button
-              onClick={() => handleViewChange("resaltadoAnuncio")}
-              className='block w-full mb-4 px-4 py-2 bg-custom-dark text-white rounded hover:bg-custom-gray transition-colors'>
-              Resaltado Anuncio
-            </button>
-          </aside>
-        )}
+        <Sidebar sidebarOpen={sidebarOpen} handleViewChange={handleViewChange} />
 
         <main className='flex-1 p-5 overflow-auto'>
           {/* Botón para abrir o cerrar el menú, visible solo en móviles */}
