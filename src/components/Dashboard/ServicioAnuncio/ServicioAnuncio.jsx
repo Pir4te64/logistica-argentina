@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { useServicioAnuncio } from './useServicioAnuncio';
 import ServicioAnuncioItem from './ServicioAnuncioItem';
 import ServicioAnuncioForm from './ServicioAnuncioForm';
+import { FaChevronDown } from 'react-icons/fa';
 
 const ServicioAnuncio = () => {
-    const { servicios, loading, error } = useServicioAnuncio();
+    const { servicios, loading, error, refetch } = useServicioAnuncio();
     const [showForm, setShowForm] = useState(false);
-    console.log(servicios);
 
     if (loading) return <p>Cargando servicios…</p>;
     if (error) return <p>Error cargando servicios.</p>;
@@ -14,7 +14,6 @@ const ServicioAnuncio = () => {
 
     return (
         <div className="space-y-8">
-            {/* Botón para alternar entre lista y formulario */}
             <div className="flex justify-end">
                 <button
                     onClick={() => setShowForm(prev => !prev)}
@@ -24,16 +23,38 @@ const ServicioAnuncio = () => {
                 </button>
             </div>
 
-            {/* Mostrar formulario o lista de servicios */}
             {showForm ? (
                 <ServicioAnuncioForm onSubmit={() => setShowForm(false)} />
             ) : (
                 servicios.map((servicio, index) => (
-                    <ServicioAnuncioItem
-                        key={servicio.id ?? index}
-                        servicio={servicio}
-                        index={index}
-                    />
+                    <details
+                        key={servicio.id}
+                        className="group border rounded-lg bg-white shadow-sm transition-all
+                       [&[open]]:shadow-md"
+                    >
+                        <summary
+                            className="flex w-full items-center justify-between gap-2
+                         cursor-pointer select-none p-4
+                         text-gray-700 font-medium
+                         marker:hidden"
+                        >
+                            <span className="text-base md:text-lg">
+                                {servicio.titulo ?? `Servicio #${index + 1}`}
+                            </span>
+                            <FaChevronDown
+                                className="w-5 h-5 shrink-0 transition-transform duration-300
+                           group-open:-rotate-180"
+                            />
+                        </summary>
+
+                        <div className="p-4 border-t text-sm text-gray-600">
+                            <ServicioAnuncioItem
+                                servicio={servicio}
+                                index={index}
+                                onUpdated={refetch}
+                            />
+                        </div>
+                    </details>
                 ))
             )}
         </div>

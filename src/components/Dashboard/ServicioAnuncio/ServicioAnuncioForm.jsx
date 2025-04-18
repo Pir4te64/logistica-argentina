@@ -28,7 +28,7 @@ const ServicioAnuncioForm = ({ onSubmit }) => {
         handleFileChange,
         handleSubmit,
     } = useServicioAnuncioForm({ onSubmit });
-
+    const today = new Date().toISOString().split("T")[0];
     return (
         <form
             onSubmit={handleSubmit}
@@ -54,6 +54,7 @@ const ServicioAnuncioForm = ({ onSubmit }) => {
                         name="fecha_inicio_servicio"
                         value={form.fecha_inicio_servicio}
                         onChange={handleChange}
+                        min={today}
                         required
                     />
 
