@@ -1,10 +1,11 @@
 // src/components/Dashboard/ServicioAnuncio/ServicioAnuncioItemEdit.jsx
-import React from "react";
+import React from 'react';
+import useBeneficioRepartidor from '../Beneficios/useBeneficioRepartidor';
 
-// Recibimos todo lo necesario como props:
 const ServicioAnuncioItemEdit = ({
     form,
     handleChange,
+    handleBeneficiosChange,   // <--- nuevo
     categorias,
     resaltadores,
     estados,
@@ -14,18 +15,20 @@ const ServicioAnuncioItemEdit = ({
     EDITABLE_FIELDS,
     labelize,
 }) => {
+    // cargo opciones de beneficios
+    const { data: benResp, loading: loadingBen } = useBeneficioRepartidor();
+    const beneficiosOpc = benResp?.data || [];
+
     return (
         <>
-            {/* 1) Los campos editables */}
+            {/* 1) Campos editables */}
             <dl className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {Object.entries(form)
-                    // Nos quedamos solo con los que estén en EDITABLE_FIELDS
                     .filter(([k]) => EDITABLE_FIELDS[k])
                     .map(([k, v]) => {
                         const type = EDITABLE_FIELDS[k];
 
-                        // checkbox
-                        if (type === "checkbox") {
+                        if (type === 'checkbox') {
                             return (
                                 <div key={k} className="flex flex-col">
                                     <label className="text-sm text-gray-500 mb-1">
@@ -42,8 +45,7 @@ const ServicioAnuncioItemEdit = ({
                             );
                         }
 
-                        // select categoría
-                        if (type === "select_categoria") {
+                        if (type === 'select_categoria') {
                             return (
                                 <div key={k} className="flex flex-col">
                                     <label className="text-sm text-gray-500 mb-1">
@@ -51,23 +53,20 @@ const ServicioAnuncioItemEdit = ({
                                     </label>
                                     <select
                                         name="categoria_vehiculo_id"
-                                        value={form.categoria_vehiculo_id || ""}
+                                        value={form.categoria_vehiculo_id || ''}
                                         onChange={handleChange}
                                         className="p-2 border rounded"
                                     >
-                                        <option value="">Selecciona...</option>
-                                        {categorias.map((c) => (
-                                            <option key={c.id} value={c.id}>
-                                                {c.nombre}
-                                            </option>
+                                        <option value=''>Selecciona...</option>
+                                        {categorias.map(c => (
+                                            <option key={c.id} value={c.id}>{c.nombre}</option>
                                         ))}
                                     </select>
                                 </div>
                             );
                         }
 
-                        // select resaltador
-                        if (type === "select_resaltador") {
+                        if (type === 'select_resaltador') {
                             return (
                                 <div key={k} className="flex flex-col">
                                     <label className="text-sm text-gray-500 mb-1">
@@ -75,23 +74,20 @@ const ServicioAnuncioItemEdit = ({
                                     </label>
                                     <select
                                         name="resaltador_anuncio_id"
-                                        value={form.resaltador_anuncio_id || ""}
+                                        value={form.resaltador_anuncio_id || ''}
                                         onChange={handleChange}
                                         className="p-2 border rounded"
                                     >
-                                        <option value="">Selecciona...</option>
-                                        {resaltadores.map((r) => (
-                                            <option key={r.id} value={r.id}>
-                                                {r.nombre}
-                                            </option>
+                                        <option value=''>Selecciona...</option>
+                                        {resaltadores.map(r => (
+                                            <option key={r.id} value={r.id}>{r.nombre}</option>
                                         ))}
                                     </select>
                                 </div>
                             );
                         }
 
-                        // select estado
-                        if (type === "select_estado") {
+                        if (type === 'select_estado') {
                             return (
                                 <div key={k} className="flex flex-col">
                                     <label className="text-sm text-gray-500 mb-1">
@@ -99,15 +95,13 @@ const ServicioAnuncioItemEdit = ({
                                     </label>
                                     <select
                                         name="estado_servicio_id"
-                                        value={form.estado_servicio_id || ""}
+                                        value={form.estado_servicio_id || ''}
                                         onChange={handleChange}
                                         className="p-2 border rounded"
                                     >
-                                        <option value="">Selecciona...</option>
-                                        {estados.map((e) => (
-                                            <option key={e.id} value={e.id}>
-                                                {e.nombre}
-                                            </option>
+                                        <option value=''>Selecciona...</option>
+                                        {estados.map(e => (
+                                            <option key={e.id} value={e.id}>{e.nombre}</option>
                                         ))}
                                     </select>
                                 </div>
@@ -123,13 +117,36 @@ const ServicioAnuncioItemEdit = ({
                                 <input
                                     type={type}
                                     name={k}
-                                    value={form[k] ?? ""}
+                                    value={form[k] ?? ''}
                                     onChange={handleChange}
                                     className="p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200"
                                 />
                             </div>
                         );
                     })}
+
+                {/* Nuevo: select múltiple para Beneficios */}
+                <div className="col-span-full flex flex-col">
+                    <label className="text-sm text-gray-500 mb-1">Beneficios</label>
+                    {loadingBen ? (
+                        <p>Cargando beneficios…</p>
+                    ) : (
+                        <select
+                            multiple
+                            name="beneficio_repartidor_ids"
+                            value={form.beneficio_repartidor_ids}
+                            onChange={handleBeneficiosChange}
+                            className="p-2 border rounded h-32"
+                        >
+                            {beneficiosOpc.map(b => (
+                                <option key={b.id} value={b.id}>{b.nombre}</option>
+                            ))}
+                        </select>
+                    )}
+                    <p className="text-sm text-gray-500 mt-1">
+                        (Mantén presionada Ctrl o Cmd para seleccionar varios)
+                    </p>
+                </div>
             </dl>
 
             {/* 2) Edición de Campos Extra */}
@@ -143,8 +160,8 @@ const ServicioAnuncioItemEdit = ({
                             type="text"
                             placeholder="Nombre"
                             value={c.nombre}
-                            onChange={(e) =>
-                                handleExtraChange(i, "nombre", e.target.value)
+                            onChange={e =>
+                                handleExtraChange(i, 'nombre', e.target.value)
                             }
                             className="flex-1 p-2 border rounded"
                         />
@@ -152,8 +169,8 @@ const ServicioAnuncioItemEdit = ({
                             type="text"
                             placeholder="Valor"
                             value={c.valor}
-                            onChange={(e) =>
-                                handleExtraChange(i, "valor", e.target.value)
+                            onChange={e =>
+                                handleExtraChange(i, 'valor', e.target.value)
                             }
                             className="flex-1 p-2 border rounded"
                         />

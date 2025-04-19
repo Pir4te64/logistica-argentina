@@ -2,22 +2,31 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { API_URL } from '@/Api/Api';
-import Swal from 'sweetalert2';
 
 export default function useServicioAnuncioItem(servicio, onUpdated) {
-    const [form, setForm] = useState(servicio);
+    // Inicializo form incluyendo los IDs de los beneficios actuales
+    const [form, setForm] = useState({
+        ...servicio,
+        beneficio_repartidor_ids: servicio.beneficios?.map(b => b.id) || []
+    });
     const [editMode, setEditMode] = useState(false);
     const [saving, setSaving] = useState(false);
     const [deleting, setDeleting] = useState(false);
     const [error, setError] = useState('');
 
-    // Genérico para inputs y checkboxes
+    // inputs básicos y checkboxes
     const handleChange = e => {
         const { name, type, value, checked } = e.target;
         setForm(f => ({
             ...f,
             [name]: type === 'checkbox' ? (checked ? 1 : 0) : value
         }));
+    };
+
+    // multi‑select Beneficios
+    const handleBeneficiosChange = e => {
+        const opts = Array.from(e.target.selectedOptions, o => Number(o.value));
+        setForm(f => ({ ...f, beneficio_repartidor_ids: opts }));
     };
 
     // Campos extra
@@ -41,7 +50,10 @@ export default function useServicioAnuncioItem(servicio, onUpdated) {
         }));
 
     const handleCancel = () => {
-        setForm(servicio);
+        setForm({
+            ...servicio,
+            beneficio_repartidor_ids: servicio.beneficios?.map(b => b.id) || []
+        });
         setEditMode(false);
         setError('');
     };
@@ -66,24 +78,7 @@ export default function useServicioAnuncioItem(servicio, onUpdated) {
     };
 
     const handleDelete = async () => {
-        // 1) Mostramos el diálogo de confirmación
-        const result = await Swal.fire({
-            title: '¿Estás seguro?',
-            text: 'Esta acción eliminará el servicio permanentemente.',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Sí, eliminar',
-            cancelButtonText: 'Cancelar'
-        });
-
-        // 2) Si el usuario no confirmó, salimos sin hacer nada
-        if (!result.isConfirmed) {
-            return;
-        }
-
-        // 3) Continuamos con la eliminación
+        if (!window.confirm('¿Seguro querés eliminar este servicio?')) return;
         setDeleting(true);
         setError('');
         try {
@@ -92,22 +87,9 @@ export default function useServicioAnuncioItem(servicio, onUpdated) {
                 `${API_URL.SERVICIO_ANUNCIO}/${servicio.id}`,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
-            // 4) Informamos éxito y refrescamos la lista
-            await Swal.fire({
-                title: 'Eliminado',
-                text: 'El servicio ha sido eliminado correctamente.',
-                icon: 'success',
-                confirmButtonText: 'Aceptar'
-            });
             onUpdated();
         } catch {
             setError('No se pudo eliminar. Intenta nuevamente.');
-            Swal.fire({
-                title: 'Error',
-                text: 'No se pudo eliminar. Intenta nuevamente.',
-                icon: 'error',
-                confirmButtonText: 'Aceptar'
-            });
         } finally {
             setDeleting(false);
         }
@@ -121,11 +103,12 @@ export default function useServicioAnuncioItem(servicio, onUpdated) {
         error,
         setEditMode,
         handleChange,
+        handleBeneficiosChange, // <--- expongo el handler
         handleExtraChange,
         addExtra,
         removeExtra,
         handleCancel,
         handleSave,
-        handleDelete
+        handleDelete,
     };
 }

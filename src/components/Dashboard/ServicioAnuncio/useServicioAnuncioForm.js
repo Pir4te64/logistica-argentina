@@ -172,6 +172,7 @@ const useServicioAnuncioForm = ({ onSubmit }) => {
       campos_extra: form.camposExtra,
       imagenes: imagenUrls                  // URLs de las imágenes
     };
+    console.log('Payload:', payload);
 
     // 4) POST creación
     try {
@@ -183,7 +184,7 @@ const useServicioAnuncioForm = ({ onSubmit }) => {
         title: 'Servicio creado',
         icon: 'success',
         confirmButtonText: 'Aceptar'
-      }).then(() => window.location.reload());
+      })
       onSubmit && onSubmit(resp.data);
     } catch (err) {
       console.error('Error:', err);
