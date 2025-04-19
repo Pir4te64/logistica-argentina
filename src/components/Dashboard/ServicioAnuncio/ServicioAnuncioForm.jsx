@@ -1,13 +1,8 @@
+// src/components/Dashboard/ServicioAnuncio/ServicioAnuncioForm.jsx
+import React, { useMemo } from "react";
+import { FaTimes } from "react-icons/fa";
 import useServicioAnuncioForm from "./useServicioAnuncioForm";
-
-const Section = ({ title, children, defaultOpen = false }) => (
-    <details open={defaultOpen} className="border rounded-lg">
-        <summary className="cursor-pointer select-none bg-gray-100 px-3 py-2 font-medium">
-            {title}
-        </summary>
-        <div className="space-y-4 px-3 py-4">{children}</div>
-    </details>
-);
+import { Section, InputText, Check, Select } from "./FormControls";
 
 const ServicioAnuncioForm = ({ onSubmit }) => {
     const {
@@ -26,14 +21,43 @@ const ServicioAnuncioForm = ({ onSubmit }) => {
         addCampoExtra,
         removeCampoExtra,
         handleFileChange,
+        removeImage,
         handleSubmit,
+        imagenes
     } = useServicioAnuncioForm({ onSubmit });
+
     const today = new Date().toISOString().split("T")[0];
+
+    const isFormValid = useMemo(() => {
+        return (
+            form.empresa.trim() !== "" &&
+            form.fecha_inicio_servicio !== "" &&
+            form.tarifa_total !== "" &&
+            form.direccion_recogida.trim() !== "" &&
+            form.direccion_entrega.trim() !== "" &&
+            form.telefono_contacto.trim() !== "" &&
+            form.ciudad.trim() !== "" &&
+            form.cantidad_productos !== "" &&
+            form.cantidad_vehiculos !== "" &&
+            form.peso !== "" &&
+            form.dimensiones.trim() !== "" &&
+            form.categoriaVehiculoId !== "" &&
+            form.beneficioIds.length > 0 &&
+            form.resaltarId !== "" &&
+            form.estadoServicioId !== ""
+        );
+    }, [form]);
+
+    const onFormSubmit = e => {
+        e.preventDefault();
+        if (!isFormValid) return;
+        handleSubmit(e);
+    };
+
     return (
         <form
-            onSubmit={handleSubmit}
-            className="w-full max-w-4xl mx-auto bg-white rounded shadow text-[15px] sm:text-base
-                 sm:p-4 md:p-6 space-y-6"
+            onSubmit={onFormSubmit}
+            className="w-full max-w-4xl mx-auto bg-white rounded shadow text-[15px] sm:text-base sm:p-4 md:p-6 space-y-6"
         >
             <h2 className="text-2xl font-semibold">Crear Servicio de Anuncio</h2>
 
@@ -45,9 +69,9 @@ const ServicioAnuncioForm = ({ onSubmit }) => {
                         name="empresa"
                         value={form.empresa}
                         onChange={handleChange}
+                        placeholder="Ingresa el nombre de la empresa"
                         required
                     />
-
                     <InputText
                         label="Fecha de inicio"
                         type="date"
@@ -55,9 +79,9 @@ const ServicioAnuncioForm = ({ onSubmit }) => {
                         value={form.fecha_inicio_servicio}
                         onChange={handleChange}
                         min={today}
+                        placeholder="Selecciona la fecha de inicio"
                         required
                     />
-
                     <InputText
                         label="Tarifa total"
                         type="number"
@@ -65,6 +89,7 @@ const ServicioAnuncioForm = ({ onSubmit }) => {
                         name="tarifa_total"
                         value={form.tarifa_total}
                         onChange={handleChange}
+                        placeholder="Ej. 1500.00"
                         required
                     />
                 </div>
@@ -78,6 +103,7 @@ const ServicioAnuncioForm = ({ onSubmit }) => {
                         name="periodo_nombre"
                         value={form.periodo_nombre}
                         onChange={handleChange}
+                        placeholder="Ej. Mensual"
                     />
                     <InputText
                         label="Valor periodo"
@@ -85,6 +111,7 @@ const ServicioAnuncioForm = ({ onSubmit }) => {
                         name="periodo_valor"
                         value={form.periodo_valor}
                         onChange={handleChange}
+                        placeholder="Ej. 12"
                     />
                 </div>
             </Section>
@@ -96,12 +123,14 @@ const ServicioAnuncioForm = ({ onSubmit }) => {
                     name="direccion_recogida"
                     value={form.direccion_recogida}
                     onChange={handleChange}
+                    placeholder="Calle, número, piso, depto."
                 />
                 <InputText
                     label="Dirección de entrega"
                     name="direccion_entrega"
                     value={form.direccion_entrega}
                     onChange={handleChange}
+                    placeholder="Calle, número, piso, depto."
                 />
             </Section>
 
@@ -113,12 +142,14 @@ const ServicioAnuncioForm = ({ onSubmit }) => {
                         name="telefono_contacto"
                         value={form.telefono_contacto}
                         onChange={handleChange}
+                        placeholder="Ej. +5493512345678"
                     />
                     <InputText
                         label="Ciudad"
                         name="ciudad"
                         value={form.ciudad}
                         onChange={handleChange}
+                        placeholder="Ej. Posadas"
                     />
                 </div>
             </Section>
@@ -132,6 +163,7 @@ const ServicioAnuncioForm = ({ onSubmit }) => {
                         name="cantidad_productos"
                         value={form.cantidad_productos}
                         onChange={handleChange}
+                        placeholder="Cantidad total de productos"
                     />
                     <InputText
                         label="Vehículos"
@@ -139,28 +171,40 @@ const ServicioAnuncioForm = ({ onSubmit }) => {
                         name="cantidad_vehiculos"
                         value={form.cantidad_vehiculos}
                         onChange={handleChange}
+                        placeholder="Número de vehículos"
                     />
                     <InputText
                         label="Peso (kg)"
                         name="peso"
                         value={form.peso}
                         onChange={handleChange}
+                        placeholder="Peso total en kg"
                     />
                 </div>
-
                 <InputText
                     label="Dimensiones"
                     name="dimensiones"
                     value={form.dimensiones}
                     onChange={handleChange}
+                    placeholder="Alto x Largo x Ancho"
                 />
             </Section>
 
             {/* 6. Características (flags) */}
             <Section title="Características del envío">
                 <div className="flex flex-wrap gap-4">
-                    <Check name="fragil" label="Frágil" checked={form.fragil} onChange={handleChange} />
-                    <Check name="liquido" label="Líquido" checked={form.liquido} onChange={handleChange} />
+                    <Check
+                        name="fragil"
+                        label="Frágil"
+                        checked={form.fragil}
+                        onChange={handleChange}
+                    />
+                    <Check
+                        name="liquido"
+                        label="Líquido"
+                        checked={form.liquido}
+                        onChange={handleChange}
+                    />
                     <Check
                         name="requiere_refrigeracion"
                         label="Requiere refrig."
@@ -177,16 +221,36 @@ const ServicioAnuncioForm = ({ onSubmit }) => {
                     name="video_url"
                     value={form.video_url}
                     onChange={handleChange}
+                    placeholder="URL del video (YouTube, Vimeo, etc.)"
                 />
                 <label className="block font-medium mt-4">Imágenes</label>
                 <input
                     type="file"
-                    name="imagenes"
                     accept="image/*"
                     multiple
                     onChange={handleFileChange}
                     className="w-full mt-1 p-2 border rounded"
                 />
+                {imagenes.length > 0 && (
+                    <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                        {imagenes.map((file, idx) => (
+                            <div key={idx} className="relative group">
+                                <img
+                                    src={URL.createObjectURL(file)}
+                                    alt={`Preview ${idx + 1}`}
+                                    className="w-full h-32 object-cover rounded"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => removeImage(idx)}
+                                    className="absolute top-1 right-1 bg-red-600 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition"
+                                >
+                                    <FaTimes />
+                                </button>
+                            </div>
+                        ))}
+                    </div>
+                )}
             </Section>
 
             {/* 8. Selects */}
@@ -199,18 +263,21 @@ const ServicioAnuncioForm = ({ onSubmit }) => {
                     loading={loadingCat}
                     options={categorias}
                 />
-
-                <Select
-                    label="Beneficios"
-                    name="beneficioIds"
-                    multiple
-                    value={form.beneficioIds}
-                    onChange={handleBeneficiosChange}
-                    loading={loadingBen}
-                    options={beneficios}
-                    tall
-                />
-
+                <div>
+                    <Select
+                        label="Beneficios"
+                        name="beneficioIds"
+                        multiple
+                        value={form.beneficioIds}
+                        onChange={handleBeneficiosChange}
+                        loading={loadingBen}
+                        options={beneficios}
+                        tall
+                    />
+                    <p className="text-sm text-gray-500 mt-1">
+                        Puedes seleccionar más de una opción
+                    </p>
+                </div>
                 <Select
                     label="Resaltador de Anuncio"
                     name="resaltarId"
@@ -219,7 +286,6 @@ const ServicioAnuncioForm = ({ onSubmit }) => {
                     loading={loadingRes}
                     options={resaltadores}
                 />
-
                 <Select
                     label="Estado de Servicio"
                     name="estadoServicioId"
@@ -235,21 +301,21 @@ const ServicioAnuncioForm = ({ onSubmit }) => {
                 {form.camposExtra.map((c, i) => (
                     <div key={i} className="flex flex-col sm:flex-row gap-2 mb-2">
                         <InputText
-                            placeholder="Nombre"
+                            placeholder="Nombre del campo"
                             value={c.nombre}
-                            onChange={(e) => handleCampoExtraChange(i, "nombre", e.target.value)}
+                            onChange={e => handleCampoExtraChange(i, 'nombre', e.target.value)}
                             className="flex-1"
                         />
                         <InputText
-                            placeholder="Valor"
+                            placeholder="Valor del campo"
                             value={c.valor}
-                            onChange={(e) => handleCampoExtraChange(i, "valor", e.target.value)}
+                            onChange={e => handleCampoExtraChange(i, 'valor', e.target.value)}
                             className="flex-1"
                         />
                         <button
                             type="button"
                             onClick={() => removeCampoExtra(i)}
-                            className="bg-custom-red bg-custom-red/80 text-white px-3  rounded-md"
+                            className="bg-custom-red text-white px-3 rounded-md"
                         >
                             Eliminar
                         </button>
@@ -268,8 +334,11 @@ const ServicioAnuncioForm = ({ onSubmit }) => {
             <div className="text-right">
                 <button
                     type="submit"
-                    className="bg-custom-blue hover:bg-custom-blue-medium text-white rounded px-6 py-2
-                     w-full sm:w-auto"
+                    disabled={!isFormValid}
+                    className={`bg-custom-blue text-white rounded px-6 py-2 w-full sm:w-auto ${!isFormValid
+                            ? 'opacity-50 cursor-not-allowed'
+                            : 'hover:bg-custom-blue-medium'
+                        }`}
                 >
                     Crear servicio
                 </button>
@@ -277,52 +346,5 @@ const ServicioAnuncioForm = ({ onSubmit }) => {
         </form>
     );
 };
-
-/* === Extracted UI helpers ==== */
-
-const InputText = ({
-    label,
-    className = "",
-    ...props
-}) => (
-    <div className={className}>
-        {label && <label className="block font-medium">{label}</label>}
-        <input {...props} className="w-full mt-1 p-2 border rounded" />
-    </div>
-);
-
-const Check = ({ label, ...props }) => (
-    <label className="inline-flex items-center">
-        <input type="checkbox" className="form-checkbox" {...props} />
-        <span className="ml-2">{label}</span>
-    </label>
-);
-
-const Select = ({
-    label,
-    loading,
-    options = [],
-    tall,
-    ...props
-}) => (
-    <div className="w-full">
-        <label className="block font-medium">{label}</label>
-        {loading ? (
-            <p>Cargando {label.toLowerCase()}…</p>
-        ) : (
-            <select
-                {...props}
-                className={`w-full mt-1 p-2 border rounded ${tall ? "h-32" : ""}`}
-            >
-                {!props.multiple && <option value="">Selecciona</option>}
-                {options.map((o) => (
-                    <option key={o.id} value={o.id}>
-                        {o.nombre}
-                    </option>
-                ))}
-            </select>
-        )}
-    </div>
-);
 
 export default ServicioAnuncioForm;

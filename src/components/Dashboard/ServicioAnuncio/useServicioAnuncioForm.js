@@ -6,29 +6,20 @@ import useBeneficioRepartidor from '../Beneficios/useBeneficioRepartidor';
 import useCategoriaVehiculos from '../Categoria/useCategoriaVehiculos';
 import useResaltarAnuncio from '../ResaltarAnuncio/useResaltarAnuncio';
 import useEstadoServicio from '../EstadoServicio/useEstadoServicio';
+import Swal from 'sweetalert2';
 
-/**
- * Hook que encapsula toda la lógica de creación de un Servicio de Anuncio:
- * - Estado del formulario
- * - Handlers para inputs, selects, campos extra e imágenes
- * - Lógica de subida de imagenes y POST de creación
- * - Datos cargados de los endpoints: beneficios, categorías, resaltadores y estados
- */
 const useServicioAnuncioForm = ({ onSubmit }) => {
   // datos para selects
-  const { data: beneficiosResponse, loading: loadingBen } = useBeneficioRepartidor();
-  const beneficios = beneficiosResponse?.data || [];
+  const { data: benResp, loading: loadingBen } = useBeneficioRepartidor();
+  const beneficios = benResp?.data || [];
+  const { data: catResp, loading: loadingCat } = useCategoriaVehiculos();
+  const categorias = catResp?.data || [];
+  const { data: resResp, loading: loadingRes } = useResaltarAnuncio();
+  const resaltadores = resResp?.data || [];
+  const { data: estResp, loading: loadingEst } = useEstadoServicio();
+  const estados = estResp?.data || [];
 
-  const { data: categoriasResponse, loading: loadingCat } = useCategoriaVehiculos();
-  const categorias = categoriasResponse?.data || [];
-
-  const { data: resaltarResponse, loading: loadingRes } = useResaltarAnuncio();
-  const resaltadores = resaltarResponse?.data || [];
-
-  const { data: estadosResponse, loading: loadingEst } = useEstadoServicio();
-  const estados = estadosResponse?.data || [];
-
-  // estado del formulario
+  // estado general del formulario (sin imágenes)
   const [form, setForm] = useState({
     empresa: '',
     fecha_inicio_servicio: '',
@@ -51,9 +42,11 @@ const useServicioAnuncioForm = ({ onSubmit }) => {
     beneficioIds: [],
     resaltarId: '',
     estadoServicioId: '',
-    camposExtra: [{ nombre: '', valor: '' }],
-    imagenes: []
+    camposExtra: [{ nombre: '', valor: '' }]
   });
+
+  // estado para imágenes
+  const [imagenes, setImagenes] = useState([]);
 
   // Handlers básicos
   const handleChange = e => {
@@ -75,15 +68,23 @@ const useServicioAnuncioForm = ({ onSubmit }) => {
     }));
   };
   const addCampoExtra = () =>
-    setForm(prev => ({ ...prev, camposExtra: [...prev.camposExtra, { nombre: '', valor: '' }] }));
+    setForm(prev => ({
+      ...prev,
+      camposExtra: [...prev.camposExtra, { nombre: '', valor: '' }]
+    }));
   const removeCampoExtra = i =>
-    setForm(prev => ({ ...prev, camposExtra: prev.camposExtra.filter((_, idx) => idx !== i) }));
+    setForm(prev => ({
+      ...prev,
+      camposExtra: prev.camposExtra.filter((_, idx) => idx !== i)
+    }));
 
-  // Archivos
+  // Archivos (imágenes)
   const handleFileChange = e => {
     const files = Array.from(e.target.files);
-    setForm(prev => ({ ...prev, imagenes: files }));
+    setImagenes(imgs => [...imgs, ...files]);
   };
+  const removeImage = index =>
+    setImagenes(imgs => imgs.filter((_, i) => i !== index));
 
   // Submit
   const handleSubmit = async e => {
@@ -95,15 +96,18 @@ const useServicioAnuncioForm = ({ onSubmit }) => {
 
     // 1. subir imágenes
     const imagenUrls = [];
-    for (const file of form.imagenes) {
+    for (const file of imagenes) {
       const fd = new FormData();
       fd.append('file', file);
       fd.append('filename', file.name);
-      fd.append('tipo_archivo', 3);
+      fd.append('tipo_archivo', 23);
       fd.append('correo', correo);
       fd.append('tipo_usuario', tipo_usuario);
       const res = await axios.post(API_URL.UPLOAD_IMAGE, fd, {
-        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' }
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data'
+        }
       });
       imagenUrls.push(res.data.url);
     }
@@ -134,6 +138,7 @@ const useServicioAnuncioForm = ({ onSubmit }) => {
       campos_extra: form.camposExtra,
       imagenes: imagenUrls
     };
+    console.log('Payload:', payload);
 
     // 3. POST creación
     try {
@@ -141,28 +146,38 @@ const useServicioAnuncioForm = ({ onSubmit }) => {
         headers: { Authorization: `Bearer ${token}` }
       });
       console.log('Creado:', resp.data);
+      Swal.fire({
+        title: 'Servicio creado',
+        icon: 'success',
+        confirmButtonText: 'Aceptar'
+      }).then(() => window.location.reload());
       onSubmit && onSubmit(resp.data);
     } catch (err) {
       console.error('Error:', err);
+      Swal.fire({
+        title: 'Error al crear el servicio',
+        text: err.response?.data?.message || err.message,
+        icon: 'error',
+        confirmButtonText: 'Cerrar'
+      });
     }
   };
 
   return {
-    // form state
     form,
-    // select data + loading
     beneficios, loadingBen,
     categorias, loadingCat,
     resaltadores, loadingRes,
     estados, loadingEst,
-    // handlers
     handleChange,
     handleBeneficiosChange,
     handleCampoExtraChange,
     addCampoExtra,
     removeCampoExtra,
     handleFileChange,
-    handleSubmit
+    removeImage,
+    handleSubmit,
+    imagenes
   };
 };
 

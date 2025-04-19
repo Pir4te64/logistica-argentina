@@ -2,10 +2,10 @@
 import React, { useState } from "react";
 import axios from "axios";
 import {
-    FaEdit,     // ✏️
-    FaTimes,    // ✖️
-    FaCheck,    // 💾
-    FaTrash,    // 🗑️
+    FaEdit,    // ✏️
+    FaTimes,   // ✖️
+    FaCheck,   // 💾
+    FaTrash,   // 🗑️
 } from "react-icons/fa";
 import { API_URL } from "../../../Api/Api";
 
@@ -46,22 +46,9 @@ const EDITABLE_FIELDS = {
 };
 
 const labelize = (key) =>
-    key.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
-
-const renderObject = (obj, titulo) => (
-    <fieldset className="border p-4 rounded" key={titulo}>
-        <legend className="font-medium">{titulo}</legend>
-        <ul className="list-disc list-inside">
-            {Object.entries(obj)
-                .filter(([k]) => !OMITIR_NESTED.includes(k))
-                .map(([k, v]) => (
-                    <li key={k}>
-                        <span className="font-medium">{labelize(k)}:</span> {String(v)}
-                    </li>
-                ))}
-        </ul>
-    </fieldset>
-);
+    key
+        .replace(/_/g, " ")
+        .replace(/\b\w/g, (l) => l.toUpperCase());
 
 const ServicioAnuncioItem = ({ servicio, index, onUpdated }) => {
     const [editMode, setEditMode] = useState(false);
@@ -69,6 +56,7 @@ const ServicioAnuncioItem = ({ servicio, index, onUpdated }) => {
     const [saving, setSaving] = useState(false);
     const [deleting, setDeleting] = useState(false);
     const [error, setError] = useState("");
+    //console.log("servicio", servicio);
 
     /* ---- Handlers ---- */
 
@@ -123,27 +111,28 @@ const ServicioAnuncioItem = ({ servicio, index, onUpdated }) => {
         }
     };
 
-    /* ---- Renderizado de campos ---- */
+    /* ---- Rendering fields ---- */
 
     const renderField = (k, v) => {
         if (!editMode || !EDITABLE_FIELDS[k]) {
             return (
-                <p key={k}>
-                    <span className="font-medium">{labelize(k)}:</span> {String(v)}
-                </p>
+                <div key={k} className="flex flex-col">
+                    <dt className="text-sm text-gray-500">{labelize(k)}</dt>
+                    <dd className="mt-1 text-base text-gray-900">{String(v)}</dd>
+                </div>
             );
         }
         const type = EDITABLE_FIELDS[k];
         return (
-            <label key={k} className="block">
-                <span className="font-medium">{labelize(k)}:</span>
+            <div key={k} className="flex flex-col">
+                <label className="text-sm text-gray-500 mb-1">{labelize(k)}</label>
                 {type === "checkbox" ? (
                     <input
                         type="checkbox"
                         name={k}
                         checked={!!form[k]}
                         onChange={handleChange}
-                        className="ml-2 align-middle"
+                        className="h-5 w-5 text-blue-600"
                     />
                 ) : (
                     <input
@@ -151,60 +140,67 @@ const ServicioAnuncioItem = ({ servicio, index, onUpdated }) => {
                         name={k}
                         value={form[k] ?? ""}
                         onChange={handleChange}
-                        className="mt-1 p-1 border rounded w-full"
+                        className="p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200"
                     />
                 )}
-            </label>
+            </div>
         );
     };
 
     return (
-        <div className="max-w-2xl mx-auto p-6 bg-white rounded shadow space-y-4">
-            {/* Header con botones */}
-            <div className="flex justify-between items-center">
-                <h2 className="text-xl font-semibold">
-                    Detalle de Servicio #{index + 1}
+        <div className="max-w-3xl mx-auto p-6 bg-white rounded-lg  space-y-6">
+            {/* Header with actions */}
+            <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
+                <h2 className="text-2xl font-semibold text-gray-800">
+                    Servicio #{index + 1}
                 </h2>
+                <div className="mt-4 sm:mt-0 flex space-x-2">
+                    {!editMode ? (
+                        <>
+                            <button
+                                onClick={() => setEditMode(true)}
+                                className="flex items-center text-blue-600 hover:text-blue-800"
+                            >
+                                <FaEdit /> <span className="ml-1">Editar</span>
+                            </button>
+                            <button
+                                onClick={handleDelete}
+                                disabled={deleting}
+                                className="flex items-center text-custom-red hover:text-custom-red/80 disabled:opacity-50"
+                            >
+                                <FaTrash />{" "}
+                                <span className="ml-1">
+                                    {deleting ? "Eliminando…" : "Eliminar"}
+                                </span>
+                            </button>
+                        </>
+                    ) : (
+                        <>
+                            <button
+                                onClick={handleSave}
+                                disabled={saving}
+                                className="flex items-center bg-custom-blue text-white px-4 py-2 rounded-md hover:bg-custom-blue-medium disabled:opacity-50"
+                            >
+                                <FaCheck />{" "}
+                                <span className="ml-2">
+                                    {saving ? "Guardando…" : "Guardar"}
+                                </span>
+                            </button>
+                            <button
+                                onClick={handleCancel}
+                                className="flex items-center bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300"
+                            >
+                                <FaTimes /> <span className="ml-2">Cancelar</span>
+                            </button>
+                        </>
+                    )}
+                </div>
+            </header>
 
-                {!editMode ? (
-                    <div className="flex items-center gap-2">
-                        <button
-                            onClick={() => setEditMode(true)}
-                            className="text-blue-600 hover:text-blue-800 flex items-center gap-1"
-                        >
-                            <FaEdit /> Editar
-                        </button>
-                        <button
-                            onClick={handleDelete}
-                            disabled={deleting}
-                            className="text-custom-red hover:text-custom-red/80 flex items-center gap-1 disabled:opacity-60"
-                        >
-                            <FaTrash /> {deleting ? "Eliminando…" : "Eliminar"}
-                        </button>
-                    </div>
-                ) : (
-                    <div className="flex gap-2">
-                        <button
-                            onClick={handleSave}
-                            disabled={saving}
-                            className="bg-custom-blue text-white px-2 py-1 rounded flex items-center gap-1 disabled:opacity-60"
-                        >
-                            <FaCheck size={14} /> {saving ? "Guardando…" : "Guardar"}
-                        </button>
-                        <button
-                            onClick={handleCancel}
-                            className="bg-red-500 text-white px-2 py-1 rounded flex items-center gap-1"
-                        >
-                            <FaTimes size={14} /> Cancelar
-                        </button>
-                    </div>
-                )}
-            </div>
+            {error && <p className="text-red-600 text-center">{error}</p>}
 
-            {error && <p className="text-red-600">{error}</p>}
-
-            {/* Campos simples */}
-            <div className="space-y-2">
+            {/* Main fields */}
+            <dl className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {Object.entries(form)
                     .filter(
                         ([k, v]) =>
@@ -214,24 +210,124 @@ const ServicioAnuncioItem = ({ servicio, index, onUpdated }) => {
                             k !== "id"
                     )
                     .map(([k, v]) => renderField(k, v))}
-            </div>
+            </dl>
 
-            {/* Objetos anidados sólo lectura */}
+            {/* Nested objects (read-only) */}
             {!editMode && (
                 <>
-                    {form.categoria_vehiculo &&
-                        renderObject(form.categoria_vehiculo, "Categoría de Vehículo")}
-                    {form.resaltador &&
-                        renderObject(form.resaltador, "Resaltador")}
-                    {form.estado &&
-                        renderObject(form.estado, "Estado")}
+                    {form.categoria_vehiculo && (
+                        <section>
+                            <h3 className="text-lg font-medium text-gray-700 mb-2">
+                                Categoría de Vehículo
+                            </h3>
+                            <dl className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                {Object.entries(form.categoria_vehiculo)
+                                    .filter(([k]) => !OMITIR_NESTED.includes(k))
+                                    .map(([k, v]) => (
+                                        <div key={k} className="flex flex-col">
+                                            <dt className="text-sm text-gray-500">{labelize(k)}</dt>
+                                            <dd className="mt-1 text-gray-900">{String(v)}</dd>
+                                        </div>
+                                    ))}
+                            </dl>
+                        </section>
+                    )}
+
+                    {form.resaltador && (
+                        <section>
+                            <h3 className="text-lg font-medium text-gray-700 mb-2">
+                                Resaltador
+                            </h3>
+                            <dl className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                {Object.entries(form.resaltador)
+                                    .filter(([k]) => !OMITIR_NESTED.includes(k))
+                                    .map(([k, v]) => (
+                                        <div key={k} className="flex flex-col">
+                                            <dt className="text-sm text-gray-500">{labelize(k)}</dt>
+                                            <dd className="mt-1 text-gray-900">{String(v)}</dd>
+                                        </div>
+                                    ))}
+                            </dl>
+                        </section>
+                    )}
+
+                    {form.estado && (
+                        <section>
+                            <h3 className="text-lg font-medium text-gray-700 mb-2">
+                                Estado
+                            </h3>
+                            <dl className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                {Object.entries(form.estado)
+                                    .filter(([k]) => !OMITIR_NESTED.includes(k))
+                                    .map(([k, v]) => (
+                                        <div key={k} className="flex flex-col">
+                                            <dt className="text-sm text-gray-500">{labelize(k)}</dt>
+                                            <dd className="mt-1 text-gray-900">{String(v)}</dd>
+                                        </div>
+                                    ))}
+                            </dl>
+                        </section>
+                    )}
                 </>
             )}
 
-            {/* Video */}
+            {/* Lists (read-only) */}
+            {!editMode && form.beneficios?.length > 0 && (
+                <section>
+                    <h3 className="text-lg font-medium text-gray-700 mb-2">
+                        Beneficios
+                    </h3>
+                    <ul className="list-disc list-inside space-y-1">
+                        {form.beneficios.map((b) => (
+                            <li key={b.id} className="text-gray-900">
+                                {b.nombre}
+                            </li>
+                        ))}
+                    </ul>
+                </section>
+            )}
+
+            {!editMode && form.imagenes?.length > 0 && (
+                <section>
+                    <h3 className="text-lg font-medium text-gray-700 mb-2">
+                        Imágenes
+                    </h3>
+                    <ul className="list-disc list-inside space-y-1">
+                        {form.imagenes.map((img) => (
+                            <li key={img.id} className="text-gray-900">
+                                <a
+                                    href={img.imagen_url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-blue-600 underline"
+                                >
+                                    {img.imagen_url}
+                                </a>
+                            </li>
+                        ))}
+                    </ul>
+                </section>
+            )}
+
+            {!editMode && form.campos_extra?.length > 0 && (
+                <section>
+                    <h3 className="text-lg font-medium text-gray-700 mb-2">
+                        Campos Extra
+                    </h3>
+                    <ul className="list-disc list-inside space-y-1">
+                        {form.campos_extra.map((c) => (
+                            <li key={c.id} className="text-gray-900">
+                                <span className="font-medium">{c.nombre}:</span> {c.valor}
+                            </li>
+                        ))}
+                    </ul>
+                </section>
+            )}
+
+            {/* Video link */}
             {!editMode && form.video_url && (
-                <div>
-                    <span className="font-medium">Video:</span>{" "}
+                <section>
+                    <h3 className="text-lg font-medium text-gray-700 mb-2">Video</h3>
                     <a
                         href={form.video_url}
                         target="_blank"
@@ -240,41 +336,7 @@ const ServicioAnuncioItem = ({ servicio, index, onUpdated }) => {
                     >
                         Ver video
                     </a>
-                </div>
-            )}
-
-            {/* Listas sólo lectura */}
-            {!editMode && form.beneficios?.length > 0 && (
-                <fieldset className="border p-4 rounded">
-                    <legend className="font-medium">Beneficios</legend>
-                    <ul className="list-disc list-inside">
-                        {form.beneficios.map((b) => (
-                            <li key={b.id}>{b.nombre}</li>
-                        ))}
-                    </ul>
-                </fieldset>
-            )}
-            {!editMode && form.imagenes?.length > 0 && (
-                <fieldset className="border p-4 rounded">
-                    <legend className="font-medium">Imágenes</legend>
-                    <ul className="list-disc list-inside">
-                        {form.imagenes.map((img) => (
-                            <li key={img.id}>{img.imagen_url}</li>
-                        ))}
-                    </ul>
-                </fieldset>
-            )}
-            {!editMode && form.campos_extra?.length > 0 && (
-                <fieldset className="border p-4 rounded">
-                    <legend className="font-medium">Campos Extra</legend>
-                    <ul className="list-disc list-inside">
-                        {form.campos_extra.map((c) => (
-                            <li key={c.id}>
-                                {c.nombre}: {c.valor}
-                            </li>
-                        ))}
-                    </ul>
-                </fieldset>
+                </section>
             )}
         </div>
     );
