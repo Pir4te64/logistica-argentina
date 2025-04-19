@@ -19,7 +19,7 @@ const useServicioAnuncioForm = ({ onSubmit }) => {
   const { data: estResp, loading: loadingEst } = useEstadoServicio();
   const estados = estResp?.data || [];
 
-  // estado general del formulario (sin imágenes)
+  // estado general del formulario (sin multimedia)
   const [form, setForm] = useState({
     empresa: '',
     fecha_inicio_servicio: '',
@@ -37,7 +37,7 @@ const useServicioAnuncioForm = ({ onSubmit }) => {
     fragil: false,
     liquido: false,
     requiere_refrigeracion: false,
-    video_url: '',
+    video_url: '',            // mantengo el campo aunque lo sobreescriba
     categoriaVehiculoId: '',
     beneficioIds: [],
     resaltarId: '',
@@ -45,8 +45,9 @@ const useServicioAnuncioForm = ({ onSubmit }) => {
     camposExtra: [{ nombre: '', valor: '' }]
   });
 
-  // estado para imágenes
+  // estado para imágenes y video
   const [imagenes, setImagenes] = useState([]);
+  const [videoFile, setVideoFile] = useState(null);
 
   // Handlers básicos
   const handleChange = e => {
@@ -79,12 +80,27 @@ const useServicioAnuncioForm = ({ onSubmit }) => {
     }));
 
   // Archivos (imágenes)
+  // en tu componente, antes de añadir al estado:
+  const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5 MB
   const handleFileChange = e => {
     const files = Array.from(e.target.files);
-    setImagenes(imgs => [...imgs, ...files]);
+    const invalid = files.filter(f => f.size > MAX_IMAGE_SIZE);
+    if (invalid.length) {
+      alert(`Una o más imágenes superan los 5 MB y no serán subidas.`);
+    }
+    const valid = files.filter(f => f.size <= MAX_IMAGE_SIZE);
+    setImagenes(imgs => [...imgs, ...valid]);
   };
+
   const removeImage = index =>
     setImagenes(imgs => imgs.filter((_, i) => i !== index));
+
+  // Archivo de video (solo uno)
+  const handleVideoChange = e => {
+    const file = e.target.files[0] || null;
+    setVideoFile(file);
+  };
+  const removeVideo = () => setVideoFile(null);
 
   // Submit
   const handleSubmit = async e => {
@@ -94,7 +110,25 @@ const useServicioAnuncioForm = ({ onSubmit }) => {
     const correo = user.email;
     const tipo_usuario = 2;
 
-    // 1. subir imágenes
+    // 1) Subir video si existe
+    let videoUrl = '';
+    if (videoFile) {
+      const fdVid = new FormData();
+      fdVid.append('file', videoFile);
+      fdVid.append('filename', videoFile.name);
+      fdVid.append('tipo_archivo', 24); // distinto para video
+      fdVid.append('correo', correo);
+      fdVid.append('tipo_usuario', tipo_usuario);
+      const resVid = await axios.post(API_URL.UPLOAD_IMAGE, fdVid, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      videoUrl = resVid.data.url;
+    }
+
+    // 2) Subir imágenes
     const imagenUrls = [];
     for (const file of imagenes) {
       const fd = new FormData();
@@ -112,7 +146,7 @@ const useServicioAnuncioForm = ({ onSubmit }) => {
       imagenUrls.push(res.data.url);
     }
 
-    // 2. armar payload
+    // 3) Armar payload
     const payload = {
       empresa: form.empresa,
       fecha_inicio_servicio: form.fecha_inicio_servicio,
@@ -130,17 +164,16 @@ const useServicioAnuncioForm = ({ onSubmit }) => {
       fragil: form.fragil,
       liquido: form.liquido,
       requiere_refrigeracion: form.requiere_refrigeracion,
-      video_url: form.video_url,
+      video_url: videoUrl,                  // usamos la URL subida
       categoria_vehiculo_id: Number(form.categoriaVehiculoId),
       resaltador_anuncio_id: Number(form.resaltarId),
       estado_servicio_id: Number(form.estadoServicioId),
       beneficio_repartidor_ids: form.beneficioIds,
       campos_extra: form.camposExtra,
-      imagenes: imagenUrls
+      imagenes: imagenUrls                  // URLs de las imágenes
     };
-    console.log('Payload:', payload);
 
-    // 3. POST creación
+    // 4) POST creación
     try {
       const resp = await axios.post(API_URL.SERVICIO_ANUNCIO, payload, {
         headers: { Authorization: `Bearer ${token}` }
@@ -176,8 +209,11 @@ const useServicioAnuncioForm = ({ onSubmit }) => {
     removeCampoExtra,
     handleFileChange,
     removeImage,
+    handleVideoChange,
+    removeVideo,
     handleSubmit,
-    imagenes
+    imagenes,
+    videoFile
   };
 };
 

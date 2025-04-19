@@ -4,8 +4,8 @@ import { FaTimes } from "react-icons/fa";
 import useServicioAnuncioForm from "./useServicioAnuncioForm";
 import { Section, InputText, Check, Select } from "./FormControls";
 import GeneralInfoSections from "./GeneralInfoSections";
-import ExtraFieldsSection from "./ExtraFieldsSection";
 import ConfigSections from "./ConfigSections";
+import ExtraFieldsSection from "./ExtraFieldsSection";
 
 const ServicioAnuncioForm = ({ onSubmit }) => {
     const {
@@ -25,8 +25,11 @@ const ServicioAnuncioForm = ({ onSubmit }) => {
         removeCampoExtra,
         handleFileChange,
         removeImage,
+        handleVideoChange,
+        removeVideo,
         handleSubmit,
-        imagenes
+        imagenes,
+        videoFile
     } = useServicioAnuncioForm({ onSubmit });
 
     const today = new Date().toISOString().split("T")[0];
@@ -64,7 +67,9 @@ const ServicioAnuncioForm = ({ onSubmit }) => {
         >
             <h2 className="text-2xl font-semibold">Crear Servicio de Anuncio</h2>
 
+            {/* 1–5: Datos básicos, periodo, direcciones, contacto, cantidades */}
             <GeneralInfoSections form={form} handleChange={handleChange} />
+
             {/* 6. Características (flags) */}
             <Section title="Características del envío">
                 <div className="flex flex-wrap gap-4">
@@ -91,13 +96,32 @@ const ServicioAnuncioForm = ({ onSubmit }) => {
 
             {/* 7. Multimedia */}
             <Section title="Multimedia">
-                <InputText
-                    label="URL de video"
-                    name="video_url"
-                    value={form.video_url}
-                    onChange={handleChange}
-                    placeholder="URL del video (YouTube, Vimeo, etc.)"
+                {/* Video en lugar de URL */}
+                <label className="block font-medium">Video pequeño</label>
+                <input
+                    type="file"
+                    accept="video/*"
+                    onChange={handleVideoChange}
+                    className="w-full mt-1 p-2 border rounded"
                 />
+                {videoFile && (
+                    <div className="relative mt-4 group">
+                        <video
+                            src={URL.createObjectURL(videoFile)}
+                            controls
+                            className="w-full max-h-48 object-cover rounded"
+                        />
+                        <button
+                            type="button"
+                            onClick={removeVideo}
+                            className="absolute top-1 right-1 bg-red-600 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition"
+                        >
+                            <FaTimes />
+                        </button>
+                    </div>
+                )}
+
+                {/* Imágenes */}
                 <label className="block font-medium mt-4">Imágenes</label>
                 <input
                     type="file"
@@ -128,6 +152,7 @@ const ServicioAnuncioForm = ({ onSubmit }) => {
                 )}
             </Section>
 
+            {/* 8. Selects */}
             <ConfigSections
                 form={form}
                 categorias={categorias}
@@ -150,15 +175,14 @@ const ServicioAnuncioForm = ({ onSubmit }) => {
                 removeCampoExtra={removeCampoExtra}
             />
 
-
             {/* Submit */}
             <div className="text-right">
                 <button
                     type="submit"
                     disabled={!isFormValid}
                     className={`bg-custom-blue text-white rounded px-6 py-2 w-full sm:w-auto ${!isFormValid
-                        ? 'opacity-50 cursor-not-allowed'
-                        : 'hover:bg-custom-blue-medium'
+                            ? 'opacity-50 cursor-not-allowed'
+                            : 'hover:bg-custom-blue-medium'
                         }`}
                 >
                     Crear servicio
