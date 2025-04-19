@@ -2,14 +2,17 @@
 import React, { useState } from "react";
 import axios from "axios";
 import {
-    FaEdit,    // ✏️
-    FaTimes,   // ✖️
-    FaCheck,   // 💾
-    FaTrash,   // 🗑️
+    FaEdit,
+    FaTimes,
+    FaCheck,
+    FaTrash,
 } from "react-icons/fa";
 import { API_URL } from "../../../Api/Api";
-
-/* ---------- Config ---------- */
+import useCategoriaVehiculos from "../Categoria/useCategoriaVehiculos";
+import useResaltarAnuncio from "../ResaltarAnuncio/useResaltarAnuncio";
+import useEstadoServicio from "../EstadoServicio/useEstadoServicio";
+import ItemActions from "./ItemActions";
+import useServicioAnuncioItem from "./useServicioAnuncioItem";
 
 const OMITIR = [
     "created_at",
@@ -22,9 +25,12 @@ const OMITIR = [
     "campos_extra",
     "video_url",
 ];
-
 const OMITIR_NESTED = ["id", "created_at", "updated_at"];
 
+/**
+ * Definimos qué campos son editables y de qué tipo.
+ * Ya no incluimos video_url, beneficios ni imágenes.
+ */
 const EDITABLE_FIELDS = {
     empresa: "text",
     fecha_inicio_servicio: "date",
@@ -42,7 +48,9 @@ const EDITABLE_FIELDS = {
     liquido: "checkbox",
     requiere_refrigeracion: "checkbox",
     ciudad: "text",
-    video_url: "text",
+    categoria_vehiculo_id: "select_categoria",
+    resaltador_anuncio_id: "select_resaltador",
+    estado_servicio_id: "select_estado",
 };
 
 const labelize = (key) =>
@@ -51,70 +59,34 @@ const labelize = (key) =>
         .replace(/\b\w/g, (l) => l.toUpperCase());
 
 const ServicioAnuncioItem = ({ servicio, index, onUpdated }) => {
-    const [editMode, setEditMode] = useState(false);
-    const [form, setForm] = useState(servicio);
-    const [saving, setSaving] = useState(false);
-    const [deleting, setDeleting] = useState(false);
-    const [error, setError] = useState("");
-    //console.log("servicio", servicio);
+    const {
+        form,
+        editMode,
+        saving,
+        deleting,
+        error,
+        setEditMode,
+        handleChange,
+        handleExtraChange,
+        addExtra,
+        removeExtra,
+        handleCancel,
+        handleSave,
+        handleDelete
+    } = useServicioAnuncioItem(servicio, onUpdated);
 
-    /* ---- Handlers ---- */
+    const { data: catResp, loading: loadingCat } = useCategoriaVehiculos();
+    const { data: resResp, loading: loadingRes } = useResaltarAnuncio();
+    const { data: estResp, loading: loadingEst } = useEstadoServicio();
+    const categorias = catResp?.data || [];
+    const resaltadores = resResp?.data || [];
+    const estados = estResp?.data || [];
 
-    const handleChange = (e) => {
-        const { name, type, value, checked } = e.target;
-        setForm((prev) => ({
-            ...prev,
-            [name]: type === "checkbox" ? (checked ? 1 : 0) : value,
-        }));
-    };
 
-    const handleCancel = () => {
-        setForm(servicio);
-        setEditMode(false);
-        setError("");
-    };
-
-    const handleSave = async () => {
-        try {
-            setSaving(true);
-            setError("");
-            const token = localStorage.getItem("token");
-            await axios.put(
-                `${API_URL.SERVICIO_ANUNCIO}/${servicio.id}`,
-                form,
-                { headers: { Authorization: `Bearer ${token}` } }
-            );
-            setEditMode(false);
-            onUpdated();
-        } catch {
-            setError("No se pudo guardar. Intenta nuevamente.");
-        } finally {
-            setSaving(false);
-        }
-    };
-
-    const handleDelete = async () => {
-        if (!window.confirm("¿Seguro querés eliminar este servicio?")) return;
-        try {
-            setDeleting(true);
-            setError("");
-            const token = localStorage.getItem("token");
-            await axios.delete(
-                `${API_URL.SERVICIO_ANUNCIO}/${servicio.id}`,
-                { headers: { Authorization: `Bearer ${token}` } }
-            );
-            onUpdated();
-        } catch {
-            setError("No se pudo eliminar. Intenta nuevamente.");
-        } finally {
-            setDeleting(false);
-        }
-    };
-
-    /* ---- Rendering fields ---- */
-
+    // Render dinámico de un campo según esté en edición y su tipo
     const renderField = (k, v) => {
-        if (!editMode || !EDITABLE_FIELDS[k]) {
+        const type = EDITABLE_FIELDS[k];
+        if (!editMode || !type) {
             return (
                 <div key={k} className="flex flex-col">
                     <dt className="text-sm text-gray-500">{labelize(k)}</dt>
@@ -122,11 +94,11 @@ const ServicioAnuncioItem = ({ servicio, index, onUpdated }) => {
                 </div>
             );
         }
-        const type = EDITABLE_FIELDS[k];
-        return (
-            <div key={k} className="flex flex-col">
-                <label className="text-sm text-gray-500 mb-1">{labelize(k)}</label>
-                {type === "checkbox" ? (
+
+        if (type === "checkbox") {
+            return (
+                <div key={k} className="flex flex-col">
+                    <label className="text-sm text-gray-500 mb-1">{labelize(k)}</label>
                     <input
                         type="checkbox"
                         name={k}
@@ -134,72 +106,115 @@ const ServicioAnuncioItem = ({ servicio, index, onUpdated }) => {
                         onChange={handleChange}
                         className="h-5 w-5 text-blue-600"
                     />
-                ) : (
-                    <input
-                        type={type}
-                        name={k}
-                        value={form[k] ?? ""}
+                </div>
+            );
+        }
+
+        if (type === "select_categoria") {
+            return (
+                <div key={k} className="flex flex-col">
+                    <label className="text-sm text-gray-500 mb-1">
+                        {labelize(k)}
+                    </label>
+                    <select
+                        name="categoria_vehiculo_id"
+                        value={form.categoria_vehiculo_id || ""}
                         onChange={handleChange}
-                        className="p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200"
-                    />
-                )}
+                        className="p-2 border rounded"
+                    >
+                        <option value="">Selecciona...</option>
+                        {categorias.map((c) => (
+                            <option key={c.id} value={c.id}>
+                                {c.nombre}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+            );
+        }
+
+        if (type === "select_resaltador") {
+            return (
+                <div key={k} className="flex flex-col">
+                    <label className="text-sm text-gray-500 mb-1">
+                        {labelize(k)}
+                    </label>
+                    <select
+                        name="resaltador_anuncio_id"
+                        value={form.resaltador_anuncio_id || ""}
+                        onChange={handleChange}
+                        className="p-2 border rounded"
+                    >
+                        <option value="">Selecciona...</option>
+                        {resaltadores.map((r) => (
+                            <option key={r.id} value={r.id}>
+                                {r.nombre}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+            );
+        }
+
+        if (type === "select_estado") {
+            return (
+                <div key={k} className="flex flex-col">
+                    <label className="text-sm text-gray-500 mb-1">
+                        {labelize(k)}
+                    </label>
+                    <select
+                        name="estado_servicio_id"
+                        value={form.estado_servicio_id || ""}
+                        onChange={handleChange}
+                        className="p-2 border rounded"
+                    >
+                        <option value="">Selecciona...</option>
+                        {estados.map((e) => (
+                            <option key={e.id} value={e.id}>
+                                {e.nombre}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+            );
+        }
+
+        // text, date, number
+        return (
+            <div key={k} className="flex flex-col">
+                <label className="text-sm text-gray-500 mb-1">{labelize(k)}</label>
+                <input
+                    type={type}
+                    name={k}
+                    value={form[k] ?? ""}
+                    onChange={handleChange}
+                    className="p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200"
+                />
             </div>
         );
     };
 
     return (
-        <div className="max-w-3xl mx-auto p-6 bg-white rounded-lg  space-y-6">
-            {/* Header with actions */}
+        <div className="max-w-3xl mx-auto p-6 bg-white rounded-lg space-y-6">
+            {/* Header con acciones */}
             <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
                 <h2 className="text-2xl font-semibold text-gray-800">
                     Servicio #{index + 1}
                 </h2>
-                <div className="mt-4 sm:mt-0 flex space-x-2">
-                    {!editMode ? (
-                        <>
-                            <button
-                                onClick={() => setEditMode(true)}
-                                className="flex items-center text-blue-600 hover:text-blue-800"
-                            >
-                                <FaEdit /> <span className="ml-1">Editar</span>
-                            </button>
-                            <button
-                                onClick={handleDelete}
-                                disabled={deleting}
-                                className="flex items-center text-custom-red hover:text-custom-red/80 disabled:opacity-50"
-                            >
-                                <FaTrash />{" "}
-                                <span className="ml-1">
-                                    {deleting ? "Eliminando…" : "Eliminar"}
-                                </span>
-                            </button>
-                        </>
-                    ) : (
-                        <>
-                            <button
-                                onClick={handleSave}
-                                disabled={saving}
-                                className="flex items-center bg-custom-blue text-white px-4 py-2 rounded-md hover:bg-custom-blue-medium disabled:opacity-50"
-                            >
-                                <FaCheck />{" "}
-                                <span className="ml-2">
-                                    {saving ? "Guardando…" : "Guardar"}
-                                </span>
-                            </button>
-                            <button
-                                onClick={handleCancel}
-                                className="flex items-center bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300"
-                            >
-                                <FaTimes /> <span className="ml-2">Cancelar</span>
-                            </button>
-                        </>
-                    )}
-                </div>
+                <ItemActions
+                    editMode={editMode}
+                    setEditMode={setEditMode}
+                    handleDelete={handleDelete}
+                    deleting={deleting}
+                    handleSave={handleSave}
+                    saving={saving}
+                    handleCancel={handleCancel}
+                />
             </header>
 
             {error && <p className="text-red-600 text-center">{error}</p>}
 
-            {/* Main fields */}
+            {/* Campos simples */}
             <dl className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {Object.entries(form)
                     .filter(
@@ -212,7 +227,52 @@ const ServicioAnuncioItem = ({ servicio, index, onUpdated }) => {
                     .map(([k, v]) => renderField(k, v))}
             </dl>
 
-            {/* Nested objects (read-only) */}
+            {/* Edición de campos extra */}
+            {editMode && (
+                <section>
+                    <h3 className="text-lg font-medium text-gray-700 mb-2">
+                        Campos Extra
+                    </h3>
+                    {form.campos_extra.map((c, i) => (
+                        <div key={i} className="flex flex-col sm:flex-row gap-2 mb-2">
+                            <input
+                                type="text"
+                                placeholder="Nombre"
+                                value={c.nombre}
+                                onChange={(e) =>
+                                    handleExtraChange(i, "nombre", e.target.value)
+                                }
+                                className="flex-1 p-2 border rounded"
+                            />
+                            <input
+                                type="text"
+                                placeholder="Valor"
+                                value={c.valor}
+                                onChange={(e) =>
+                                    handleExtraChange(i, "valor", e.target.value)
+                                }
+                                className="flex-1 p-2 border rounded"
+                            />
+                            <button
+                                type="button"
+                                onClick={() => removeExtra(i)}
+                                className="bg-custom-red text-white px-3 rounded-md"
+                            >
+                                Eliminar
+                            </button>
+                        </div>
+                    ))}
+                    <button
+                        type="button"
+                        onClick={addExtra}
+                        className="bg-custom-blue text-white rounded px-3 py-1"
+                    >
+                        Agregar campo extra
+                    </button>
+                </section>
+            )}
+
+            {/* Secciones read-only anidadas y listas */}
             {!editMode && (
                 <>
                     {form.categoria_vehiculo && (
@@ -268,75 +328,75 @@ const ServicioAnuncioItem = ({ servicio, index, onUpdated }) => {
                             </dl>
                         </section>
                     )}
+
+                    {form.beneficios?.length > 0 && (
+                        <section>
+                            <h3 className="text-lg font-medium text-gray-700 mb-2">
+                                Beneficios
+                            </h3>
+                            <ul className="list-disc list-inside space-y-1">
+                                {form.beneficios.map((b) => (
+                                    <li key={b.id} className="text-gray-900">
+                                        {b.nombre}
+                                    </li>
+                                ))}
+                            </ul>
+                        </section>
+                    )}
+
+                    {form.imagenes?.length > 0 && (
+                        <section>
+                            <h3 className="text-lg font-medium text-gray-700 mb-2">
+                                Imágenes
+                            </h3>
+                            <ul className="list-disc list-inside space-y-1">
+                                {form.imagenes.map((img) => (
+                                    <li key={img.id} className="text-gray-900">
+                                        <a
+                                            href={img.imagen_url}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="text-blue-600 underline"
+                                        >
+                                            {img.imagen_url}
+                                        </a>
+                                    </li>
+                                ))}
+                            </ul>
+                        </section>
+                    )}
+
+                    {form.campos_extra?.length > 0 && (
+                        <section>
+                            <h3 className="text-lg font-medium text-gray-700 mb-2">
+                                Campos Extra
+                            </h3>
+                            <ul className="list-disc list-inside space-y-1">
+                                {form.campos_extra.map((c) => (
+                                    <li key={c.id} className="text-gray-900">
+                                        <span className="font-medium">{c.nombre}:</span> {c.valor}
+                                    </li>
+                                ))}
+                            </ul>
+                        </section>
+                    )}
+
+                    {form.video_url && (
+                        <section>
+                            <h3 className="text-lg font-medium text-gray-700 mb-2">
+                                Video
+                            </h3>
+                            <a
+                                href={form.video_url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-blue-600 underline"
+                            >
+                                Ver video
+                            </a>
+                        </section>
+                    )}
                 </>
-            )}
-
-            {/* Lists (read-only) */}
-            {!editMode && form.beneficios?.length > 0 && (
-                <section>
-                    <h3 className="text-lg font-medium text-gray-700 mb-2">
-                        Beneficios
-                    </h3>
-                    <ul className="list-disc list-inside space-y-1">
-                        {form.beneficios.map((b) => (
-                            <li key={b.id} className="text-gray-900">
-                                {b.nombre}
-                            </li>
-                        ))}
-                    </ul>
-                </section>
-            )}
-
-            {!editMode && form.imagenes?.length > 0 && (
-                <section>
-                    <h3 className="text-lg font-medium text-gray-700 mb-2">
-                        Imágenes
-                    </h3>
-                    <ul className="list-disc list-inside space-y-1">
-                        {form.imagenes.map((img) => (
-                            <li key={img.id} className="text-gray-900">
-                                <a
-                                    href={img.imagen_url}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="text-blue-600 underline"
-                                >
-                                    {img.imagen_url}
-                                </a>
-                            </li>
-                        ))}
-                    </ul>
-                </section>
-            )}
-
-            {!editMode && form.campos_extra?.length > 0 && (
-                <section>
-                    <h3 className="text-lg font-medium text-gray-700 mb-2">
-                        Campos Extra
-                    </h3>
-                    <ul className="list-disc list-inside space-y-1">
-                        {form.campos_extra.map((c) => (
-                            <li key={c.id} className="text-gray-900">
-                                <span className="font-medium">{c.nombre}:</span> {c.valor}
-                            </li>
-                        ))}
-                    </ul>
-                </section>
-            )}
-
-            {/* Video link */}
-            {!editMode && form.video_url && (
-                <section>
-                    <h3 className="text-lg font-medium text-gray-700 mb-2">Video</h3>
-                    <a
-                        href={form.video_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-600 underline"
-                    >
-                        Ver video
-                    </a>
-                </section>
             )}
         </div>
     );
