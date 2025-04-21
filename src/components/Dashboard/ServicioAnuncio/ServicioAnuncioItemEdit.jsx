@@ -15,10 +15,9 @@ const ServicioAnuncioItemEdit = ({
   EDITABLE_FIELDS,
   labelize,
 }) => {
-  // cargo opciones de beneficios
   const { data: benResp, loading: loadingBen } = useBeneficioRepartidor();
   const beneficiosOpc = benResp?.data || [];
-
+  const today = new Date().toISOString().split("T")[0];
 
   return (
     <>
@@ -26,42 +25,94 @@ const ServicioAnuncioItemEdit = ({
       <dl className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {Object.entries(form)
           .filter(([k]) => EDITABLE_FIELDS[k])
-          .map(([k, v]) => {
+          .map(([k]) => {
             const type = EDITABLE_FIELDS[k];
 
-            if (type === "checkbox") {
+            // Fecha
+            if (type === "date") {
               return (
                 <div key={k} className="flex flex-col">
-                  <label className="text-sm text-gray-500 mb-1">
+                  <label htmlFor={k} className="text-sm font-medium text-gray-700 mb-1">
                     {labelize(k)}
                   </label>
                   <input
-                    type="checkbox"
+                    id={k}
+                    type="date"
                     name={k}
-                    checked={!!form[k]}
+                    min={today}
+                    value={form[k] ?? ""}
                     onChange={handleChange}
-                    className="h-5 w-5 text-blue-600"
+                    className="
+                      block w-full px-3 py-2
+                      border border-gray-300 rounded-md shadow-sm
+                      focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500
+                      transition
+                    "
                   />
                 </div>
               );
             }
 
-            if (type === "select_categoria") {
+            // Checkboxes simples
+            if (type === "checkbox") {
+              return (
+                <div key={k} className="flex items-center">
+                  <input
+                    id={k}
+                    type="checkbox"
+                    name={k}
+                    checked={!!form[k]}
+                    onChange={handleChange}
+                    className="
+                      h-5 w-5 text-indigo-600
+                      border-gray-300 rounded
+                      focus:outline-none focus:ring-2 focus:ring-indigo-500
+                      transition
+                    "
+                  />
+                  <label htmlFor={k} className="ml-2 text-sm text-gray-700">
+                    {labelize(k)}
+                  </label>
+                </div>
+              );
+            }
+
+            // Selects: categorías, resaltadores, estados
+            if (type.startsWith("select_")) {
+              const options =
+                type === "select_categoria"
+                  ? categorias
+                  : type === "select_resaltador"
+                    ? resaltadores
+                    : estados;
+              const nameKey =
+                type === "select_categoria"
+                  ? "categoria_vehiculo_id"
+                  : type === "select_resaltador"
+                    ? "resaltador_anuncio_id"
+                    : "estado_servicio_id";
+
               return (
                 <div key={k} className="flex flex-col">
-                  <label className="text-sm text-gray-500 mb-1">
+                  <label htmlFor={nameKey} className="text-sm font-medium text-gray-700 mb-1">
                     {labelize(k)}
                   </label>
                   <select
-                    name="categoria_vehiculo_id"
-                    value={form.categoria_vehiculo_id || ""}
+                    id={nameKey}
+                    name={nameKey}
+                    value={form[nameKey] || ""}
                     onChange={handleChange}
-                    className="p-2 border rounded"
+                    className="
+                      block w-full px-3 py-2
+                      border border-gray-300 rounded-md shadow-sm
+                      focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500
+                      transition
+                    "
                   >
-                    <option value="">Selecciona...</option>
-                    {categorias.map((c) => (
-                      <option key={c.id} value={c.id}>
-                        {c.nombre}
+                    <option value="">Selecciona…</option>
+                    {options.map((o) => (
+                      <option key={o.id} value={o.id}>
+                        {o.nombre}
                       </option>
                     ))}
                   </select>
@@ -69,125 +120,116 @@ const ServicioAnuncioItemEdit = ({
               );
             }
 
-            if (type === "select_resaltador") {
-              return (
-                <div key={k} className="flex flex-col">
-                  <label className="text-sm text-gray-500 mb-1">
-                    {labelize(k)}
-                  </label>
-                  <select
-                    name="resaltador_anuncio_id"
-                    value={form.resaltador_anuncio_id || ""}
-                    onChange={handleChange}
-                    className="p-2 border rounded"
-                  >
-                    <option value="">Selecciona...</option>
-                    {resaltadores.map((r) => (
-                      <option key={r.id} value={r.id}>
-                        {r.nombre}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              );
-            }
-
-            if (type === "select_estado") {
-              return (
-                <div key={k} className="flex flex-col">
-                  <label className="text-sm text-gray-500 mb-1">
-                    {labelize(k)}
-                  </label>
-                  <select
-                    name="estado_servicio_id"
-                    value={form.estado_servicio_id || ""}
-                    onChange={handleChange}
-                    className="p-2 border rounded"
-                  >
-                    <option value="">Selecciona...</option>
-                    {estados.map((e) => (
-                      <option key={e.id} value={e.id}>
-                        {e.nombre}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              );
-            }
-
-            // text, date, number
+            // text / number
             return (
               <div key={k} className="flex flex-col">
-                <label className="text-sm text-gray-500 mb-1">
+                <label htmlFor={k} className="text-sm font-medium text-gray-700 mb-1">
                   {labelize(k)}
                 </label>
                 <input
+                  id={k}
                   type={type}
                   name={k}
                   value={form[k] ?? ""}
                   onChange={handleChange}
-                  className="p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200"
+                  className="
+                    block w-full px-3 py-2
+                    border border-gray-300 rounded-md shadow-sm
+                    focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500
+                    transition
+                  "
                 />
               </div>
             );
           })}
 
-        {/* Selección múltiple de beneficios con mejor UI */}
-        <div className="mb-6">
+        {/* Beneficios */}
+        <div className="sm:col-span-2 lg:col-span-3">
           <h3 className="text-sm font-medium text-gray-700 mb-2">Beneficios</h3>
-          <div className="flex flex-col gap-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {beneficiosOpc.map((b) => (
               <label
                 key={b.id}
-                className="flex items-center gap-2 bg-white border border-gray-300 rounded-md p-3 shadow-sm hover:shadow-md transition cursor-pointer"
+                className="
+                  flex items-center gap-2
+                  bg-white border border-gray-300 rounded-md p-3
+                  shadow-sm hover:shadow-md
+                  transition cursor-pointer
+                "
               >
                 <input
                   type="checkbox"
                   checked={form.beneficios.includes(b.id)}
                   onChange={() => toggleBeneficio(b.id)}
-                  className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                  className="
+                    h-4 w-4 text-indigo-600
+                    border-gray-300 rounded
+                    focus:outline-none focus:ring-2 focus:ring-indigo-500
+                    transition
+                  "
                 />
                 <span className="text-gray-800 text-sm">{b.nombre}</span>
               </label>
             ))}
           </div>
         </div>
-
-
       </dl>
 
-      {/* 2) Edición de Campos Extra */}
-      <section>
-        <h3 className="text-lg font-medium text-gray-700 mb-2">Campos Extra</h3>
+      {/* 2) Campos Extra */}
+      <section className="mt-6">
+        <h3 className="text-lg font-semibold text-gray-800 mb-4">Campos Extra</h3>
         {form.campos_extra.map((c, i) => (
-          <div key={i} className="flex flex-col sm:flex-row gap-2 mb-2">
+          <div key={i} className="flex flex-col sm:flex-row gap-2 mb-3">
             <input
               type="text"
               placeholder="Nombre"
               value={c.nombre}
               onChange={(e) => handleExtraChange(i, "nombre", e.target.value)}
-              className="flex-1 p-2 border rounded"
+              className="
+                flex-1 px-3 py-2
+                border border-gray-300 rounded-md shadow-sm
+                focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500
+                transition
+              "
             />
             <input
               type="text"
               placeholder="Valor"
               value={c.valor}
               onChange={(e) => handleExtraChange(i, "valor", e.target.value)}
-              className="flex-1 p-2 border rounded"
+              className="
+                flex-1 px-3 py-2
+                border border-gray-300 rounded-md shadow-sm
+                focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500
+                transition
+              "
             />
             <button
               type="button"
               onClick={() => removeExtra(i)}
-              className="bg-custom-red text-white px-3 rounded-md"
+              className="
+                inline-flex items-center px-3 py-2
+                text-sm font-medium rounded-md
+                text-white bg-red-600 border border-transparent
+                hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500
+                transition
+              "
             >
               Eliminar
             </button>
           </div>
         ))}
+
         <button
           type="button"
           onClick={addExtra}
-          className="bg-custom-blue text-white rounded px-3 py-1"
+          className="
+            inline-flex items-center px-4 py-2 mt-2
+            text-sm font-medium rounded-md
+            text-white bg-indigo-600 border border-transparent
+            hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500
+            transition
+          "
         >
           Agregar campo extra
         </button>

@@ -122,7 +122,7 @@ const useServicioAnuncioForm = ({ onSubmit }) => {
       fdVid.append("file", videoFile);
       fdVid.append("filename", videoFile.name);
       fdVid.append("tipo_archivo", 24); // distinto para video
-      fdVid.append("anuncio", anuncioId);
+      fdVid.append("correo", anuncioId);
       fdVid.append("tipo_usuario", tipo_usuario);
       const resVid = await axios.post(API_URL.UPLOAD_IMAGE, fdVid, {
         headers: {
@@ -140,7 +140,7 @@ const useServicioAnuncioForm = ({ onSubmit }) => {
       fd.append("file", file);
       fd.append("filename", file.name);
       fd.append("tipo_archivo", 23);
-      fd.append("anuncio", anuncioId);
+      fd.append("correo", anuncioId);
       fd.append("tipo_usuario", tipo_usuario);
       const res = await axios.post(API_URL.UPLOAD_IMAGE, fd, {
         headers: {
@@ -185,12 +185,16 @@ const useServicioAnuncioForm = ({ onSubmit }) => {
         headers: { Authorization: `Bearer ${token}` },
       });
       console.log("Creado:", resp.data);
+
+      onSubmit && onSubmit(resp.data);
       Swal.fire({
         title: "Servicio creado",
         icon: "success",
         confirmButtonText: "Aceptar",
-      });
-      onSubmit && onSubmit(resp.data);
+      }).then(() => {
+        window.location.reload(); // Recargar la página después de crear el servicio
+      }
+      )
     } catch (err) {
       console.error("Error:", err);
       Swal.fire({

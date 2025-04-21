@@ -16,43 +16,71 @@ const ItemActions = ({
     saving,
     handleCancel,
 }) => (
-    <div className="mt-4 sm:mt-0 flex space-x-2">
+    <div className="flex flex-wrap gap-2">
         {!editMode ? (
             <>
+                {/* Editar */}
                 <button
                     onClick={() => setEditMode(true)}
-                    className="flex items-center text-blue-600 hover:text-blue-800"
+                    className="
+            inline-flex items-center px-3 py-2
+            bg-white text-indigo-600 border border-indigo-600
+            text-sm font-medium rounded-md
+            hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500
+            transition
+          "
                 >
-                    <FaEdit /> <span className="ml-1">Editar</span>
+                    <FaEdit className="mr-2" /> Editar
                 </button>
+
+                {/* Eliminar */}
                 <button
                     onClick={handleDelete}
                     disabled={deleting}
-                    className="flex items-center text-custom-red hover:text-custom-red/80 disabled:opacity-50"
+                    className={`
+            inline-flex items-center px-3 py-2
+            text-sm font-medium rounded-md
+            text-white bg-red-600 border border-transparent
+            hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500
+            transition
+            ${deleting ? 'opacity-50 cursor-not-allowed' : ''}
+          `}
                 >
-                    <FaTrash />{' '}
-                    <span className="ml-1">
-                        {deleting ? 'Eliminando…' : 'Eliminar'}
-                    </span>
+                    <FaTrash className="mr-2" />
+                    {deleting ? 'Eliminando…' : 'Eliminar'}
                 </button>
             </>
         ) : (
             <>
+                {/* Guardar */}
                 <button
                     onClick={handleSave}
                     disabled={saving}
-                    className="flex items-center bg-custom-blue text-white px-4 py-2 rounded-md hover:bg-custom-blue-medium disabled:opacity-50"
+                    className={`
+            inline-flex items-center px-3 py-2
+            text-sm font-medium rounded-md
+            text-white bg-green-600 border border-transparent
+            hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500
+            transition
+            ${saving ? 'opacity-50 cursor-not-allowed' : ''}
+          `}
                 >
-                    <FaCheck />{' '}
-                    <span className="ml-2">
-                        {saving ? 'Guardando…' : 'Guardar'}
-                    </span>
+                    <FaCheck className="mr-2" />
+                    {saving ? 'Guardando…' : 'Guardar'}
                 </button>
+
+                {/* Cancelar */}
                 <button
                     onClick={handleCancel}
-                    className="flex items-center bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300"
+                    className="
+            inline-flex items-center px-3 py-2
+            bg-gray-100 text-gray-700 border border-transparent
+            text-sm font-medium rounded-md
+            hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300
+            transition
+          "
                 >
-                    <FaTimes /> <span className="ml-2">Cancelar</span>
+                    <FaTimes className="mr-2" /> Cancelar
                 </button>
             </>
         )}

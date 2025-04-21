@@ -39,7 +39,7 @@ const ServicioAnuncio = () => {
                          marker:hidden"
                         >
                             <span className="text-base md:text-lg">
-                                {servicio.titulo ?? `Servicio #${index + 1}`}
+                                {servicio.titulo ?? `Anuncio #${index + 1}`}
                             </span>
                             <FaChevronDown
                                 className="w-5 h-5 shrink-0 transition-transform duration-300

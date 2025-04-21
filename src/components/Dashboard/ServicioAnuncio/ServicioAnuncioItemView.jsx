@@ -1,14 +1,11 @@
 // src/components/Dashboard/ServicioAnuncio/ServicioAnuncioItemView.jsx
 import React from "react";
+import { FaCheck } from "react-icons/fa";
 
 const FLAGS = ["fragil", "liquido", "requiere_refrigeracion"];
 
 /**
  * Componente de solo lectura para ServicioAnuncioItem.
- * Muestra:
- *  - Campos simples y flags como checkbox deshabilitado
- *  - Secciones anidadas: categoría, resaltador, estado
- *  - Listas: beneficios, imágenes, campos_extra, video
  */
 const ServicioAnuncioItemView = ({
     form,
@@ -16,10 +13,9 @@ const ServicioAnuncioItemView = ({
     OMITIR,
     OMITIR_NESTED,
 }) => (
-
-    <>
-        {/* Campos simples (read-only), incluyendo flags */}
-        <dl className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="space-y-6">
+        {/* 1) Campos simples y flags */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {Object.entries(form)
                 .filter(
                     ([k, v]) =>
@@ -29,106 +25,89 @@ const ServicioAnuncioItemView = ({
                         k !== "id"
                 )
                 .map(([k, v]) => (
-                    <div key={k} className="flex flex-col">
-                        <dt className="text-sm text-gray-500">{labelize(k)}</dt>
+                    <div
+                        key={k}
+                        className="bg-white p-4 rounded-md shadow-sm flex flex-col"
+                    >
+                        <dt className="text-xs font-medium text-gray-500">{labelize(k)}</dt>
                         {FLAGS.includes(k) ? (
-                            <dd className="mt-1">
+                            <dd className="mt-2 flex items-center">
                                 <input
                                     type="checkbox"
                                     disabled
                                     checked={v === 1}
-                                    className="h-5 w-5 text-blue-600"
+                                    className="h-5 w-5 text-indigo-600 border-gray-300 rounded transition"
                                 />
+                                <span className="ml-2 text-sm text-gray-700">
+                                    {v === 1 ? "Sí" : "No"}
+                                </span>
                             </dd>
                         ) : (
-                            <dd className="mt-1 text-gray-900">{String(v)}</dd>
+                            <dd className="mt-2 text-sm text-gray-800">{String(v)}</dd>
                         )}
                     </div>
                 ))}
-        </dl>
+        </div>
 
-        {/* Nested: categoría de vehículo */}
-        {form.categoria_vehiculo && (
-            <section>
-                <h3 className="text-lg font-medium text-gray-700 mb-2">
-                    Categoría de Vehículo
-                </h3>
-                <dl className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {Object.entries(form.categoria_vehiculo)
-                        .filter(([k]) => !OMITIR_NESTED.includes(k))
-                        .map(([k, v]) => (
-                            <div key={k} className="flex flex-col">
-                                <dt className="text-sm text-gray-500">{labelize(k)}</dt>
-                                <dd className="mt-1 text-gray-900">{String(v)}</dd>
-                            </div>
-                        ))}
-                </dl>
-            </section>
+        {/* 2) Categoría, resaltador y estado como secciones tipo tarjeta */}
+        {["categoria_vehiculo", "resaltador", "estado"].map((key) =>
+            form[key] ? (
+                <section
+                    key={key}
+                    className="bg-white p-6 rounded-md shadow-sm space-y-4"
+                >
+                    <h3 className="text-lg font-semibold text-gray-800">
+                        {labelize(key)}
+                    </h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        {Object.entries(form[key])
+                            .filter(([k]) => !OMITIR_NESTED.includes(k))
+                            .map(([k, v]) => (
+                                <div key={k} className="flex flex-col">
+                                    <dt className="text-xs font-medium text-gray-500">
+                                        {labelize(k)}
+                                    </dt>
+                                    <dd className="mt-1 text-sm text-gray-800">{String(v)}</dd>
+                                </div>
+                            ))}
+                    </div>
+                </section>
+            ) : null
         )}
 
-        {/* Nested: resaltador */}
-        {form.resaltador && (
-            <section>
-                <h3 className="text-lg font-medium text-gray-700 mb-2">
-                    Resaltador
-                </h3>
-                <dl className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {Object.entries(form.resaltador)
-                        .filter(([k]) => !OMITIR_NESTED.includes(k))
-                        .map(([k, v]) => (
-                            <div key={k} className="flex flex-col">
-                                <dt className="text-sm text-gray-500">{labelize(k)}</dt>
-                                <dd className="mt-1 text-gray-900">{String(v)}</dd>
-                            </div>
-                        ))}
-                </dl>
-            </section>
-        )}
-
-        {/* Nested: estado */}
-        {form.estado && (
-            <section>
-                <h3 className="text-lg font-medium text-gray-700 mb-2">Estado</h3>
-                <dl className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {Object.entries(form.estado)
-                        .filter(([k]) => !OMITIR_NESTED.includes(k))
-                        .map(([k, v]) => (
-                            <div key={k} className="flex flex-col">
-                                <dt className="text-sm text-gray-500">{labelize(k)}</dt>
-                                <dd className="mt-1 text-gray-900">{String(v)}</dd>
-                            </div>
-                        ))}
-                </dl>
-            </section>
-        )}
-
-        {/* Lista de beneficios */}
+        {/* 3) Beneficios como badges */}
         {form.beneficios?.length > 0 && (
-            <section>
-                <h3 className="text-lg font-medium text-gray-700 mb-2">Beneficios</h3>
-                <ul className="list-disc list-inside space-y-1">
+            <section className="bg-white p-6 rounded-md shadow-sm">
+                <h3 className="text-lg font-semibold text-gray-800 mb-3">Beneficios</h3>
+                <div className="flex flex-wrap gap-2">
                     {form.beneficios.map((b) => (
-                        <li key={b} className="text-gray-900">
-                            Beneficio: {b}
-                        </li>
+                        <span
+                            key={b}
+                            className="
+                inline-flex items-center px-2.5 py-0.5
+                bg-indigo-100 text-indigo-800 text-xs font-medium
+                rounded-full
+              "
+                        >
+                            <FaCheck className="mr-1 text-indigo-600" /> {b}
+                        </span>
                     ))}
-                </ul>
+                </div>
             </section>
         )}
 
-
-        {/* Lista de imágenes */}
+        {/* 4) Imágenes */}
         {form.imagenes?.length > 0 && (
-            <section>
-                <h3 className="text-lg font-medium text-gray-700 mb-2">Imágenes</h3>
+            <section className="bg-white p-6 rounded-md shadow-sm">
+                <h3 className="text-lg font-semibold text-gray-800 mb-3">Imágenes</h3>
                 <ul className="list-disc list-inside space-y-1">
                     {form.imagenes.map((img) => (
-                        <li key={img.id} className="text-gray-900">
+                        <li key={img.id} className="text-sm">
                             <a
                                 href={img.imagen_url}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-blue-600 underline"
+                                className="text-indigo-600 hover:underline"
                             >
                                 {img.imagen_url}
                             </a>
@@ -138,15 +117,15 @@ const ServicioAnuncioItemView = ({
             </section>
         )}
 
-        {/* Lista de campos extra */}
+        {/* 5) Campos extra */}
         {form.campos_extra?.length > 0 && (
-            <section>
-                <h3 className="text-lg font-medium text-gray-700 mb-2">
+            <section className="bg-white p-6 rounded-md shadow-sm">
+                <h3 className="text-lg font-semibold text-gray-800 mb-3">
                     Campos Extra
                 </h3>
                 <ul className="list-disc list-inside space-y-1">
                     {form.campos_extra.map((c) => (
-                        <li key={c.id} className="text-gray-900">
+                        <li key={c.id} className="text-sm text-gray-800">
                             <span className="font-medium">{c.nombre}:</span> {c.valor}
                         </li>
                     ))}
@@ -154,21 +133,21 @@ const ServicioAnuncioItemView = ({
             </section>
         )}
 
-        {/* Enlace a video */}
+        {/* 6) Video */}
         {form.video_url && (
-            <section>
-                <h3 className="text-lg font-medium text-gray-700 mb-2">Video</h3>
+            <section className="bg-white p-6 rounded-md shadow-sm">
+                <h3 className="text-lg font-semibold text-gray-800 mb-3">Video</h3>
                 <a
                     href={form.video_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-blue-600 underline"
+                    className="inline-block text-indigo-600 hover:underline text-sm"
                 >
                     Ver video
                 </a>
             </section>
         )}
-    </>
+    </div>
 );
 
 export default ServicioAnuncioItemView;
