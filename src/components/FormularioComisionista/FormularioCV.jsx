@@ -56,10 +56,10 @@ const FormularioCV = () => {
 
       formData.append("file", selectedFile);
       formData.append("filename", selectedFile.name);
-      formData.append("tipo_archivo", "5");
+      formData.append("tipo_archivo", "25");
 
       // Agrega tipo_usuario = 6
-      formData.append("tipo_usuario", "6");
+      formData.append("tipo_usuario", "5");
 
       const storedUser = localStorage.getItem("user");
       if (storedUser) {
@@ -92,9 +92,8 @@ const FormularioCV = () => {
 
         {/* Área de subida con soporte para drag & drop */}
         <div
-          className={`border-2 ${
-            dragActive ? "border-blue-500" : "border-gray-300"
-          } border-dashed rounded-md p-6 md:p-4 flex flex-col items-center justify-center h-60 md:h-40 cursor-pointer`}
+          className={`border-2 ${dragActive ? "border-blue-500" : "border-gray-300"
+            } border-dashed rounded-md p-6 md:p-4 flex flex-col items-center justify-center h-60 md:h-40 cursor-pointer`}
           onClick={handleAreaClick}
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}

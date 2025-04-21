@@ -1,12 +1,12 @@
 import React from "react";
 
 
-const FormularioCard = ({ Icon, title, description }) => {
+const FormularioCard = ({ icon, title, description }) => {
   return (
     <div className="bg-custom-red text-white p-2 md:p-4 rounded-2xl w-full md:w-1/3 flex flex-col justify-start h-48 md:h-64">
       {/* Ícono */}
       <div className="flex items-center justify-start text-2xl md:text-3xl mb-1 md:mb-2">
-        <Icon />
+        {icon}
       </div>
 
       {/* Título */}
