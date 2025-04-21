@@ -1,6 +1,6 @@
 // src/components/Dashboard/ServicioAnuncio/GeneralInfoSections.jsx
 import React from 'react';
-import { Section, InputText } from './FormControls';
+import { Section, InputText } from '@/components/Dashboard/ServicioAnuncio/FormControls';
 
 const GeneralInfoSections = ({ form, handleChange }) => {
     const today = new Date().toISOString().split('T')[0];

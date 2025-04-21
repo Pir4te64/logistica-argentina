@@ -1,11 +1,11 @@
 // src/components/Dashboard/ServicioAnuncio/ServicioAnuncioForm.jsx
 import React, { useMemo } from "react";
 import { FaTimes } from "react-icons/fa";
-import useServicioAnuncioForm from "./useServicioAnuncioForm";
-import { Section, InputText, Check, Select } from "./FormControls";
-import GeneralInfoSections from "./GeneralInfoSections";
-import ConfigSections from "./ConfigSections";
-import ExtraFieldsSection from "./ExtraFieldsSection";
+import useServicioAnuncioForm from "@/components/Dashboard/ServicioAnuncio/useServicioAnuncioForm";
+import { Section, InputText, Check, Select } from "@/components/Dashboard/ServicioAnuncio/FormControls";
+import GeneralInfoSections from "@/components/Dashboard/ServicioAnuncio/GeneralInfoSections";
+import ConfigSections from "@/components/Dashboard/ServicioAnuncio/ConfigSections";
+import ExtraFieldsSection from "@/components/Dashboard/ServicioAnuncio/ExtraFieldsSection";
 
 const ServicioAnuncioForm = ({ onSubmit }) => {
     const {

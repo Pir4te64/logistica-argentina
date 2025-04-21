@@ -1,6 +1,6 @@
 // src/components/Dashboard/ServicioAnuncio/ConfigSections.jsx
 import React from 'react';
-import { Section, Select } from './FormControls';
+import { Section, Select } from '@/components/Dashboard/ServicioAnuncio/FormControls';
 
 const ConfigSections = ({
     form,

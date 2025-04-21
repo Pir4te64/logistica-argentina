@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { useServicioAnuncio } from './useServicioAnuncio';
-import ServicioAnuncioItem from './ServicioAnuncioItem';
-import ServicioAnuncioForm from './ServicioAnuncioForm';
+import { useServicioAnuncio } from '@/components/Dashboard/ServicioAnuncio/useServicioAnuncio';
+import ServicioAnuncioItem from '@/components/Dashboard/ServicioAnuncio/ServicioAnuncioItem';
+import ServicioAnuncioForm from '@/components/Dashboard/ServicioAnuncio/ServicioAnuncioForm';
 import { FaChevronDown } from 'react-icons/fa';
 
 const ServicioAnuncio = () => {

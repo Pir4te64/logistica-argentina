@@ -1,6 +1,6 @@
 // src/components/Dashboard/ServicioAnuncio/ExtraFieldsSection.jsx
 import React from 'react';
-import { Section, InputText } from './FormControls';
+import { Section, InputText } from '@/components/Dashboard/ServicioAnuncio/FormControls';
 
 const ExtraFieldsSection = ({
     camposExtra,
