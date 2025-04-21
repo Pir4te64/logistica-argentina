@@ -7,6 +7,7 @@ import useCategoriaVehiculos from "@/components/Dashboard/Categoria/useCategoria
 import useResaltarAnuncio from "@/components/Dashboard/ResaltarAnuncio/useResaltarAnuncio";
 import useEstadoServicio from "@/components/Dashboard/EstadoServicio/useEstadoServicio";
 import Swal from "sweetalert2";
+import { nanoid } from "nanoid";
 
 const useServicioAnuncioForm = ({ onSubmit }) => {
   // datos para selects
@@ -107,6 +108,7 @@ const useServicioAnuncioForm = ({ onSubmit }) => {
 
   // Submit
   const handleSubmit = async (e) => {
+    const anuncioId = nanoid(4)
     e.preventDefault();
     const token = localStorage.getItem("token");
     const user = JSON.parse(localStorage.getItem("user") || "{}");
@@ -120,7 +122,7 @@ const useServicioAnuncioForm = ({ onSubmit }) => {
       fdVid.append("file", videoFile);
       fdVid.append("filename", videoFile.name);
       fdVid.append("tipo_archivo", 24); // distinto para video
-      fdVid.append("correo", correo);
+      fdVid.append("anuncio", anuncioId);
       fdVid.append("tipo_usuario", tipo_usuario);
       const resVid = await axios.post(API_URL.UPLOAD_IMAGE, fdVid, {
         headers: {
@@ -138,7 +140,7 @@ const useServicioAnuncioForm = ({ onSubmit }) => {
       fd.append("file", file);
       fd.append("filename", file.name);
       fd.append("tipo_archivo", 23);
-      fd.append("correo", correo);
+      fd.append("anuncio", anuncioId);
       fd.append("tipo_usuario", tipo_usuario);
       const res = await axios.post(API_URL.UPLOAD_IMAGE, fd, {
         headers: {

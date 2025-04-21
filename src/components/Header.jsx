@@ -48,6 +48,8 @@ const Header = () => {
           redirectPath = "/formulario-choferes";
         } else if (textLower.includes("comisionista")) {
           redirectPath = "/formulario-comisionista";
+        } else if (textLower.includes("marca")) {
+          redirectPath = "/formulario";
         }
         return (
           <SwiperSlide key={index}>
