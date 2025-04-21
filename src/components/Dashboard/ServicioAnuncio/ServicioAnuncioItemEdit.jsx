@@ -5,7 +5,7 @@ import useBeneficioRepartidor from "@/components/Dashboard/Beneficios/useBenefic
 const ServicioAnuncioItemEdit = ({
   form,
   handleChange,
-  handleBeneficiosChange, // <--- nuevo
+  toggleBeneficio,
   categorias,
   resaltadores,
   estados,
@@ -18,6 +18,7 @@ const ServicioAnuncioItemEdit = ({
   // cargo opciones de beneficios
   const { data: benResp, loading: loadingBen } = useBeneficioRepartidor();
   const beneficiosOpc = benResp?.data || [];
+
 
   return (
     <>
@@ -131,30 +132,28 @@ const ServicioAnuncioItemEdit = ({
             );
           })}
 
-        {/* Nuevo: select múltiple para Beneficios */}
-        <div className="col-span-full flex flex-col">
-          <label className="text-sm text-gray-500 mb-1">Beneficios</label>
-          {loadingBen ? (
-            <p>Cargando beneficios…</p>
-          ) : (
-            <select
-              multiple
-              name="beneficio_repartidor_ids"
-              value={form.beneficio_repartidor_ids}
-              onChange={handleBeneficiosChange}
-              className="p-2 border rounded h-32"
-            >
-              {beneficiosOpc.map((b) => (
-                <option key={b.id} value={b.id}>
-                  {b.nombre}
-                </option>
-              ))}
-            </select>
-          )}
-          <p className="text-sm text-gray-500 mt-1">
-            (Mantén presionada Ctrl o Cmd para seleccionar varios)
-          </p>
+        {/* Selección múltiple de beneficios con mejor UI */}
+        <div className="mb-6">
+          <h3 className="text-sm font-medium text-gray-700 mb-2">Beneficios</h3>
+          <div className="flex flex-col gap-2">
+            {beneficiosOpc.map((b) => (
+              <label
+                key={b.id}
+                className="flex items-center gap-2 bg-white border border-gray-300 rounded-md p-3 shadow-sm hover:shadow-md transition cursor-pointer"
+              >
+                <input
+                  type="checkbox"
+                  checked={form.beneficios.includes(b.id)}
+                  onChange={() => toggleBeneficio(b.id)}
+                  className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                />
+                <span className="text-gray-800 text-sm">{b.nombre}</span>
+              </label>
+            ))}
+          </div>
         </div>
+
+
       </dl>
 
       {/* 2) Edición de Campos Extra */}

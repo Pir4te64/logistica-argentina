@@ -24,10 +24,19 @@ export default function useServicioAnuncioItem(servicio, onUpdated) {
   };
 
   // multi‑select Beneficios
-  const handleBeneficiosChange = (e) => {
-    const opts = Array.from(e.target.selectedOptions, (o) => Number(o.value));
-    setForm((f) => ({ ...f, beneficios: opts }));
+  const toggleBeneficio = (id) => {
+    setForm((f) => {
+      const already = f.beneficios.includes(id);
+      return {
+        ...f,
+        beneficios: already
+          ? f.beneficios.filter((b) => b !== id)
+          : [...f.beneficios, id],
+      };
+    });
   };
+
+
 
   // Campos extra
   const handleExtraChange = (i, field, val) => {
@@ -62,6 +71,7 @@ export default function useServicioAnuncioItem(servicio, onUpdated) {
     setSaving(true);
     setError("");
     try {
+
       const token = localStorage.getItem("token");
       await axios.put(`${API_URL.SERVICIO_ANUNCIO}/${servicio.id}`, form, {
         headers: { Authorization: `Bearer ${token}` },
@@ -100,7 +110,7 @@ export default function useServicioAnuncioItem(servicio, onUpdated) {
     error,
     setEditMode,
     handleChange,
-    handleBeneficiosChange, // <--- expongo el handler
+    toggleBeneficio,
     handleExtraChange,
     addExtra,
     removeExtra,

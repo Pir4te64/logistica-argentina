@@ -16,6 +16,7 @@ const ServicioAnuncioItemView = ({
     OMITIR,
     OMITIR_NESTED,
 }) => (
+
     <>
         {/* Campos simples (read-only), incluyendo flags */}
         <dl className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -107,13 +108,14 @@ const ServicioAnuncioItemView = ({
                 <h3 className="text-lg font-medium text-gray-700 mb-2">Beneficios</h3>
                 <ul className="list-disc list-inside space-y-1">
                     {form.beneficios.map((b) => (
-                        <li key={b.id} className="text-gray-900">
-                            {b.nombre}
+                        <li key={b} className="text-gray-900">
+                            Beneficio: {b}
                         </li>
                     ))}
                 </ul>
             </section>
         )}
+
 
         {/* Lista de imágenes */}
         {form.imagenes?.length > 0 && (

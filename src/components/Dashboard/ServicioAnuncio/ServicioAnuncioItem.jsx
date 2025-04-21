@@ -61,6 +61,7 @@ const ServicioAnuncioItem = ({ servicio, index, onUpdated }) => {
     handleCancel,
     handleSave,
     handleDelete,
+    toggleBeneficio
   } = useServicioAnuncioItem(servicio, onUpdated);
 
   const { data: catResp } = useCategoriaVehiculos();
@@ -99,6 +100,7 @@ const ServicioAnuncioItem = ({ servicio, index, onUpdated }) => {
           removeExtra={removeExtra}
           EDITABLE_FIELDS={EDITABLE_FIELDS}
           labelize={labelize}
+          toggleBeneficio={toggleBeneficio}
         />
       ) : (
         <ServicioAnuncioItemView
