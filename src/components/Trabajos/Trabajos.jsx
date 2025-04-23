@@ -1,12 +1,18 @@
 // Trabajos.jsx
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import { initialValues, validationSchema } from "@/components/Trabajos/trabajos.data";
 import CustomInput from "@/components/Trabajos/CustomInput";
 import CustomSelect from "@/components/Trabajos/CustomSelect";
 import TarjetaAplicar from "@/components/Trabajos/TarjetaAplicar";
+import { useTrabajos } from "@/components/Trabajos/useTrabajos";
 
 const Trabajos = () => {
+  const { fetchServicios, servicios, loading, error } = useTrabajos();
+
+  useEffect(() => {
+    fetchServicios();
+  }, [fetchServicios]);
   const formik = useFormik({
     initialValues,
     validationSchema,

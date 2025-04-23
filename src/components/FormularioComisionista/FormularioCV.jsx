@@ -59,7 +59,7 @@ const FormularioCV = () => {
       formData.append("tipo_archivo", "25");
 
       // Agrega tipo_usuario = 6
-      formData.append("tipo_usuario", "5");
+      formData.append("tipo_usuario", 6);
 
       const storedUser = localStorage.getItem("user");
       if (storedUser) {

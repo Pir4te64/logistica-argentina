@@ -12,6 +12,7 @@ const Sidebar = ({ sidebarOpen, handleViewChange }) => {
         { key: "tipoArchivo", label: "Tipo Archivo" },
         { key: "resaltadoAnuncio", label: "Resaltado Anuncio" },
         { key: "servicioAnuncio", label: "Servicio Anuncio" },
+        { key: "postulaciones", label: "Postulaciones" },
     ];
 
     return (

@@ -10,6 +10,7 @@ import TipoArchivo from "@/components/Dashboard/TipoArchivos/TipoArchivo";
 import ResaltarAnuncio from "@/components/Dashboard/ResaltarAnuncio/ResaltarAnuncio";
 import ServicioAnuncio from "@/components/Dashboard/ServicioAnuncio/ServicioAnuncio";
 import Sidebar from "@/components/Dashboard/Dashboard/Sidebar";
+import Postulaciones from "@/components/Dashboard/Postulaciones/Postulaciones";
 
 const Dashboard = () => {
   const [activeView, setActiveView] = useState("default");
@@ -39,6 +40,8 @@ const Dashboard = () => {
         return <ResaltarAnuncio />;
       case "servicioAnuncio":
         return <ServicioAnuncio />;
+      case "postulaciones":
+        return <Postulaciones />;
       default:
         return (
           <div className='flex items-center justify-center h-full'>

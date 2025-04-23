@@ -12,4 +12,5 @@ export const API_URL = {
   TIPO_ARCHIVOS: `${BASE_URL}/api/tipo-archivos`,
   RESALTADOR_ANUNCIO: `${BASE_URL}/api/resaltador-anuncio`,
   SERVICIO_ANUNCIO: `${BASE_URL}/api/servicio-anuncio`,
+  POSTULACIONES: `${BASE_URL}/api/postulacion`,
 };
