@@ -56,7 +56,7 @@ const FormularioCV = () => {
 
       formData.append("file", selectedFile);
       formData.append("filename", selectedFile.name);
-      formData.append("tipo_archivo", "25");
+      formData.append("tipo_archivo", 25);
 
       // Agrega tipo_usuario = 6
       formData.append("tipo_usuario", 6);
@@ -73,7 +73,7 @@ const FormularioCV = () => {
         const response = await axios.post(API_URL.UPLOAD_IMAGE, formData, {
           headers: { "Content-Type": "multipart/form-data" },
         });
-        console.log("Archivo subido correctamente", response.data);
+        //console.log("Archivo subido correctamente", response.data);
 
         if (response.status === 200) {
           navigate("/mensaje");

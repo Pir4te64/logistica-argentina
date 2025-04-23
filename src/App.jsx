@@ -25,7 +25,7 @@ function App() {
       <Route
         path='/dashboard'
         element={
-          <ProtectedRoute allowedIds={[1, 2, 3]}>
+          <ProtectedRoute allowedIds={[1, 2]}>
             <DasboardPage />
           </ProtectedRoute>
         }
