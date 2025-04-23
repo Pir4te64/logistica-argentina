@@ -43,7 +43,7 @@ const FormularioDocumentacion = () => {
     setIsSubmitting(true);
     try {
       await submitDocumentation(uploadedFiles);
-      window.location.href = "/mensaje";
+      //window.location.href = "/mensaje";
     } catch (error) {
       console.error("Error al enviar documentación:", error);
       setIsSubmitting(false);

@@ -66,7 +66,7 @@ const Navbar = () => {
             <>
               {user &&
                 user.roles &&
-                user.roles.some((role) => role.id === 1 || role.id === 2 || role.id === 3) && (
+                user.roles.some((role) => role.id === 1 || role.id === 2) && (
                   <Link
                     to='/dashboard'
                     className='bg-custom-red hover:bg-custom-red/80 px-4 py-2 rounded transition-colors'>
@@ -134,7 +134,7 @@ const Navbar = () => {
             <>
               {user &&
                 user.roles &&
-                user.roles.some((role) => role.id === 1 || role.id === 2 || role.id === 3) && (
+                user.roles.some((role) => role.id === 1 || role.id === 2) && (
                   <Link
                     to='/dashboard'
                     className='bg-custom-red hover:bg-custom-red/80 px-4 py-2 rounded transition-colors'>

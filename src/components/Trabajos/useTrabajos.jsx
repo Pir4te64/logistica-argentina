@@ -20,8 +20,8 @@ export const useTrabajos = create((set, get) => ({
                     Authorization: `Bearer ${token}`,
                 },
             });
-            console.log("▶ Servicios anuncio:", response.data);
-            set({ servicios: response.data.data, loading: false });
+
+            set({ servicios: response.data, loading: false });
         } catch (err) {
             console.error("❌ Error al cargar servicios:", err);
             set({ error: err, loading: false });
