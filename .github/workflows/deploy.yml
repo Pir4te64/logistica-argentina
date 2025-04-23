@@ -1,0 +1,76 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write  # <--- Permiso para escribir contenido en el repo
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1️⃣ Clonar el repositorio
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      # 2️⃣ Instalar dependencias y generar la build
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'  # Ajusta según tu proyecto
+
+      - name: Install dependencies and build
+        run: |
+          npm ci
+          npm run build  # Genera la carpeta 'dist' o 'build'
+
+      # 3️⃣ Crear/limpiar la rama "production"
+      - name: Prepare production branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Si la rama "production" ya existe en remoto, bórrala
+          if git rev-parse --verify origin/production > /dev/null 2>&1; then
+            git push origin --delete production
+          fi
+
+          # Crea la rama 'production' basada en 'main'
+          git checkout -b production
+
+      # 4️⃣ Borrar todo y copiar solo los archivos de la build
+      - name: Clean branch and copy dist content
+        run: |
+          # Elimina los archivos rastreados por Git
+          git rm -rf . || true
+          
+          # Copia el contenido de 'dist' (o 'build') a la raíz
+          cp -r dist/* .
+
+          # Borra 'dist' y 'node_modules'
+          rm -rf dist node_modules
+
+          # Agrega y confirma los cambios
+          git add .
+          git commit -m "Deploy production from main"
+
+      # 5️⃣ Empujar los cambios a la rama "production"
+      - name: Push to production branch
+        run: |
+          git push origin production --force
+
+      # 6️⃣ Desplegar a Hostinger via FTP
+      - name: Deploy to Hostinger
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./            # <-- Sube la raíz (que contiene el build)
+          server-dir: /
