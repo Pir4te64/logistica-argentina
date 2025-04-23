@@ -1,49 +1,83 @@
 // Testimonials.jsx
 import React, { useState } from "react";
-import { FaChevronLeft, FaChevronRight, FaQuoteLeft } from "react-icons/fa";
-import testimonialImg from "@/assets/testimonials.png"; // reemplazá por tu asset real
+import { FaQuoteLeft, FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import logisticsImg from "@/assets/distribucionproductoslocales.jpg"; // tu imagen de logística
 
 const testimonialsData = [
   {
-    text: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset.",
-    image: testimonialImg,
+    author: "— Darío Pablo Barrios",
+    text: "Me ayudaron con el combustible hasta tanto inicié a cobrar, así pude trabajar",
   },
   {
-    text: "Otro testimonio de cliente satisfecho que habla maravillas de nuestros servicios y la calidad que ofrecemos...",
-    image: testimonialImg,
+    author: "— Exequiel Lorente",
+    text: "Presto servicio hace más de 1 año y nunca tuve ningún problema",
+  },
+  {
+    author: "— Juan Pablo Meza",
+    text: "Una vez pagas el combustible es fácil trabajar, todos los meses te pagan",
+  },
+  {
+    author: "— Claudio Almiron",
+    text: "Con muchas ganas de trabajar!",
+  },
+  {
+    author: "— Lucas Martín Sánchez",
+    text: "Me quedé sin trabajo y en la semana ingresé a trabajar con Logística Argentina SRL",
+  },
+  {
+    author: "— Martín Mendoza",
+    text: "Yo trabajaba en relación de dependencia y me quedé sin trabajo, quería ingresar a trabajar en una Empresa de Paquetes, pero no podía con los plazos de pago, gracias a Logística Argentina pude ingresar!",
   },
 ];
 
 const Testimonials = () => {
   const [current, setCurrent] = useState(0);
   const total = testimonialsData.length;
-  const { text, image } = testimonialsData[current];
+  const { author, text } = testimonialsData[current];
 
-  const prev = () => setCurrent((current - 1 + total) % total);
-  const next = () => setCurrent((current + 1) % total);
+  const prevTestimonial = () =>
+    setCurrent((current - 1 + total) % total);
+  const nextTestimonial = () =>
+    setCurrent((current + 1) % total);
 
   return (
-    <section className="py-16 bg-white" id="testimonios">
-      <h2 className="text-2xl font-semibold text-center mb-12">Testimonios</h2>
+    <section className="py-16 bg-gray-50" id="testimonios">
+      <h2 className="text-3xl font-semibold text-center mb-12">
+        ¿Qué dicen nuestros clientes y distribuidores?
+      </h2>
 
-      <div className="relative max-w-6xl mx-auto px-4 flex flex-col lg:flex-row items-center">
-        {/* Tarjeta de testimonio */}
-        <div className="relative bg-white rounded-lg shadow-lg p-8 lg:w-1/2 w-full">
-          <FaQuoteLeft className="text-custom-blue md:text-4xl text-2xl absolute md:-left-8 md:top-4 top-0 -left-2" />
-          <p className="text-gray-700 leading-relaxed">{text}</p>
+      <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden flex flex-col md:flex-row">
+        {/* Texto del testimonio */}
+        <div className="p-8 md:w-1/2 flex flex-col justify-between">
+          <div>
+            <h3 className="font-bold text-gray-900 mb-2">
+              {author.replace(/^— /, "")}
+            </h3>
+            <div className="flex mb-4">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <span key={i} className="text-yellow-400 text-xl">
+                  ★
+                </span>
+              ))}
+            </div>
+            <div className="relative">
+              <FaQuoteLeft className="text-custom-blue text-4xl absolute -top-4 -left-4 opacity-20" />
+              <p className="text-gray-700 leading-relaxed mt-2">{text}</p>
+            </div>
+          </div>
 
-          {/* Navegación de testimonios */}
-          <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-4">
+          {/* Controles Prev/Next */}
+          <div className="mt-6 flex justify-between">
             <button
-              onClick={prev}
-              className="bg-custom-red p-3 rounded shadow hover:bg-custom-red/80 transition"
+              onClick={prevTestimonial}
+              className="bg-custom-red p-2 rounded-full shadow hover:bg-custom-red/80 transition"
               aria-label="Anterior Testimonio"
             >
               <FaChevronLeft className="text-white" />
             </button>
             <button
-              onClick={next}
-              className="bg-custom-red p-3 rounded shadow hover:bg-custom-red/80 transition"
+              onClick={nextTestimonial}
+              className="bg-custom-red p-2 rounded-full shadow hover:bg-custom-red/80 transition"
               aria-label="Siguiente Testimonio"
             >
               <FaChevronRight className="text-white" />
@@ -51,12 +85,12 @@ const Testimonials = () => {
           </div>
         </div>
 
-        {/* Imagen del testimonio */}
-        <div className="mt-12 lg:mt-0 lg:ml-12 lg:w-1/2 w-full h-80 lg:h-96 bg-gray-100 rounded-lg overflow-hidden">
+        {/* Imagen fija a la derecha */}
+        <div className="md:w-1/2 h-64 md:h-auto">
           <img
-            src={image}
-            alt="Testimonio"
-            className="object-cover w-full h-full"
+            src={logisticsImg}
+            alt="Logística Argentina"
+            className="w-full h-full object-cover"
           />
         </div>
       </div>

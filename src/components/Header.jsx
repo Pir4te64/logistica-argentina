@@ -1,17 +1,12 @@
 // src/components/Dashboard/ServicioAnuncio/Header.jsx
 import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-
-// Importa estilos de Swiper y de sus módulos
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import "swiper/css/autoplay";
 import "swiper/css/effect-fade";
-
-// Importa los módulos necesarios de Swiper
 import { EffectFade, Navigation, Autoplay } from "swiper/modules";
-
 import { useNavigate } from "react-router-dom";
 
 import header from "@/assets/Header/header.jpg";
@@ -40,6 +35,9 @@ const Header = () => {
   const roleNames = user.roles?.map((r) => r.name.toLowerCase()) || [];
   const isAdmin = roleNames.includes("admin") || roleNames.includes("super admin");
 
+  // 2) Compruebo token
+  const token = localStorage.getItem("token"); // o la clave que uses para el JWT
+
   return (
     <Swiper
       modules={[EffectFade, Navigation, Autoplay]}
@@ -52,29 +50,29 @@ const Header = () => {
       className="w-full h-[400px] sm:h-[500px] md:h-screen"
     >
       {images.map((img, index) => {
-        const textLower = texts[index].toLowerCase();
+        const txt = texts[index].toLowerCase();
         let redirectPath = "";
-        if (textLower.includes("chofer") || textLower.includes("ayudante")) {
+        if (txt.includes("chofer") || txt.includes("ayudante")) {
           redirectPath = "/formulario-choferes";
-        } else if (textLower.includes("comisionista")) {
+        } else if (txt.includes("comisionista")) {
           redirectPath = "/formulario-comisionista";
-        } else if (textLower.includes("marca")) {
+        } else if (txt.includes("marca")) {
           redirectPath = "/formulario";
         }
 
-        // Solo clickeable si no es Admin o Super Admin
-        const canClick = redirectPath && !isAdmin;
+        // Solo clickeable si hay ruta, no es admin y existe el token
+        const canClick = Boolean(redirectPath && !isAdmin && token);
 
         return (
           <SwiperSlide key={index}>
             <div
-              className={`relative w-full h-full bg-cover bg-center ${canClick ? "cursor-pointer" : "cursor-default"
-                } transition`}
+              className={`
+                relative w-full h-full bg-cover bg-center transition
+                ${canClick ? "cursor-pointer" : " "}
+              `}
               style={{ backgroundImage: `url(${img})` }}
               onClick={() => {
-                if (canClick) {
-                  navigate(redirectPath);
-                }
+                if (canClick) navigate(redirectPath);
               }}
             >
               <div className="absolute bottom-0 left-0 w-full">
