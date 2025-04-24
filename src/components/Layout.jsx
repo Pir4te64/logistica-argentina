@@ -1,7 +1,7 @@
 import React from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import WhatsAppButton from "./WhatsAppButton";
+import WhatsAppButton from "@/components/WhatsAppButton";
 
 const Layout = ({ children }) => {
   return (

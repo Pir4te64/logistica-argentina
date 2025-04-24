@@ -2,10 +2,11 @@
 import React, { useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
-import { API_URL } from "@/Api/Api";
+import { FaInfoCircle } from "react-icons/fa";
 import tarjeta from "@/assets/tarjeta.jpg";
+import { API_URL } from "@/Api/Api";
 
-const TarjetaAplicar = ({ servicio }) => {
+const TarjetaAplicar = ({ servicio, onInfo }) => {
   const {
     id: servicioId,
     empresa,
@@ -20,17 +21,16 @@ const TarjetaAplicar = ({ servicio }) => {
   const user = storedUser ? JSON.parse(storedUser) : null;
   const token = localStorage.getItem("token");
 
-  // Verificar rol
+  // Comprobar rol Transportistas
   const isTransportista = user?.roles?.some(
     (r) => r.name.toLowerCase() === "transportistas"
   );
 
-  const [loading, setLoading] = useState(false);
+  const [loadingApply, setLoadingApply] = useState(false);
 
   const handleApply = async () => {
     if (!isTransportista || !token) return;
-
-    setLoading(true);
+    setLoadingApply(true);
     try {
       const payload = {
         servicios_id: servicioId,
@@ -42,84 +42,61 @@ const TarjetaAplicar = ({ servicio }) => {
         asignado: false,
         puntos: 0,
       };
-
       await axios.post(API_URL.POSTULACIONES, payload, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
       });
-
-      // Éxito con SweetAlert2
-      Swal.fire({
-        icon: "success",
-        title: "¡Postulación exitosa!",
-        text: "Te postulaste correctamente.",
-        confirmButtonColor: "#3085d6",
-        confirmButtonText: "OK",
-      });
+      Swal.fire("¡Postulación exitosa!", "", "success");
     } catch (error) {
-      // Extraer mensaje si viene de la API
-      const msg =
-        error.response?.data?.message ||
-        "Ocurrió un error al postular. Intenta de nuevo.";
-      const ms2 = error.response?.data?.errors
-      Swal.fire({
-        icon: "error",
-        title: "Error al postular",
-        text: msg,
-        text: ms2,
-        confirmButtonColor: "#d33",
-        confirmButtonText: "Cerrar",
-      });
+      Swal.fire("Error al postular", "Intenta de nuevo.", "error");
     } finally {
-      setLoading(false);
+      setLoadingApply(false);
     }
   };
 
   return (
     <div className="relative w-full h-64 rounded shadow overflow-hidden">
-      {/* Imagen de fondo */}
       <img
         src={tarjeta}
-        alt="Persona con paquete"
+        alt="Fondo tarjeta"
         className="absolute inset-0 w-full h-full object-cover"
       />
-
-      {/* Degradado */}
       <div className="absolute inset-0 bg-gradient-to-r from-custom-blue to-transparent"></div>
 
-      {/* Contenido */}
-      <div className="relative z-10 p-4 h-full flex items-center justify-between text-white">
-        <div className="max-w-sm">
+      <div className="relative z-10 p-4 h-full flex flex-col justify-between text-white">
+        <div>
           <h2 className="text-xl font-semibold">{empresa}</h2>
-          <p className="mt-2">
-            <strong>Ciudad:</strong> {ciudad}
-          </p>
-          <p>
-            <strong>Vehículo:</strong> {vehiculoNombre}
-          </p>
-          <p>
-            <strong>Tarifa:</strong> ${tarifa_total}
-          </p>
+          <p className="mt-2"><strong>Ciudad:</strong> {ciudad}</p>
+          <p><strong>Vehículo:</strong> {vehiculoNombre}</p>
+          <p><strong>Tarifa:</strong> ${tarifa_total}</p>
         </div>
 
-        {/* Botón Aplicar */}
-        <div className="absolute md:bottom-10 bottom-5 md:right-20 right-5">
+        <div className="flex space-x-2">
+          {/* + Info */}
+          <button
+            onClick={onInfo}
+            className="flex items-center gap-1 bg-custom-blue px-3 py-1 rounded hover:bg-custom-blue/80 transition-colors"
+          >
+            <FaInfoCircle /> + Info
+          </button>
+
+          {/* Aplicar */}
           <button
             onClick={handleApply}
-            disabled={!isTransportista || loading}
+            disabled={!isTransportista || loadingApply}
             className={`
-              w-32 px-4 py-2 rounded transition-colors
+              px-3 py-1 rounded transition-colors
               ${isTransportista
-                ? loading
+                ? loadingApply
                   ? "bg-gray-500 cursor-wait"
                   : "bg-custom-red hover:bg-custom-red/80"
                 : "bg-gray-400 cursor-not-allowed"}
               text-white
             `}
           >
-            {loading ? "Enviando..." : "Aplicar"}
+            {loadingApply ? "Enviando..." : "Aplicar"}
           </button>
         </div>
       </div>

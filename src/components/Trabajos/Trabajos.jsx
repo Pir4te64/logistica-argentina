@@ -1,36 +1,37 @@
 // src/components/Trabajos/Trabajos.jsx
 import React, { useEffect, useState, useMemo } from "react";
 import { useFormik } from "formik";
-import { initialValues, validationSchema } from "@/components/Trabajos/trabajos.data";
-import CustomInput from "@/components/Trabajos/CustomInput";
+import { initialValues } from "@/components/Trabajos/trabajos.data";
 import CustomSelect from "@/components/Trabajos/CustomSelect";
 import TarjetaAplicar from "@/components/Trabajos/TarjetaAplicar";
 import { useTrabajos } from "@/components/Trabajos/useTrabajos";
+import ServicioModal from "@/components/Trabajos/Modal";
 
 const Trabajos = () => {
   const { fetchServicios, servicios = [], loading, error } = useTrabajos();
+
+  // Ejecutar fetch y esperar la promesa
   useEffect(() => {
-    fetchServicios();
+    const load = async () => {
+      await fetchServicios();
+    };
+    load();
   }, [fetchServicios]);
 
-  // Formik
+  // Formik para filtros
   const formik = useFormik({
     initialValues,
-    onSubmit: () => {
-      /* el filtrado es en vivo */
-    },
+    onSubmit: () => { },
   });
 
-  // Generar opciones únicas a partir de servicios
+  // Opciones dinámicas
   const cityOptions = useMemo(() => {
     const cities = Array.from(new Set(servicios.map(s => s.ciudad))).sort();
     return cities.map(c => ({ label: c, value: c }));
   }, [servicios]);
 
   const vehiculosOptions = useMemo(() => {
-    const vehs = Array.from(
-      new Set(servicios.map(s => s.categoria_vehiculo.nombre))
-    ).sort();
+    const vehs = Array.from(new Set(servicios.map(s => s.categoria_vehiculo.nombre))).sort();
     return vehs.map(v => ({ label: v, value: v }));
   }, [servicios]);
 
@@ -39,68 +40,68 @@ const Trabajos = () => {
     return emps.map(e => ({ label: e, value: e }));
   }, [servicios]);
 
-  // Filtrar servicios según formik.values
+  // Filtrado en vivo
   const serviciosFiltrados = useMemo(() => {
     return servicios.filter(s => {
       const { ciudad, vehiculo, empresa } = formik.values;
       const matchCity = ciudad ? s.ciudad === ciudad : true;
-      const matchVeh =
-        vehiculo ? s.categoria_vehiculo.nombre === vehiculo : true;
+      const matchVeh = vehiculo ? s.categoria_vehiculo.nombre === vehiculo : true;
       const matchEmp = empresa ? s.empresa === empresa : true;
       return matchCity && matchVeh && matchEmp;
     });
   }, [servicios, formik.values]);
 
-  // "Ver más"
+  // Ver más
   const [visibleCount, setVisibleCount] = useState(4);
   const handleShowMore = () => setVisibleCount(serviciosFiltrados.length);
 
+  // Modal de info
+  const [selectedServicio, setSelectedServicio] = useState(null);
+
+  if (loading) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <h1 className="text-3xl font-extrabold text-gray-800 mb-6">Trabajos</h1>
+        <p className="text-gray-600">Cargando servicios...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <p className="text-red-600">Error al cargar servicios.</p>
+      </div>
+    );
+  }
+
   return (
     <div className="container mx-auto w-11/12 mt-10" id="trabajos">
-      {/* Filtro */}
+      <h1 className="text-3xl font-extrabold text-gray-800 mb-6">Trabajos</h1>
+
+      {/* Filtros */}
       <div className="bg-custom-dark p-4 rounded mb-6">
         <form onSubmit={formik.handleSubmit} className="flex flex-col gap-4 md:flex-row">
           <div className="flex-1">
-            <CustomSelect
-              label="Ciudad"
-              name="ciudad"
-              formik={formik}
-              options={cityOptions}
-            />
+            <CustomSelect label="Ciudad" name="ciudad" formik={formik} options={cityOptions} />
           </div>
           <div className="flex-1">
-            <CustomSelect
-              label="Vehículo"
-              name="vehiculo"
-              formik={formik}
-              options={vehiculosOptions}
-            />
+            <CustomSelect label="Vehículo" name="vehiculo" formik={formik} options={vehiculosOptions} />
           </div>
           <div className="flex-1">
-            <CustomSelect
-              label="Empresa"
-              name="empresa"
-              formik={formik}
-              options={empresasOptions}
-            />
+            <CustomSelect label="Empresa" name="empresa" formik={formik} options={empresasOptions} />
           </div>
-          <button
-            type="submit"
-            className="bg-custom-blue text-white px-6 py-2 rounded hover:bg-custom-blue/80 transition-colors md:ml-4"
-          >
-            Filtrar
-          </button>
         </form>
       </div>
 
-      {/* Estado de carga/error */}
-      {loading && <p className="text-center">Cargando servicios...</p>}
-      {error && <p className="text-center text-red-500">Error al cargar servicios.</p>}
-
-      {/* Listado de tarjetas filtradas */}
+      {/* Listado */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {serviciosFiltrados.slice(0, visibleCount).map(servicio => (
-          <TarjetaAplicar key={servicio.id} servicio={servicio} />
+          <TarjetaAplicar
+            key={servicio.id}
+            servicio={servicio}
+            onInfo={() => setSelectedServicio(servicio)}
+          />
         ))}
       </div>
 
@@ -115,6 +116,12 @@ const Trabajos = () => {
           </button>
         </div>
       )}
+
+      {/* Modal de detalles */}
+      <ServicioModal
+        servicio={selectedServicio}
+        onClose={() => setSelectedServicio(null)}
+      />
     </div>
   );
 };
