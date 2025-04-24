@@ -52,8 +52,8 @@ const Footer = () => {
             </li>
             <li className='flex items-center'>
               <FaPhone className='mr-2 text-xl' />
-              <a href='tel:+54376076580' className='hover:underline'>
-                +54 3760 76580
+              <a href='tel:+543795073930' className='hover:underline'>
+                +54 3795073930
               </a>
             </li>
           </ul>
@@ -64,12 +64,12 @@ const Footer = () => {
           <h3 className='text-lg font-semibold mb-2'>Síguenos</h3>
           <div className='flex space-x-4'>
             <a
-              href='https://facebook.com'
+              href='https://www.facebook.com/groups/673053787481365'
               className='bg-custom-blue p-2 rounded-full hover:bg-opacity-80'>
               <FaFacebookF />
             </a>
             <a
-              href='https://instagram.com'
+              href='https://www.instagram.com/logistica.argentina'
               className='bg-custom-blue p-2 rounded-full hover:bg-opacity-80'>
               <FaInstagram />
             </a>
