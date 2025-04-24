@@ -11,6 +11,7 @@ import FormularioChoferes from "@/pages/FormularioChoferes";
 import FormularioComisionistaPage from "@/pages/FormularioComisionista";
 import DasboardPage from "@/pages/Dasboard";
 import ProtectedRoute from "@/Api/ProtectedRoute";
+import NotFound from "@/404";
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
         path='/formulario-comisionista'
         element={<FormularioComisionistaPage />}
       />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }
