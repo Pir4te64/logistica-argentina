@@ -11,13 +11,12 @@ export const useTrabajos = create((set, get) => ({
     // Acción para cargar los servicios
     fetchServicios: async () => {
         set({ loading: true, error: null });
-        // obtengo el token directamente del otro store
-        const token = localStorage.getItem("token");
-
+      
+        
         try {
             const response = await axios.get(API_URL.SERVICIO_ANUNCIO, {
                 headers: {
-                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json",
                 },
             });
 
