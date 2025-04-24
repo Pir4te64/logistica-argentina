@@ -96,11 +96,11 @@ const LoginComponente = () => {
             </div>
 
             {/* Olvidaste tu contraseña */}
-            <div className='flex justify-end mb-4'>
+            {/*  <div className='flex justify-end mb-4'>
               <a href='#' className='text-sm text-white hover:underline'>
                 ¿Olvidaste tu contraseña?
               </a>
-            </div>
+            </div> */}
 
             {/* Botón Ingresar */}
             <button
