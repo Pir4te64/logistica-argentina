@@ -20,7 +20,6 @@ export const usePostulacionesStore = create((set, get) => ({
                     Authorization: `Bearer ${token}`,
                 },
             });
-            console.log("▶ Postulaciones:", response.data);
             // asumiendo que la data viene en response.data.data
             set({
                 postulaciones: response.data.data ?? response.data,
