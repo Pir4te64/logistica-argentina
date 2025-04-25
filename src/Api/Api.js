@@ -1,4 +1,4 @@
-export const BASE_URL = "http://69.62.95.86";
+export const BASE_URL = "https://backend.logisticaargentinasrl.com.ar";
 export const API_URL = {
   LOGIN: `${BASE_URL}/api/login`,
   REGISTER: `${BASE_URL}/api/register`,

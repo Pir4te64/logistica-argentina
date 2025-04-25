@@ -62,7 +62,7 @@ const LoginComponente = () => {
       <div className='w-full md:w-1/2 bg-custom-gray flex items-center justify-center'>
         <div className='max-w-md w-full p-8'>
           <h2 className='text-2xl font-bold mb-6 text-white'>Iniciar sesión</h2>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} className="space-y-6">
             {/* Campo Email */}
             <div className='mb-4'>
               <label className='block text-sm mb-2 text-white' htmlFor='email'>
@@ -111,7 +111,7 @@ const LoginComponente = () => {
           </form>
 
           {/* Registro */}
-          <p className='text-center text-sm mb-4 text-white'>
+          <p className='text-center text-sm mb-4 py-4 text-white'>
             ¿No tienes cuenta? {" "}
             <Link to='/register' className='text-white text-md underline'>
               Regístrate
