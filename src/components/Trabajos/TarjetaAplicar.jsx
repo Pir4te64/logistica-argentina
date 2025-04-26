@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { FaInfoCircle } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 import tarjeta from "@/assets/tarjeta.jpg";
 import { API_URL } from "@/Api/Api";
 
@@ -27,9 +28,32 @@ const TarjetaAplicar = ({ servicio, onInfo }) => {
   );
 
   const [loadingApply, setLoadingApply] = useState(false);
+  const navigate = useNavigate();
 
   const handleApply = async () => {
-    if (!isTransportista || !token) return;
+    // 1) Si no hay token: pedir login
+    if (!token) {
+      await Swal.fire({
+        icon: "info",
+        title: "Debes iniciar sesión",
+        text: "Serás redirigido al login para poder postularte.",
+        confirmButtonText: "Ir al login",
+      });
+      navigate("/login");
+      return;
+    }
+
+    // 2) Si no es transportista: mostrar mensaje y redirigir al formulario
+    if (!isTransportista) {
+      await Swal.fire(
+        "Formulario incompleto",
+        "Este formulario es para usuarios transportistas",
+        "warning"
+      );
+      return;
+    }
+
+    // 3) Caso válido: enviamos postulación
     setLoadingApply(true);
     try {
       const payload = {
@@ -42,15 +66,26 @@ const TarjetaAplicar = ({ servicio, onInfo }) => {
         asignado: false,
         puntos: 0,
       };
+
       await axios.post(API_URL.POSTULACIONES, payload, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
       });
+
       Swal.fire("¡Postulación exitosa!", "", "success");
     } catch (error) {
-      Swal.fire("Error al postular", "Intenta de nuevo.", "error");
+      const mensajeError =
+        error.response?.data?.errors?.[0] || "Ocurrió un error desconocido";
+
+      await Swal.fire(
+        "Error al postular",
+        `${mensajeError}. Serás redirigido al formulario.`,
+        "error"
+      );
+
+      navigate("/formulario");
     } finally {
       setLoadingApply(false);
     }
@@ -63,14 +98,20 @@ const TarjetaAplicar = ({ servicio, onInfo }) => {
         alt="Fondo tarjeta"
         className="absolute inset-0 w-full h-full object-cover"
       />
-      <div className="absolute inset-0 bg-gradient-to-r from-custom-blue to-transparent"></div>
+      <div className="absolute inset-0 bg-gradient-to-r from-custom-blue to-transparent" />
 
       <div className="relative z-10 p-4 h-full flex flex-col justify-between text-white">
         <div>
           <h2 className="text-xl font-semibold">{empresa}</h2>
-          <p className="mt-2"><strong>Ciudad:</strong> {ciudad}</p>
-          <p><strong>Vehículo:</strong> {vehiculoNombre}</p>
-          <p><strong>Tarifa:</strong> ${tarifa_total}</p>
+          <p className="mt-2">
+            <strong>Ciudad:</strong> {ciudad}
+          </p>
+          <p>
+            <strong>Vehículo:</strong> {vehiculoNombre}
+          </p>
+          <p>
+            <strong>Tarifa:</strong> ${tarifa_total}
+          </p>
         </div>
 
         <div className="flex space-x-2">
@@ -85,16 +126,11 @@ const TarjetaAplicar = ({ servicio, onInfo }) => {
           {/* Aplicar */}
           <button
             onClick={handleApply}
-            disabled={!isTransportista || loadingApply}
-            className={`
-              px-3 py-1 rounded transition-colors
-              ${isTransportista
-                ? loadingApply
-                  ? "bg-gray-500 cursor-wait"
-                  : "bg-custom-red hover:bg-custom-red/80"
-                : "bg-gray-400 cursor-not-allowed"}
-              text-white
-            `}
+            className={`px-3 py-1 rounded transition-colors 
+              ${loadingApply
+                ? "bg-gray-500 cursor-wait"
+                : "bg-custom-red hover:bg-custom-red/80"}
+              text-white`}
           >
             {loadingApply ? "Enviando..." : "Aplicar"}
           </button>

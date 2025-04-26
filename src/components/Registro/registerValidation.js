@@ -15,7 +15,7 @@ export const validationSchema = Yup.object({
   telefono: Yup.string().required("Requerido"),
   email: Yup.string().email("Email inválido").required("Requerido"),
   roles: Yup.string().required("Debes elegir un rol"),  // ← validación
-  password: Yup.string().min(6, "Mínimo 6 caracteres").required("Requerido"),
+  password: Yup.string().min(8, "Mínimo 8 caracteres").required("Requerido"),
   passwordConfirmation: Yup.string()
     .oneOf([Yup.ref("password"), null], "Las contraseñas no coinciden")
     .required("Requerido"),

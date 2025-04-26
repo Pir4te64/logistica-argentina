@@ -1,4 +1,4 @@
-// MiniCard.jsx
+// src/components/Trabajos/MiniCard.jsx
 import React from "react";
 import beneficio1 from "@/assets/beneficios/1.jpg";
 import beneficio2 from "@/assets/beneficios/2.jpg";
@@ -39,25 +39,29 @@ const MiniCard = () => {
   ];
 
   return (
-    <div className='grid grid-cols-1 gap-4 lg:grid-cols-5 -mt-10 container mx-auto justify-items-center'>
-      {miniCardsData.map((card, index) => (
-        <div
-          key={index}
-          className='block w-full max-w-xs rounded overflow-hidden shadow hover:shadow-md transition-shadow bg-custom-blue-medium'>
-          {/* Imagen en la parte superior */}
-          <img
-            src={card.imageUrl}
-            alt={card.title}
-            className='w-full h-40 object-cover'
-          />
-
-          {/* Contenido de texto */}
-          <div className='p-4 '>
-            <h3 className='text-lg  text-white'>{card.title}</h3>
-            <p className='text-custom-dark mt-2 text-sm'>{card.description}</p>
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 -mt-10">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+        {miniCardsData.map((card, index) => (
+          <div
+            key={index}
+            className="w-full bg-custom-blue-medium rounded-lg overflow-hidden shadow hover:shadow-lg transition-shadow duration-200"
+          >
+            <img
+              src={card.imageUrl}
+              alt={card.title}
+              className="w-full h-48 sm:h-40 md:h-48 object-cover"
+            />
+            <div className="p-4">
+              <h3 className="text-base sm:text-lg md:text-xl font-semibold text-white">
+                {card.title}
+              </h3>
+              <p className="mt-2 text-sm sm:text-base text-custom-dark">
+                {card.description}
+              </p>
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 };
