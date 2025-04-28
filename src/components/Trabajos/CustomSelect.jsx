@@ -1,41 +1,43 @@
-// CustomSelect.jsx
+// src/components/Trabajos/CustomSelect.jsx
 import React from "react";
 
-const CustomSelect = ({ label, name, formik, options }) => {
+const CustomSelect = ({
+  label,
+  name,
+  options,
+  value,
+  onChange,
+  className = "",
+}) => {
+  const handleChange = (e) => onChange(e.target.value);
+  const isGrouped = options.length > 0 && options[0].options;
+
   return (
-    <div className="flex flex-col">
-      <label htmlFor={name} className="mb-1 font-medium text-white">
-        {label}
-      </label>
+    <div className={`flex flex-col ${className}`}>
+      <label className="mb-1 text-sm font-medium text-gray-200">{label}</label>
       <select
-        id={name}
         name={name}
-        value={formik.values[name]}
-        onChange={formik.handleChange}
-        onBlur={formik.handleBlur}
-        className="border rounded p-2"
+        value={value}
+        onChange={handleChange}
+        className="w-full bg-white text-gray-800 p-2 rounded"
       >
-        <option value="">Seleccione una opción</option>
-        {options.map((group) =>
-          group.options ? (
-            <optgroup key={group.label} label={group.label}>
-              {group.options.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </optgroup>
-          ) : (
-            // Si no hay grupos (para "Empresas", por ejemplo)
-            <option key={group.value} value={group.value}>
-              {group.label}
-            </option>
-          )
-        )}
+        <option value="">— Todas —</option>
+        {isGrouped
+          ? options.map((group) => (
+              <optgroup key={group.label} label={group.label}>
+                {group.options.map((opt) => (
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </option>
+                ))}
+              </optgroup>
+            ))
+          : options.map((opt) => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
+            ))}
       </select>
-      {formik.touched[name] && formik.errors[name] && (
-        <div className="text-red-500 text-sm">{formik.errors[name]}</div>
-      )}
     </div>
   );
 };

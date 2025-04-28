@@ -6,10 +6,11 @@ import axios from "axios";
 import RegisterImg from "@/assets/Login.jpg"; // Ajusta la ruta según corresponda
 import { API_URL } from "@/Api/Api";
 import { initialValues, validationSchema } from "@/components/Registro/registerValidation";
+import { useNavigate } from "react-router-dom";
 
 const RegisterComponente = () => {
   const [message, setMessage] = useState("");
-
+  const navigate = useNavigate(); // Asegúrate de importar useNavigate si lo necesitas
   const formik = useFormik({
     initialValues,
     validationSchema,
@@ -29,7 +30,7 @@ const RegisterComponente = () => {
         console.log("Respuesta del servidor:", response.data);
         setMessage(response.data.message);
         alert("Registro exitoso, serás redirigido a la página de inicio de sesión");
-        window.location.href = "/login";
+        navigate("/login");
       } catch (error) {
         console.error("Error en registro:", error);
         setMessage("Error en el registro");
