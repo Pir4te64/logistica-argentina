@@ -2,9 +2,10 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
-import { FaTrash, FaEdit } from 'react-icons/fa';
+import { FaTrash, FaEdit, FaRegStar, FaStar } from 'react-icons/fa';
 import { usePostulacionesStore } from '@/components/Dashboard/Postulaciones/usePostulacionesStore.JS';
 import { API_URL } from '@/Api/Api';
+import Rating from '@/components/Dashboard/Postulaciones/Rating';
 
 const Postulaciones = () => {
     const { postulaciones, loading, error, fetchPostulaciones } = usePostulacionesStore();
@@ -121,7 +122,15 @@ const Postulaciones = () => {
                                 <td className="px-4 py-2 text-sm text-gray-700">{p.fecha_fin_servicio.slice(0, 10)}</td>
                                 <td className="px-4 py-2 text-center text-sm text-gray-700">{p.cumple_requisitos ? 'Sí' : 'No'}</td>
                                 <td className="px-4 py-2 text-center text-sm text-gray-700">{p.asignado ? 'Sí' : 'No'}</td>
-                                <td className="px-4 py-2 text-center text-sm text-gray-700">{p.puntos}</td>
+                                <td className="px-4 py-2 text-center text-sm text-gray-700">
+  {Array.from({ length: 5 }, (_, i) =>
+    i < p.puntos ? (
+      <FaStar key={i} className="inline-block w-4 h-4 text-yellow-400" />
+    ) : (
+      <FaRegStar key={i} className="inline-block w-4 h-4 text-gray-300" />
+    )
+  )}
+</td>
                                 <td className="px-4 py-2 text-center text-sm text-gray-700 flex items-center justify-center gap-3">
                                     <button
                                         onClick={() => startEdit(p)}
@@ -167,6 +176,7 @@ const Postulaciones = () => {
                             <input
                                 type="date"
                                 name="fecha_fin_servicio"
+                                min={form.fecha_inicio_servicio}
                                 value={form.fecha_fin_servicio}
                                 onChange={handleChange}
                                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
@@ -197,17 +207,10 @@ const Postulaciones = () => {
                             </select>
                         </div>
                         <div className="md:col-span-2">
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Puntos</label>
-                            <select
-                                name="puntos"
-                                value={form.puntos}
-                                onChange={handleChange}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                            >
-                                {[1, 2, 3, 4, 5].map(n => (
-                                    <option key={n} value={n}>{n}</option>
-                                ))}
-                            </select>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Puntos
+                            </label>
+                            <Rating value={form.puntos} onChange={handleChange} />
                         </div>
                         <div className="md:col-span-2 flex space-x-4">
                             <button

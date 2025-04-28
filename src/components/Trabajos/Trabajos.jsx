@@ -5,43 +5,12 @@ import TarjetaAplicar from "@/components/Trabajos/TarjetaAplicar";
 import { useTrabajos } from "@/components/Trabajos/useTrabajos";
 import ServicioModal from "@/components/Trabajos/Modal";
 
-// Grupos de vehículo y ejemplos
-const VEHICLE_GROUPS = [
-  {
-    label: "Chico",
-    options: [
-      { label: "Kangoo", value: "Kangoo" },
-      { label: "Fiorino", value: "Fiorino" },
-      { label: "Partner", value: "Partner" },
-    ],
-  },
-  {
-    label: "Mediano",
-    options: [
-      { label: "Master", value: "Master" },
-      { label: "Ducato", value: "Ducato" },
-      { label: "Transit", value: "Transit" },
-    ],
-  },
-  {
-    label: "Grande",
-    options: [
-      { label: "Accelo 815", value: "Accelo 815" },
-      { label: "Mercedes 710", value: "Mercedes 710" },
-      { label: "Atego", value: "Atego" },
-    ],
-  },
-  {
-    label: "Semis",
-    options: [
-      { label: "Scania", value: "Scania" },
-      { label: "Actros", value: "Actros" },
-      { label: "Iveco Stralis", value: "Iveco Stralis" },
-      { label: "Volvo FM", value: "Volvo FM" },
-    ],
-  },
+const VEHICLE_OPTIONS = [
+  { label: "Chico", value: "Chico" },
+  { label: "Mediano", value: "Mediano" },
+  { label: "Grande", value: "Grande" },
+  { label: "Semis", value: "Semis" },
 ];
-
 
 const Trabajos = () => {
   const { fetchServicios, servicios = [], loading, error } = useTrabajos();
@@ -55,6 +24,7 @@ const Trabajos = () => {
     vehiculo: "",
     empresa: "",
   });
+
   const handleSelectChange = (field, value) =>
     setFilters((prev) => ({ ...prev, [field]: value }));
 
@@ -79,17 +49,20 @@ const Trabajos = () => {
     []
   );
 
-    const serviciosFiltrados = useMemo(() => {
-        return servicios.filter((s) => {
-          const { ciudad, vehiculo, empresa } = filters;
-          return (
-            (!ciudad || s.ciudad === ciudad) &&
-            // <- aquí comparamos directamente el modelo
-            (!vehiculo || s.categoria_vehiculo.nombre === vehiculo) &&
-            (!empresa || s.empresa === empresa)
-          );
-        });
-      }, [servicios, filters]);
+  const serviciosFiltrados = useMemo(
+    () =>
+      servicios.filter((s) => {
+        const { ciudad, vehiculo, empresa } = filters;
+        return (
+          (!ciudad || s.ciudad === ciudad) &&
+          (!vehiculo ||
+            s.categoria_vehiculo.nombre.toLowerCase() ===
+              vehiculo.toLowerCase()) &&
+          (!empresa || s.empresa === empresa)
+        );
+      }),
+    [servicios, filters]
+  );
 
   const [visibleCount, setVisibleCount] = useState(4);
   const handleShowMore = () =>
@@ -124,7 +97,7 @@ const Trabajos = () => {
             name="vehiculo"
             value={filters.vehiculo}
             onChange={(v) => handleSelectChange("vehiculo", v)}
-            options={VEHICLE_GROUPS}
+            options={VEHICLE_OPTIONS}
           />
           <CustomSelect
             className="flex-1"
@@ -135,6 +108,7 @@ const Trabajos = () => {
             options={empresasOptions}
           />
         </div>
+
         <div className="mt-4 flex justify-center w-full">
           <button
             onClick={clearFilters}

@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
 const RegisterComponente = () => {
-  const [message, setMessage] = useState("");
+  const [message, _] = useState("");
   const navigate = useNavigate(); // Asegúrate de importar useNavigate si lo necesitas
   const formik = useFormik({
     initialValues,
@@ -26,7 +26,7 @@ const RegisterComponente = () => {
       };
 
       try {
-        const response = await axios.post(API_URL.REGISTER, data);
+        await axios.post(API_URL.REGISTER, data);
         await Swal.fire({
           icon: "success",
           title: "¡Registro exitoso!",
