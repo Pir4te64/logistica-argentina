@@ -77,12 +77,14 @@ export default function useServicioAnuncioItem(servicio, onUpdated) {
       const data = await axios.put(`${API_URL.SERVICIO_ANUNCIO}/${servicio.id}`, form, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      //console.log(data);
+      console.log(data);
 
       setEditMode(false);
       onUpdated();
-    } catch {
-      setError("No se pudo guardar. Intenta nuevamente.");
+    } catch(err ) {
+      console.log(err);
+
+      setError("No se pudo guardar. Intenta recargar la pagina.");
     } finally {
       setSaving(false);
     }
