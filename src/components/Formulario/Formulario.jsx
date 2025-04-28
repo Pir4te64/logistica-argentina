@@ -9,11 +9,28 @@ import { FaDollarSign, FaCalendarAlt, FaRoute } from "react-icons/fa";
 // Componentes
 import FormularioCard from "@/components/Formulario/FormularioCard";
 import FormularioDocumentacion from "@/components/Formulario/FormularioDocumentacion";
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const Formulario = () => {
+  const navigate = useNavigate();
+
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, []);
+
+    const token = localStorage.getItem("token");
+    if (!token) {
+      Swal.fire({
+        icon: "warning",
+        title: "Atención",
+        text: "Debe logearse o crearse un usuario para el puesto que desea.",
+        confirmButtonText: "Ir al Login",
+        allowOutsideClick: false,
+      }).then(() => {
+        navigate("/login");
+      });
+    }
+  }, [navigate]);
   return (
     <div className="w-full">
       {/* Sección Superior: Imágenes (ocultar en mobile, mostrar desde md) */}

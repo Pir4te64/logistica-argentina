@@ -5,7 +5,10 @@ import { useFormik } from "formik";
 import axios from "axios";
 import RegisterImg from "@/assets/Login.jpg"; // Ajusta la ruta según corresponda
 import { API_URL } from "@/Api/Api";
-import { initialValues, validationSchema } from "@/components/Registro/registerValidation";
+import {
+  initialValues,
+  validationSchema,
+} from "@/components/Registro/registerValidation";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
@@ -31,7 +34,7 @@ const RegisterComponente = () => {
           icon: "success",
           title: "¡Registro exitoso!",
           text: "Serás redirigido a la página de inicio de sesión.",
-          confirmButtonText: "Continuar"
+          confirmButtonText: "Continuar",
         });
         navigate("/login");
       } catch (error) {
@@ -55,7 +58,7 @@ const RegisterComponente = () => {
             icon: "error",
             title: "Error de validación",
             text: mensajeUsuario,
-            confirmButtonText: "Aceptar"
+            confirmButtonText: "Aceptar",
           });
         } else {
           // error genérico
@@ -63,7 +66,7 @@ const RegisterComponente = () => {
             icon: "error",
             title: "Oops...",
             text: "Hubo un problema al registrarte. Intenta de nuevo.",
-            confirmButtonText: "Aceptar"
+            confirmButtonText: "Aceptar",
           });
         }
       } finally {
@@ -71,7 +74,6 @@ const RegisterComponente = () => {
       }
     },
   });
-
 
   return (
     <div className="flex flex-col md:flex-row h-screen">
@@ -89,7 +91,6 @@ const RegisterComponente = () => {
         <div className="max-w-md w-full p-8">
           <h2 className="text-2xl font-bold text-white mb-6">Registro</h2>
           <form onSubmit={formik.handleSubmit}>
-
             {/* Apellido y Nombre */}
             <div className="mb-4 relative">
               <label htmlFor="name" className="block text-sm mb-2 text-white">
@@ -106,7 +107,7 @@ const RegisterComponente = () => {
                 onBlur={formik.handleBlur}
               />
               {formik.touched.name && formik.errors.name && (
-                <div className="absolute top-full left-0 mt-1 text-red-600 bg-white rounded-sm p-1 text-sm">
+                <div className="top-full left-0 mt-1 text-red-600 bg-white rounded-sm p-1 text-sm">
                   {formik.errors.name}
                 </div>
               )}
@@ -114,7 +115,10 @@ const RegisterComponente = () => {
 
             {/* Número de Teléfono */}
             <div className="mb-4 relative">
-              <label htmlFor="telefono" className="block text-sm mb-2 text-white">
+              <label
+                htmlFor="telefono"
+                className="block text-sm mb-2 text-white"
+              >
                 Número de Teléfono
               </label>
               <input
@@ -128,7 +132,7 @@ const RegisterComponente = () => {
                 onBlur={formik.handleBlur}
               />
               {formik.touched.telefono && formik.errors.telefono && (
-                <div className="absolute top-full left-0 mt-1 text-red-600 bg-white rounded-sm p-1 text-sm">
+                <div className=" top-full left-0 mt-1 text-red-600 bg-white rounded-sm p-1 text-sm">
                   {formik.errors.telefono}
                 </div>
               )}
@@ -150,7 +154,7 @@ const RegisterComponente = () => {
                 onBlur={formik.handleBlur}
               />
               {formik.touched.email && formik.errors.email && (
-                <div className="absolute top-full left-0 mt-1 text-red-600 bg-white rounded-sm p-1 text-sm">
+                <div className=" top-full left-0 mt-1 text-red-600 bg-white rounded-sm p-1 text-sm">
                   {formik.errors.email}
                 </div>
               )}
@@ -169,12 +173,14 @@ const RegisterComponente = () => {
               >
                 <option value="">-- Elige uno --</option>
                 <option value="Transportistas">Transportistas</option>
-                <option value="Choferes y/o Acompañantes">Choferes y/o Acompañantes</option>
+                <option value="Choferes y/o Acompañantes">
+                  Choferes y/o Acompañantes
+                </option>
                 <option value="Empresas">Empresas</option>
-                <option value="Colaboradores">Colaboradores</option>
+                <option value="Colaboradores">Comisionistas</option>
               </select>
               {formik.touched.roles && formik.errors.roles && (
-                <div className="absolute top-full left-0 mt-1 text-red-600 bg-white rounded-sm p-1 text-sm">
+                <div className=" top-full left-0 mt-1 text-red-600 bg-white rounded-sm p-1 text-sm">
                   {formik.errors.roles}
                 </div>
               )}
@@ -182,7 +188,10 @@ const RegisterComponente = () => {
 
             {/* Contraseña */}
             <div className="mb-4 relative">
-              <label htmlFor="password" className="block text-sm mb-2 text-white">
+              <label
+                htmlFor="password"
+                className="block text-sm mb-2 text-white"
+              >
                 Contraseña
               </label>
               <input
@@ -196,7 +205,7 @@ const RegisterComponente = () => {
                 onBlur={formik.handleBlur}
               />
               {formik.touched.password && formik.errors.password && (
-                <div className="absolute top-full left-0 mt-1 text-red-600 bg-white rounded-sm p-1 text-sm">
+                <div className=" top-full left-0 mt-1 text-red-600 bg-white rounded-sm p-1 text-sm">
                   {formik.errors.password}
                 </div>
               )}
@@ -222,7 +231,7 @@ const RegisterComponente = () => {
               />
               {formik.touched.passwordConfirmation &&
                 formik.errors.passwordConfirmation && (
-                  <div className="absolute top-full left-0 mt-1 text-red-600 bg-white rounded-sm p-1 text-sm">
+                  <div className=" top-full left-0 mt-1 text-red-600 bg-white rounded-sm p-1 text-sm">
                     {formik.errors.passwordConfirmation}
                   </div>
                 )}
@@ -240,7 +249,9 @@ const RegisterComponente = () => {
 
           {/* Mensaje de respuesta de la petición */}
           {message && (
-            <div className="mt-4 text-center text-white">{message} intente de nuevo</div>
+            <div className="mt-4 text-center text-white">
+              {message} intente de nuevo
+            </div>
           )}
         </div>
       </div>

@@ -25,18 +25,9 @@ const Header = () => {
     "Postúlate <br /> Si queres trabajar anotate como Chofer o ayudante ¿Qué esperas?",
     "Comisionista",
     "Genera ingresos, si queres ser comisionista <br /> ¿Qué esperas?",
-    "Publicita tu marca",
+    "Transportista",
     "¡Crece con nosotros! Expandi el alcance de tu marca, trabajamos en todo el país, que todos te conozcan",
   ];
-
-  // 1) Leo el usuario de localStorage y chequeo roles
-  const stored = localStorage.getItem("user");
-  const user = stored ? JSON.parse(stored) : {};
-  const roleNames = user.roles?.map((r) => r.name.toLowerCase()) || [];
-  const isAdmin = roleNames.includes("admin") || roleNames.includes("super admin");
-
-  // 2) Compruebo token
-  const token = localStorage.getItem("token"); // o la clave que uses para el JWT
 
   return (
     <Swiper
@@ -52,27 +43,24 @@ const Header = () => {
       {images.map((img, index) => {
         const txt = texts[index].toLowerCase();
         let redirectPath = "";
+
         if (txt.includes("chofer") || txt.includes("ayudante")) {
           redirectPath = "/formulario-choferes";
         } else if (txt.includes("comisionista")) {
           redirectPath = "/formulario-comisionista";
-        } else if (txt.includes("marca")) {
+        } else if (txt.includes("transportista")) {
           redirectPath = "/formulario";
         }
-
-        // Solo clickeable si hay ruta, no es admin y existe el token
-        const canClick = Boolean(redirectPath && !isAdmin && token);
 
         return (
           <SwiperSlide key={index}>
             <div
-              className={`
-                relative w-full h-full bg-cover bg-center transition
-                ${canClick ? "cursor-pointer" : " "}
-              `}
+              className="relative w-full h-full bg-cover bg-center cursor-pointer transition"
               style={{ backgroundImage: `url(${img})` }}
               onClick={() => {
-                if (canClick) navigate(redirectPath);
+                if (redirectPath) {
+                  navigate(redirectPath);
+                }
               }}
             >
               <div className="absolute bottom-0 left-0 w-full">

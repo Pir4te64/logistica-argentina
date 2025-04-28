@@ -2,194 +2,214 @@
 import React, { useMemo } from "react";
 import { FaTimes } from "react-icons/fa";
 import useServicioAnuncioForm from "@/components/Dashboard/ServicioAnuncio/useServicioAnuncioForm";
-import { Section, InputText, Check, Select } from "@/components/Dashboard/ServicioAnuncio/FormControls";
+import {
+  Section,
+  InputText,
+  Check,
+  Select,
+} from "@/components/Dashboard/ServicioAnuncio/FormControls";
 import GeneralInfoSections from "@/components/Dashboard/ServicioAnuncio/GeneralInfoSections";
 import ConfigSections from "@/components/Dashboard/ServicioAnuncio/ConfigSections";
 import ExtraFieldsSection from "@/components/Dashboard/ServicioAnuncio/ExtraFieldsSection";
 
 const ServicioAnuncioForm = ({ onSubmit }) => {
-    const {
-        form,
-        beneficios,
-        categorias,
-        resaltadores,
-        estados,
-        loadingBen,
-        loadingCat,
-        loadingRes,
-        loadingEst,
-        handleChange,
-        handleBeneficiosChange,
-        handleCampoExtraChange,
-        addCampoExtra,
-        removeCampoExtra,
-        handleFileChange,
-        removeImage,
-        handleVideoChange,
-        removeVideo,
-        handleSubmit,
-        imagenes,
-        videoFile
-    } = useServicioAnuncioForm({ onSubmit });
+  const {
+    form,
+    beneficios,
+    categorias,
+    resaltadores,
+    estados,
+    loadingBen,
+    loadingCat,
+    loadingRes,
+    loadingEst,
+    handleChange,
+    handleBeneficiosChange,
+    handleCampoExtraChange,
+    addCampoExtra,
+    removeCampoExtra,
+    handleFileChange,
+    removeImage,
+    handleVideoChange,
+    removeVideo,
+    handleSubmit,
+    imagenes,
+    videoFile,
+  } = useServicioAnuncioForm({ onSubmit });
 
-    const today = new Date().toISOString().split("T")[0];
-
-    const isFormValid = useMemo(() => {
-        return (
-            form.empresa.trim() !== "" &&
-            form.fecha_inicio_servicio !== "" &&
-            form.tarifa_total !== "" &&
-            form.direccion_recogida.trim() !== "" &&
-            form.direccion_entrega.trim() !== "" &&
-            form.telefono_contacto.trim() !== "" &&
-            form.ciudad.trim() !== "" &&
-            form.cantidad_productos !== "" &&
-            form.cantidad_vehiculos !== "" &&
-            form.peso !== "" &&
-            form.dimensiones.trim() !== "" &&
-            form.categoriaVehiculoId !== "" &&
-            form.beneficioIds.length > 0 &&
-            form.resaltarId !== "" &&
-            form.estadoServicioId !== ""
-        );
-    }, [form]);
-
-    const onFormSubmit = e => {
-        e.preventDefault();
-        if (!isFormValid) return;
-        handleSubmit(e);
-    };
-
+  const today = new Date().toISOString().split("T")[0];
+  const handleVideoSelect = (e) => {
+    const file = e.target.files[0];
+    if (file && file.size > 2 * 1024 * 1024) {
+      // 2 MB en bytes
+      Swal.fire({
+        icon: "error",
+        title: "Video demasiado grande",
+        text: "El video no puede superar los 2 MB.",
+        confirmButtonText: "Entendido",
+      });
+      e.target.value = ""; // limpiamos el input
+      return;
+    }
+    handleVideoChange(e);
+  };
+  const isFormValid = useMemo(() => {
     return (
-        <form
-            onSubmit={onFormSubmit}
-            className="w-full max-w-4xl mx-auto bg-white rounded shadow text-[15px] sm:text-base sm:p-4 md:p-6 space-y-6"
-        >
-            <h2 className="text-2xl font-semibold">Crear Servicio de Anuncio</h2>
-
-            {/* 1–5: Datos básicos, periodo, direcciones, contacto, cantidades */}
-            <GeneralInfoSections form={form} handleChange={handleChange} />
-
-            {/* 6. Características (flags) */}
-            <Section title="Características del envío">
-                <div className="flex flex-wrap gap-4">
-                    <Check
-                        name="fragil"
-                        label="Frágil"
-                        checked={form.fragil}
-                        onChange={handleChange}
-                    />
-                    <Check
-                        name="liquido"
-                        label="Líquido"
-                        checked={form.liquido}
-                        onChange={handleChange}
-                    />
-                    <Check
-                        name="requiere_refrigeracion"
-                        label="Requiere refrig."
-                        checked={form.requiere_refrigeracion}
-                        onChange={handleChange}
-                    />
-                </div>
-            </Section>
-
-            {/* 7. Multimedia */}
-            <Section title="Multimedia">
-                {/* Video en lugar de URL */}
-                <label className="block font-medium">Video pequeño</label>
-                <input
-                    type="file"
-                    accept="video/*"
-                    onChange={handleVideoChange}
-                    className="w-full mt-1 p-2 border rounded"
-                />
-                {videoFile && (
-                    <div className="relative mt-4 group">
-                        <video
-                            src={URL.createObjectURL(videoFile)}
-                            controls
-                            className="w-full max-h-48 object-cover rounded"
-                        />
-                        <button
-                            type="button"
-                            onClick={removeVideo}
-                            className="absolute top-1 right-1 bg-red-600 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition"
-                        >
-                            <FaTimes />
-                        </button>
-                    </div>
-                )}
-
-                {/* Imágenes */}
-                <label className="block font-medium mt-4">Imágenes</label>
-                <input
-                    type="file"
-                    accept="image/*"
-                    multiple
-                    onChange={handleFileChange}
-                    className="w-full mt-1 p-2 border rounded"
-                />
-                {imagenes.length > 0 && (
-                    <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                        {imagenes.map((file, idx) => (
-                            <div key={idx} className="relative group">
-                                <img
-                                    src={URL.createObjectURL(file)}
-                                    alt={`Preview ${idx + 1}`}
-                                    className="w-full h-32 object-cover rounded"
-                                />
-                                <button
-                                    type="button"
-                                    onClick={() => removeImage(idx)}
-                                    className="absolute top-1 right-1 bg-red-600 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition"
-                                >
-                                    <FaTimes />
-                                </button>
-                            </div>
-                        ))}
-                    </div>
-                )}
-            </Section>
-
-            {/* 8. Selects */}
-            <ConfigSections
-                form={form}
-                categorias={categorias}
-                beneficios={beneficios}
-                resaltadores={resaltadores}
-                estados={estados}
-                loadingCat={loadingCat}
-                loadingBen={loadingBen}
-                loadingRes={loadingRes}
-                loadingEst={loadingEst}
-                handleChange={handleChange}
-                handleBeneficiosChange={handleBeneficiosChange}
-            />
-
-            {/* 9. Campos extra */}
-            <ExtraFieldsSection
-                camposExtra={form.camposExtra}
-                handleCampoExtraChange={handleCampoExtraChange}
-                addCampoExtra={addCampoExtra}
-                removeCampoExtra={removeCampoExtra}
-            />
-
-            {/* Submit */}
-            <div className="text-right">
-                <button
-                    type="submit"
-                    disabled={!isFormValid}
-                    className={`bg-custom-blue text-white rounded px-6 py-2 w-full sm:w-auto ${!isFormValid
-                            ? 'opacity-50 cursor-not-allowed'
-                            : 'hover:bg-custom-blue-medium'
-                        }`}
-                >
-                    Crear servicio
-                </button>
-            </div>
-        </form>
+      form.empresa.trim() !== "" &&
+      form.fecha_inicio_servicio !== "" &&
+      form.tarifa_total !== "" &&
+      form.direccion_recogida.trim() !== "" &&
+      form.direccion_entrega.trim() !== "" &&
+      form.telefono_contacto.trim() !== "" &&
+      form.ciudad.trim() !== "" &&
+      form.cantidad_productos !== "" &&
+      form.cantidad_vehiculos !== "" &&
+      form.peso !== "" &&
+      form.dimensiones.trim() !== "" &&
+      form.categoriaVehiculoId !== "" &&
+      form.beneficioIds.length > 0 &&
+      form.resaltarId !== "" &&
+      form.estadoServicioId !== ""
     );
+  }, [form]);
+
+  const onFormSubmit = (e) => {
+    e.preventDefault();
+    if (!isFormValid) return;
+    handleSubmit(e);
+  };
+
+  return (
+    <form
+      onSubmit={onFormSubmit}
+      className="w-full max-w-4xl mx-auto bg-white rounded shadow text-[15px] sm:text-base sm:p-4 md:p-6 space-y-6"
+    >
+      <h2 className="text-2xl font-semibold">Crear Servicio de Anuncio</h2>
+
+      {/* 1–5: Datos básicos, periodo, direcciones, contacto, cantidades */}
+      <GeneralInfoSections form={form} handleChange={handleChange} />
+
+      {/* 6. Características (flags) */}
+      <Section title="Características del envío">
+        <div className="flex flex-wrap gap-4">
+          <Check
+            name="fragil"
+            label="Frágil"
+            checked={form.fragil}
+            onChange={handleChange}
+          />
+          <Check
+            name="liquido"
+            label="Líquido"
+            checked={form.liquido}
+            onChange={handleChange}
+          />
+          <Check
+            name="requiere_refrigeracion"
+            label="Requiere refrig."
+            checked={form.requiere_refrigeracion}
+            onChange={handleChange}
+          />
+        </div>
+      </Section>
+
+      {/* 7. Multimedia */}
+      <Section title="Multimedia">
+        {/* Video en lugar de URL */}
+        <label className="block font-medium">Video (máx 2 MB)</label>
+        <input
+          type="file"
+          accept="video/*"
+          onChange={handleVideoSelect}
+          className="w-full mt-1 p-2 border rounded"
+        />
+        {videoFile && (
+          <div className="relative mt-4 group">
+            <video
+              src={URL.createObjectURL(videoFile)}
+              controls
+              className="w-full max-h-48 object-cover rounded"
+            />
+            <button
+              type="button"
+              onClick={removeVideo}
+              className="absolute top-1 right-1 bg-red-600 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition"
+            >
+              <FaTimes />
+            </button>
+          </div>
+        )}
+
+        {/* Imágenes */}
+        <label className="block font-medium mt-4">Imágenes</label>
+        <input
+          type="file"
+          accept="image/*"
+          multiple
+          onChange={handleFileChange}
+          className="w-full mt-1 p-2 border rounded"
+        />
+        {imagenes.length > 0 && (
+          <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+            {imagenes.map((file, idx) => (
+              <div key={idx} className="relative group">
+                <img
+                  src={URL.createObjectURL(file)}
+                  alt={`Preview ${idx + 1}`}
+                  className="w-full h-32 object-cover rounded"
+                />
+                <button
+                  type="button"
+                  onClick={() => removeImage(idx)}
+                  className="absolute top-1 right-1 bg-red-600 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition"
+                >
+                  <FaTimes />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+      </Section>
+
+      {/* 8. Selects */}
+      <ConfigSections
+        form={form}
+        categorias={categorias}
+        beneficios={beneficios}
+        resaltadores={resaltadores}
+        estados={estados}
+        loadingCat={loadingCat}
+        loadingBen={loadingBen}
+        loadingRes={loadingRes}
+        loadingEst={loadingEst}
+        handleChange={handleChange}
+        handleBeneficiosChange={handleBeneficiosChange}
+      />
+
+      {/* 9. Campos extra */}
+      <ExtraFieldsSection
+        camposExtra={form.camposExtra}
+        handleCampoExtraChange={handleCampoExtraChange}
+        addCampoExtra={addCampoExtra}
+        removeCampoExtra={removeCampoExtra}
+      />
+
+      {/* Submit */}
+      <div className="text-right">
+        <button
+          type="submit"
+          disabled={!isFormValid}
+          className={`bg-custom-blue text-white rounded px-6 py-2 w-full sm:w-auto ${
+            !isFormValid
+              ? "opacity-50 cursor-not-allowed"
+              : "hover:bg-custom-blue-medium"
+          }`}
+        >
+          Crear servicio
+        </button>
+      </div>
+    </form>
+  );
 };
 
 export default ServicioAnuncioForm;
