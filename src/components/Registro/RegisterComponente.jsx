@@ -7,6 +7,7 @@ import RegisterImg from "@/assets/Login.jpg"; // Ajusta la ruta según correspon
 import { API_URL } from "@/Api/Api";
 import { initialValues, validationSchema } from "@/components/Registro/registerValidation";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const RegisterComponente = () => {
   const [message, setMessage] = useState("");
@@ -15,7 +16,6 @@ const RegisterComponente = () => {
     initialValues,
     validationSchema,
     onSubmit: async (values, { setSubmitting }) => {
-      // Preparamos los datos, renombrando passwordConfirmation a password_confirmation
       const data = {
         name: values.name,
         telefono: values.telefono,
@@ -27,18 +27,51 @@ const RegisterComponente = () => {
 
       try {
         const response = await axios.post(API_URL.REGISTER, data);
-        console.log("Respuesta del servidor:", response.data);
-        setMessage(response.data.message);
-        alert("Registro exitoso, serás redirigido a la página de inicio de sesión");
+        await Swal.fire({
+          icon: "success",
+          title: "¡Registro exitoso!",
+          text: "Serás redirigido a la página de inicio de sesión.",
+          confirmButtonText: "Continuar"
+        });
         navigate("/login");
       } catch (error) {
-        console.error("Error en registro:", error);
-        setMessage("Error en el registro");
+        // detectamos si viene un error 422 con validaciones
+        const resp = error.response;
+        if (resp && resp.status === 422 && resp.data.errors) {
+          // extraemos el mensaje original
+          const emailErrors = resp.data.errors.email;
+          let mensajeUsuario = "Hubo un error en el registro.";
+          if (emailErrors && emailErrors.length) {
+            // traducimos el primer mensaje
+            const msg = emailErrors[0];
+            if (msg.includes("taken")) {
+              mensajeUsuario = "El correo electrónico ya fue utilizado.";
+            } else {
+              // por si hubiera otros errores de email
+              mensajeUsuario = msg;
+            }
+          }
+          await Swal.fire({
+            icon: "error",
+            title: "Error de validación",
+            text: mensajeUsuario,
+            confirmButtonText: "Aceptar"
+          });
+        } else {
+          // error genérico
+          await Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Hubo un problema al registrarte. Intenta de nuevo.",
+            confirmButtonText: "Aceptar"
+          });
+        }
       } finally {
         setSubmitting(false);
       }
     },
   });
+
 
   return (
     <div className="flex flex-col md:flex-row h-screen">
@@ -207,7 +240,7 @@ const RegisterComponente = () => {
 
           {/* Mensaje de respuesta de la petición */}
           {message && (
-            <div className="mt-4 text-center text-white">{message}</div>
+            <div className="mt-4 text-center text-white">{message} intente de nuevo</div>
           )}
         </div>
       </div>
