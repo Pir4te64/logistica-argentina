@@ -80,9 +80,9 @@ const TarjetaAplicar = ({ servicio, onInfo }) => {
         error.response?.data?.errors?.[0] || "Ocurrió un error desconocido";
 
       await Swal.fire(
-        "Error al postular",
+        "Excelente Decisión",
         `${mensajeError}. Serás redirigido al formulario.`,
-        "error"
+        "success"
       );
 
       navigate("/formulario");
@@ -127,9 +127,11 @@ const TarjetaAplicar = ({ servicio, onInfo }) => {
           <button
             onClick={handleApply}
             className={`px-3 py-1 rounded transition-colors 
-              ${loadingApply
-                ? "bg-gray-500 cursor-wait"
-                : "bg-custom-red hover:bg-custom-red/80"}
+              ${
+                loadingApply
+                  ? "bg-gray-500 cursor-wait"
+                  : "bg-custom-red hover:bg-custom-red/80"
+              }
               text-white`}
           >
             {loadingApply ? "Enviando..." : "Aplicar"}
