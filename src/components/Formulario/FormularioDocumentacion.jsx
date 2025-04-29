@@ -8,14 +8,17 @@ const FormularioDocumentacion = () => {
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Construyo lista de campos requeridos
+  // — Sólo nos interesan los primeros 3 documentos:
+  const requiredDocs = useMemo(() => documentos.slice(0, 3), []);
+
+  // Construyo lista de campos requeridos (sólo de esos 3)
   const requiredFields = useMemo(() => {
-    return documentos.flatMap((doc) =>
+    return requiredDocs.flatMap((doc) =>
       doc.campos.length > 0
         ? doc.campos.map((campo) => ({ docTitle: doc.title, campo }))
         : [{ docTitle: doc.title, campo: "" }]
     );
-  }, []);
+  }, [requiredDocs]);
 
   // Extrae id de docMapping
   const getDocId = (docTitle, campo) => {
@@ -30,12 +33,10 @@ const FormularioDocumentacion = () => {
   // Comprueba si ya hay archivo para ese campo
   const isUploaded = (docTitle, campo) => {
     const id = getDocId(docTitle, campo);
-    return uploadedFiles.some(
-      (item) => item.id === id && item.campo === campo
-    );
+    return uploadedFiles.some((item) => item.id === id && item.campo === campo);
   };
 
-  // Conteo y porcentaje
+  // Conteo y porcentaje (ahora totalFields === 6 si cada doc tiene 2 campos)
   const uploadedCount = requiredFields.reduce(
     (cnt, { docTitle, campo }) => (isUploaded(docTitle, campo) ? cnt + 1 : cnt),
     0
@@ -89,12 +90,13 @@ const FormularioDocumentacion = () => {
 
       {/* Grid de uploaders */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {documentos.map((doc) => (
+        {documentos.map((doc, idx) => (
           <div key={doc.title} className="bg-white shadow-lg p-4 rounded-md">
             <h3 className="text-lg font-bold text-center mb-4">{doc.title}</h3>
 
-            {doc.campos.length > 0
-              ? doc.campos.map((campo) => (
+            {/* Siempre muestro todos, pero sólo los primeros 3 cuentan para el progreso */}
+            {doc.campos.length > 0 ? (
+              doc.campos.map((campo) => (
                 <div key={campo} className="mb-3">
                   <FileUploader
                     label={campo}
@@ -104,17 +106,17 @@ const FormularioDocumentacion = () => {
                   />
                 </div>
               ))
-              : (
-                <div className="mb-3">
-                  <FileUploader
-                    label=""
-                    multiple={doc.multiple || false}
-                    onFilesAccepted={(file) =>
-                      handleFileAccepted(doc.title, "", file)
-                    }
-                  />
-                </div>
-              )}
+            ) : (
+              <div className="mb-3">
+                <FileUploader
+                  label=""
+                  multiple={doc.multiple || false}
+                  onFilesAccepted={(file) =>
+                    handleFileAccepted(doc.title, "", file)
+                  }
+                />
+              </div>
+            )}
           </div>
         ))}
       </div>
@@ -126,15 +128,19 @@ const FormularioDocumentacion = () => {
           disabled={!allUploaded || isSubmitting}
           className={`
             py-2 px-6 rounded transition-colors
-            ${allUploaded
-              ? isSubmitting
-                ? "bg-gray-500 cursor-wait"
-                : "bg-red-500 hover:bg-red-600"
-              : "bg-gray-300 cursor-not-allowed"}
+            ${
+              allUploaded
+                ? isSubmitting
+                  ? "bg-gray-500 cursor-wait"
+                  : "bg-red-500 hover:bg-red-600"
+                : "bg-gray-300 cursor-not-allowed"
+            }
             text-white
           `}
         >
-          {isSubmitting ? "Enviando..." : "Enviar Documentación"}
+          {isSubmitting
+            ? "Enviando... Espere un momento"
+            : "Enviar Documentación"}
         </button>
       </div>
     </div>
