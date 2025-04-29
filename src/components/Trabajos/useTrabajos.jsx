@@ -18,7 +18,6 @@ export const useTrabajos = create((set, get) => ({
           "Content-Type": "application/json",
         },
       });
-      console.log("✅ Servicios cargados:", response.data);
 
       set({ servicios: response.data, loading: false });
     } catch (err) {

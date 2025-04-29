@@ -81,6 +81,7 @@ const RegisterComponente = () => {
       <div className="hidden md:block md:w-1/2">
         <img
           src={RegisterImg}
+          lazy="true"
           alt="Imagen de registro"
           className="h-full w-full object-cover"
         />
