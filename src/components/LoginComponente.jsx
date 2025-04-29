@@ -18,7 +18,6 @@ const LoginComponente = () => {
 
     try {
       const response = await axios.post(API_URL.LOGIN, data);
-      console.log("Respuesta del servidor:", response.data);
 
       // Verificamos si la respuesta indica error.
       // Por ejemplo, si response.data.message contiene "Error en Login"

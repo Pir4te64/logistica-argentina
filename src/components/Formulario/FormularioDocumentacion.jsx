@@ -3,6 +3,7 @@ import React, { useState, useMemo } from "react";
 import FileUploader from "@/components/Formulario/FileUploader";
 import { docMapping, documentos } from "@/components/Formulario/estaticos";
 import { submitDocumentation } from "@/components/Formulario/submitDocumentation";
+import { FaSpinner } from "react-icons/fa";
 
 const FormularioDocumentacion = () => {
   const [uploadedFiles, setUploadedFiles] = useState([]);
@@ -122,25 +123,27 @@ const FormularioDocumentacion = () => {
       </div>
 
       {/* Botón Enviar */}
-      <div className="text-center mt-6">
+      <div className="text-center w-full flex justify-center mt-6">
         <button
           onClick={handleSubmit}
           disabled={!allUploaded || isSubmitting}
           className={`
-            py-2 px-6 rounded transition-colors
-            ${
-              allUploaded
-                ? isSubmitting
-                  ? "bg-gray-500 cursor-wait"
-                  : "bg-red-500 hover:bg-red-600"
-                : "bg-gray-300 cursor-not-allowed"
-            }
-            text-white
-          `}
+    py-2 px-6 rounded transition-colors flex items-center justify-center
+    ${
+      allUploaded
+        ? isSubmitting
+          ? "bg-gray-500 cursor-wait"
+          : "bg-red-500 hover:bg-red-600"
+        : "bg-gray-300 cursor-not-allowed"
+    }
+    text-white
+  `}
         >
-          {isSubmitting
-            ? "Enviando... Espere un momento"
-            : "Enviar Documentación"}
+          {isSubmitting ? (
+            <FaSpinner className="animate-spin h-5 w-5" />
+          ) : (
+            "Enviar Documentación"
+          )}
         </button>
       </div>
     </div>
