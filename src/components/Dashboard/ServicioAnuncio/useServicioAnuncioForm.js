@@ -1,4 +1,3 @@
-// src/hooks/useServicioAnuncioForm.js
 import { useState } from "react";
 import axios from "axios";
 import { API_URL } from "@/Api/Api";
@@ -38,12 +37,12 @@ const useServicioAnuncioForm = ({ onSubmit }) => {
     fragil: false,
     liquido: false,
     requiere_refrigeracion: false,
-    video_url: "", // mantengo el campo aunque lo sobreescriba
+    video_url: "",
     categoriaVehiculoId: "",
     beneficioIds: [],
     resaltarId: "",
     estadoServicioId: "",
-    camposExtra: [{ nombre: "", valor: "" }],
+    camposExtra: [], // inicial vacío
   });
 
   // estado para imágenes y video
@@ -84,18 +83,21 @@ const useServicioAnuncioForm = ({ onSubmit }) => {
     }));
 
   // Archivos (imágenes)
-  // en tu componente, antes de añadir al estado:
-  const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5 MB
+  const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5 MB
   const handleFileChange = (e) => {
     const files = Array.from(e.target.files);
     const invalid = files.filter((f) => f.size > MAX_IMAGE_SIZE);
     if (invalid.length) {
-      alert(`Una o más imágenes superan los 5 MB y no serán subidas.`);
+      Swal.fire({
+      title: "Advertencia",
+      text: "Una o más imágenes superan los 5 MB y no serán subidas.",
+      icon: "warning",
+      confirmButtonText: "Aceptar",
+      });
     }
     const valid = files.filter((f) => f.size <= MAX_IMAGE_SIZE);
     setImagenes((imgs) => [...imgs, ...valid]);
   };
-
   const removeImage = (index) =>
     setImagenes((imgs) => imgs.filter((_, i) => i !== index));
 
@@ -108,11 +110,10 @@ const useServicioAnuncioForm = ({ onSubmit }) => {
 
   // Submit
   const handleSubmit = async (e) => {
-    const anuncioId = nanoid(4)
     e.preventDefault();
+    const anuncioId = nanoid(4);
     const token = localStorage.getItem("token");
-    const user = JSON.parse(localStorage.getItem("user") || "{}");
-    const correo = user.email;
+    JSON.parse(localStorage.getItem("user") || "{}");
     const tipo_usuario = 2;
 
     // 1) Subir video si existe
@@ -121,7 +122,7 @@ const useServicioAnuncioForm = ({ onSubmit }) => {
       const fdVid = new FormData();
       fdVid.append("file", videoFile);
       fdVid.append("filename", videoFile.name);
-      fdVid.append("tipo_archivo", 24); // distinto para video
+      fdVid.append("tipo_archivo", 24);
       fdVid.append("correo", anuncioId);
       fdVid.append("tipo_usuario", tipo_usuario);
       const resVid = await axios.post(API_URL.UPLOAD_IMAGE, fdVid, {
@@ -151,6 +152,10 @@ const useServicioAnuncioForm = ({ onSubmit }) => {
       imagenUrls.push(res.data.url);
     }
 
+    // Filtrar campos extras vacíos
+    const extras = form.camposExtra
+      .filter(c => c.nombre.trim() !== "" || c.valor.trim() !== "");
+
     // 3) Armar payload
     const payload = {
       empresa: form.empresa,
@@ -169,40 +174,28 @@ const useServicioAnuncioForm = ({ onSubmit }) => {
       fragil: form.fragil,
       liquido: form.liquido,
       requiere_refrigeracion: form.requiere_refrigeracion,
-      video_url: videoUrl, // usamos la URL subida
+      video_url: videoUrl,
       categoria_vehiculo_id: Number(form.categoriaVehiculoId),
       resaltador_anuncio_id: Number(form.resaltarId),
       estado_servicio_id: Number(form.estadoServicioId),
       beneficios: form.beneficioIds,
-      campos_extra: form.camposExtra,
-      imagenes: imagenUrls, // URLs de las imágenes
+      campos_extra: extras, // solo los llenos
+      imagenes: imagenUrls,
     };
-    console.log("Payload:", payload);
 
-    // 4) POST creación
     try {
       const resp = await axios.post(API_URL.SERVICIO_ANUNCIO, payload, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      console.log("Creado:", resp.data);
-
       onSubmit && onSubmit(resp.data);
-      Swal.fire({
-        title: "Servicio creado",
-        icon: "success",
-        confirmButtonText: "Aceptar",
-      }).then(() => {
-        window.location.reload(); // Recargar la página después de crear el servicio
+      Swal.fire({ title: "Servicio creado", icon: "success", confirmButtonText: "Aceptar" }).then(() => {
+        window.location.reload();
       }
-      )
+      );
     } catch (err) {
-      console.error("Error:", err);
-      Swal.fire({
-        title: "Error al crear el servicio",
-        text: err.response?.data?.message || err.message,
-        icon: "error",
-        confirmButtonText: "Cerrar",
-      });
+      console.log(err);
+      
+      Swal.fire({ title: "Error al crear el servicio", text: err.response?.data?.message || err.message, icon: "error", confirmButtonText: "Cerrar" });
     }
   };
 

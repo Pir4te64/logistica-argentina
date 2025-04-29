@@ -110,7 +110,7 @@ const TarjetaAplicar = ({ servicio, onInfo }) => {
             <strong>Vehículo:</strong> {vehiculoNombre}
           </p>
           <p>
-            <strong>Tarifa:</strong> ${tarifa_total}
+            <strong>Tarifa Aprox:</strong> ${tarifa_total}
           </p>
         </div>
 

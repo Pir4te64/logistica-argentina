@@ -15,7 +15,7 @@ const ConfigSections = ({
     handleChange,
     handleBeneficiosChange
 }) => (
-    <Section title="Configuraciones">
+    <Section title="Configuraciones *">
         <Select
             label="Categoría de Vehículo"
             name="categoriaVehiculoId"

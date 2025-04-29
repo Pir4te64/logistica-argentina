@@ -128,6 +128,8 @@ export default function useServicioAnuncioItem(servicio, onUpdated) {
 
       onUpdated();
     } catch (err) {
+      console.log(err);
+      
       setError('No se pudo eliminar. Intenta nuevamente.');
 
       // 5) Muestro un error si falla

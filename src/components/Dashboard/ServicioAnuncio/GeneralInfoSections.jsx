@@ -8,7 +8,7 @@ const GeneralInfoSections = ({ form, handleChange }) => {
     return (
         <>
             {/* 1. Datos básicos */}
-            <Section title="Datos básicos" >
+            <Section title="Datos básicos*" >
                 <div className="space-y-4">
                     <InputText
                         label="Empresa"
@@ -45,14 +45,14 @@ const GeneralInfoSections = ({ form, handleChange }) => {
             <Section title="Periodo">
                 <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-4">
                     <InputText
-                        label="Texto periodo"
+                        label="Periodo"
                         name="periodo_nombre"
                         value={form.periodo_nombre}
                         onChange={handleChange}
                         placeholder="Ej. Mensual"
                     />
                     <InputText
-                        label="Valor periodo"
+                        label="Valor"
                         type="number"
                         name="periodo_valor"
                         value={form.periodo_valor}
@@ -63,7 +63,7 @@ const GeneralInfoSections = ({ form, handleChange }) => {
             </Section>
 
             {/* 3. Direcciones */}
-            <Section title="Direcciones">
+            <Section title="Direcciones*">
                 <InputText
                     label="Dirección de recogida"
                     name="direccion_recogida"
@@ -81,10 +81,10 @@ const GeneralInfoSections = ({ form, handleChange }) => {
             </Section>
 
             {/* 4. Contacto y ciudad */}
-            <Section title="Contacto">
+            <Section title="Contacto*">
                 <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-4">
                     <InputText
-                        label="Teléfono contacto"
+                        label="Empresa Teléfono "
                         name="telefono_contacto"
                         value={form.telefono_contacto}
                         onChange={handleChange}

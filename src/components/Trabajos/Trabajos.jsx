@@ -6,10 +6,22 @@ import { useTrabajos } from "@/components/Trabajos/useTrabajos";
 import ServicioModal from "@/components/Trabajos/Modal";
 
 const VEHICLE_OPTIONS = [
-  { label: "Chico", value: "Chico" },
-  { label: "Mediano", value: "Mediano" },
-  { label: "Grande", value: "Grande" },
-  { label: "Semis", value: "Semis" },
+  {
+    label: "Chico (Kangoo, Fiorino, Partner, etc.)",
+    value: "Chico",
+  },
+  {
+    label: "Mediano (Master, Ducato, Transit, etc.)",
+    value: "Mediano",
+  },
+  {
+    label: "Grande (Accelo 815, Mercedes 710, Atego)",
+    value: "Grande",
+  },
+  {
+    label: "Semis (Scania, Actros, Iveco Stralis, Volvo FM)",
+    value: "Semis",
+  },
 ];
 
 const Trabajos = () => {

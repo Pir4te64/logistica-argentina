@@ -1,5 +1,4 @@
 // src/components/Dashboard/ServicioAnuncio/ServicioAnuncioForm.jsx
-import React, { useMemo } from "react";
 import { FaTimes } from "react-icons/fa";
 import useServicioAnuncioForm from "@/components/Dashboard/ServicioAnuncio/useServicioAnuncioForm";
 import {
@@ -11,6 +10,8 @@ import {
 import GeneralInfoSections from "@/components/Dashboard/ServicioAnuncio/GeneralInfoSections";
 import ConfigSections from "@/components/Dashboard/ServicioAnuncio/ConfigSections";
 import ExtraFieldsSection from "@/components/Dashboard/ServicioAnuncio/ExtraFieldsSection";
+import Swal from "sweetalert2";
+import { useMemo } from "react";
 
 const ServicioAnuncioForm = ({ onSubmit }) => {
   const {
@@ -35,47 +36,59 @@ const ServicioAnuncioForm = ({ onSubmit }) => {
     handleSubmit,
     imagenes,
     videoFile,
+    // servicios logic comentada
   } = useServicioAnuncioForm({ onSubmit });
 
-  const today = new Date().toISOString().split("T")[0];
   const handleVideoSelect = (e) => {
     const file = e.target.files[0];
     if (file && file.size > 2 * 1024 * 1024) {
-      // 2 MB en bytes
       Swal.fire({
         icon: "error",
         title: "Video demasiado grande",
         text: "El video no puede superar los 2 MB.",
         confirmButtonText: "Entendido",
       });
-      e.target.value = ""; // limpiamos el input
+      e.target.value = "";
       return;
     }
     handleVideoChange(e);
   };
-  const isFormValid = useMemo(() => {
-    return (
-      form.empresa.trim() !== "" &&
-      form.fecha_inicio_servicio !== "" &&
-      form.tarifa_total !== "" &&
-      form.direccion_recogida.trim() !== "" &&
-      form.direccion_entrega.trim() !== "" &&
-      form.telefono_contacto.trim() !== "" &&
-      form.ciudad.trim() !== "" &&
-      form.cantidad_productos !== "" &&
-      form.cantidad_vehiculos !== "" &&
-      form.peso !== "" &&
-      form.dimensiones.trim() !== "" &&
-      form.categoriaVehiculoId !== "" &&
-      form.beneficioIds.length > 0 &&
-      form.resaltarId !== "" &&
-      form.estadoServicioId !== ""
-    );
+
+  // Validación de campos obligatorios y listado de faltantes
+  const missingFields = useMemo(() => {
+    const list = [];
+    if (!form.empresa.trim()) list.push("Empresa");
+    if (!form.fecha_inicio_servicio) list.push("Fecha de inicio del servicio");
+    if (!form.tarifa_total) list.push("Tarifa total");
+    if (!form.direccion_recogida.trim()) list.push("Dirección de recogida");
+    if (!form.direccion_entrega.trim()) list.push("Dirección de entrega");
+    if (!form.telefono_contacto.trim()) list.push("Teléfono de contacto");
+    if (!form.ciudad.trim()) list.push("Ciudad");
+    if (!form.periodo_nombre.trim()) list.push("Nombre del periodo");
+    //if (!form.cantidad_productos) list.push("Cantidad de productos");
+    //if (!form.cantidad_vehiculos) list.push("Cantidad de vehículos");
+    if (!form.peso) list.push("Peso");
+   if (!form.dimensiones.trim()) list.push("Dimensiones");
+    if (!form.categoriaVehiculoId) list.push("Categoría de vehículo");
+    if (form.beneficioIds.length === 0) list.push("Beneficios");
+    if (!form.resaltarId) list.push("Resaltador de anuncio");
+    if (!form.estadoServicioId) list.push("Estado del servicio");
+    return list;
   }, [form]);
 
   const onFormSubmit = (e) => {
     e.preventDefault();
-    if (!isFormValid) return;
+    if (missingFields.length > 0) {
+      Swal.fire({
+        icon: "warning",
+        title: "Faltan campos obligatorios",
+        html: `<p>Por favor completa los siguientes campos:</p><ul style=\"text-align:left;\">${missingFields
+          .map((f) => `<li>${f}</li>`)
+          .join("")}</ul>`,
+        confirmButtonText: "Entendido",
+      });
+      return;
+    }
     handleSubmit(e);
   };
 
@@ -90,7 +103,7 @@ const ServicioAnuncioForm = ({ onSubmit }) => {
       <GeneralInfoSections form={form} handleChange={handleChange} />
 
       {/* 6. Características (flags) */}
-      <Section title="Características del envío">
+      <Section title="Características del envío (Opcional)">
         <div className="flex flex-wrap gap-4">
           <Check
             name="fragil"
@@ -114,8 +127,7 @@ const ServicioAnuncioForm = ({ onSubmit }) => {
       </Section>
 
       {/* 7. Multimedia */}
-      <Section title="Multimedia">
-        {/* Video en lugar de URL */}
+      <Section title="Multimedia *">
         <label className="block font-medium">Video (máx 2 MB)</label>
         <input
           type="file"
@@ -140,7 +152,6 @@ const ServicioAnuncioForm = ({ onSubmit }) => {
           </div>
         )}
 
-        {/* Imágenes */}
         <label className="block font-medium mt-4">Imágenes</label>
         <input
           type="file"
@@ -194,16 +205,19 @@ const ServicioAnuncioForm = ({ onSubmit }) => {
         removeCampoExtra={removeCampoExtra}
       />
 
+      {/* Servicios dinámicos si los activas más adelante */}
+      {/* <ServicesSection
+        servicios={servicios}
+        handleServicioChange={handleServicioChange}
+        addServicio={addServicio}
+        removeServicio={removeServicio}
+      /> */}
+
       {/* Submit */}
       <div className="text-right">
         <button
           type="submit"
-          disabled={!isFormValid}
-          className={`bg-custom-blue text-white rounded px-6 py-2 w-full sm:w-auto ${
-            !isFormValid
-              ? "opacity-50 cursor-not-allowed"
-              : "hover:bg-custom-blue-medium"
-          }`}
+          className="bg-custom-blue text-white rounded px-6 py-2 w-full sm:w-auto hover:bg-custom-blue-medium transition"
         >
           Crear servicio
         </button>
