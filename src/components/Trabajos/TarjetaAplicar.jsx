@@ -43,7 +43,7 @@ const TarjetaAplicar = ({ servicio, onInfo }) => {
       return;
     }
 
-    // 2) Si no es transportista: mostrar mensaje y redirigir al formulario
+    // 2) Si no es transportista: mostrar mensaje
     if (!isTransportista) {
       await Swal.fire(
         "Formulario incompleto",
@@ -74,18 +74,19 @@ const TarjetaAplicar = ({ servicio, onInfo }) => {
         },
       });
 
-      Swal.fire("¡Postulación exitosa!", "", "success");
+      // Solo mostramos éxito, SIN redirección
+      await Swal.fire("¡Postulación exitosa!", "", "success");
     } catch (error) {
       const mensajeError =
         error.response?.data?.errors?.[0] || "Ocurrió un error desconocido";
 
+      // Solo aquí redirigimos:
       await Swal.fire(
         "Excelente Decisión",
         `${mensajeError}. Serás redirigido al formulario.`,
         "success"
       );
-
-      navigate("/formulario");
+      navigate("/formulario", { state: { servicio } });
     } finally {
       setLoadingApply(false);
     }
@@ -126,6 +127,7 @@ const TarjetaAplicar = ({ servicio, onInfo }) => {
           {/* Aplicar */}
           <button
             onClick={handleApply}
+            disabled={loadingApply}
             className={`px-3 py-1 rounded transition-colors 
               ${
                 loadingApply

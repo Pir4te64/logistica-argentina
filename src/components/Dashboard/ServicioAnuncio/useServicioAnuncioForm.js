@@ -1,3 +1,4 @@
+// src/components/Dashboard/ServicioAnuncio/useServicioAnuncioForm.jsx
 import { useState } from "react";
 import axios from "axios";
 import { API_URL } from "@/Api/Api";
@@ -9,7 +10,7 @@ import Swal from "sweetalert2";
 import { nanoid } from "nanoid";
 
 const useServicioAnuncioForm = ({ onSubmit }) => {
-  // datos para selects
+  // ── Selects ─────────────────────────────────────────────────────────
   const { data: benResp, loading: loadingBen } = useBeneficioRepartidor();
   const beneficios = benResp?.data || [];
   const { data: catResp, loading: loadingCat } = useCategoriaVehiculos();
@@ -19,7 +20,7 @@ const useServicioAnuncioForm = ({ onSubmit }) => {
   const { data: estResp, loading: loadingEst } = useEstadoServicio();
   const estados = estResp?.data || [];
 
-  // estado general del formulario (sin multimedia)
+  // ── Form básico ──────────────────────────────────────────────────────
   const [form, setForm] = useState({
     empresa: "",
     fecha_inicio_servicio: "",
@@ -42,27 +43,46 @@ const useServicioAnuncioForm = ({ onSubmit }) => {
     beneficioIds: [],
     resaltarId: "",
     estadoServicioId: "",
-    camposExtra: [], // inicial vacío
+    camposExtra: [],
   });
 
-  // estado para imágenes y video
+  // ── Multimedia ───────────────────────────────────────────────────────
   const [imagenes, setImagenes] = useState([]);
   const [videoFile, setVideoFile] = useState(null);
 
-  // Handlers básicos
+  // ── Servicios (ya existente) ────────────────────────────────────────
+  const [servicios, setServicios] = useState([]);
+  const addServicio = () =>
+    setServicios((prev) => [...prev, { id: nanoid(), nombre: "", descripcion: "" }]);
+  const removeServicio = (i) =>
+    setServicios((prev) => prev.filter((_, idx) => idx !== i));
+  const handleServicioChange = (i, field, val) =>
+    setServicios((prev) =>
+      prev.map((s, idx) => (idx === i ? { ...s, [field]: val } : s))
+    );
+
+  // ── Plazos (nuevo) ──────────────────────────────────────────────────
+  const [plazos, setPlazos] = useState([]);
+  const addPlazo = () =>
+    setPlazos((prev) => [...prev, { id: nanoid(), nombre: "", descripcion: "" }]);
+  const removePlazo = (i) =>
+    setPlazos((prev) => prev.filter((_, idx) => idx !== i));
+  const handlePlazoChange = (i, field, val) =>
+    setPlazos((prev) =>
+      prev.map((p, idx) => (idx === i ? { ...p, [field]: val } : p))
+    );
+
+  // ── Handlers básicos y de selects ───────────────────────────────────
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setForm((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
-    }));
+    setForm((prev) => ({ ...prev, [name]: type === "checkbox" ? checked : value }));
   };
   const handleBeneficiosChange = (e) => {
     const opts = Array.from(e.target.selectedOptions, (o) => Number(o.value));
     setForm((prev) => ({ ...prev, beneficioIds: opts }));
   };
 
-  // Campos extra
+  // ── Campos extra ────────────────────────────────────────────────────
   const handleCampoExtraChange = (i, field, val) => {
     setForm((prev) => ({
       ...prev,
@@ -82,56 +102,52 @@ const useServicioAnuncioForm = ({ onSubmit }) => {
       camposExtra: prev.camposExtra.filter((_, idx) => idx !== i),
     }));
 
-  // Archivos (imágenes)
-  const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5 MB
+  // ── Manejo de imágenes ───────────────────────────────────────────────
+  const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
   const handleFileChange = (e) => {
     const files = Array.from(e.target.files);
     const invalid = files.filter((f) => f.size > MAX_IMAGE_SIZE);
     if (invalid.length) {
       Swal.fire({
-      title: "Advertencia",
-      text: "Una o más imágenes superan los 5 MB y no serán subidas.",
-      icon: "warning",
-      confirmButtonText: "Aceptar",
+        title: "Advertencia",
+        text: "Una o más imágenes superan los 5 MB y no serán subidas.",
+        icon: "warning",
+        confirmButtonText: "Aceptar",
       });
     }
     const valid = files.filter((f) => f.size <= MAX_IMAGE_SIZE);
     setImagenes((imgs) => [...imgs, ...valid]);
   };
-  const removeImage = (index) =>
-    setImagenes((imgs) => imgs.filter((_, i) => i !== index));
+  const removeImage = (i) =>
+    setImagenes((imgs) => imgs.filter((_, idx) => idx !== i));
 
-  // Archivo de video (solo uno)
+  // ── Manejo de video ─────────────────────────────────────────────────
   const handleVideoChange = (e) => {
     const file = e.target.files[0] || null;
     setVideoFile(file);
   };
   const removeVideo = () => setVideoFile(null);
 
-  // Submit
+  // ── Submit ──────────────────────────────────────────────────────────
   const handleSubmit = async (e) => {
     e.preventDefault();
     const anuncioId = nanoid(4);
     const token = localStorage.getItem("token");
-    JSON.parse(localStorage.getItem("user") || "{}");
     const tipo_usuario = 2;
 
-    // 1) Subir video si existe
+    // 1) Subir video
     let videoUrl = "";
     if (videoFile) {
-      const fdVid = new FormData();
-      fdVid.append("file", videoFile);
-      fdVid.append("filename", videoFile.name);
-      fdVid.append("tipo_archivo", 24);
-      fdVid.append("correo", anuncioId);
-      fdVid.append("tipo_usuario", tipo_usuario);
-      const resVid = await axios.post(API_URL.UPLOAD_IMAGE, fdVid, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
-        },
+      const fdV = new FormData();
+      fdV.append("file", videoFile);
+      fdV.append("filename", videoFile.name);
+      fdV.append("tipo_archivo", 24);
+      fdV.append("correo", anuncioId);
+      fdV.append("tipo_usuario", tipo_usuario);
+      const resV = await axios.post(API_URL.UPLOAD_IMAGE, fdV, {
+        headers: { Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data" },
       });
-      videoUrl = resVid.data.url;
+      videoUrl = resV.data.url;
     }
 
     // 2) Subir imágenes
@@ -144,19 +160,17 @@ const useServicioAnuncioForm = ({ onSubmit }) => {
       fd.append("correo", anuncioId);
       fd.append("tipo_usuario", tipo_usuario);
       const res = await axios.post(API_URL.UPLOAD_IMAGE, fd, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
-        },
+        headers: { Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data" },
       });
       imagenUrls.push(res.data.url);
     }
 
-    // Filtrar campos extras vacíos
-    const extras = form.camposExtra
-      .filter(c => c.nombre.trim() !== "" || c.valor.trim() !== "");
+    // 3) Filtrar campos extra
+    const extras = form.camposExtra.filter(
+      (c) => c.nombre.trim() !== "" || c.valor.trim() !== ""
+    );
 
-    // 3) Armar payload
+    // 4) Armar payload, incluyendo ambos arrays
     const payload = {
       empresa: form.empresa,
       fecha_inicio_servicio: form.fecha_inicio_servicio,
@@ -179,24 +193,34 @@ const useServicioAnuncioForm = ({ onSubmit }) => {
       resaltador_anuncio_id: Number(form.resaltarId),
       estado_servicio_id: Number(form.estadoServicioId),
       beneficios: form.beneficioIds,
-      campos_extra: extras, // solo los llenos
+      campos_extra: extras,
       imagenes: imagenUrls,
+      servicios_servicio: servicios.map(({ nombre, descripcion }) => ({
+        nombre,
+        descripcion,
+      })),
+      servicios_plazo: plazos.map(({ nombre, descripcion }) => ({
+        nombre,
+        descripcion,
+      })),
     };
-
+    console.log(payload);
+    
     try {
       const resp = await axios.post(API_URL.SERVICIO_ANUNCIO, payload, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      onSubmit && onSubmit(resp.data);
-      Swal.fire({ title: "Servicio creado", icon: "success", confirmButtonText: "Aceptar" }).then(() => {
-        window.location.reload();
-      }
-      );
+      onSubmit?.(resp.data);
+      Swal.fire({ title: "Servicio creado", icon: "success", confirmButtonText: "Aceptar" })
+        .then(() => window.location.reload());
     } catch (err) {
-      console.log(err);
-      
-      Swal.fire({ title: "Error al crear el servicio", text: err.response?.data?.message || err.message, icon: "error", confirmButtonText: "Cerrar" });
-    }
+      Swal.fire({
+        title: "Error al crear el servicio",
+        text: err.response?.data?.message || err.message,
+        icon: "error",
+        confirmButtonText: "Cerrar",
+      });
+    } 
   };
 
   return {
@@ -221,6 +245,18 @@ const useServicioAnuncioForm = ({ onSubmit }) => {
     handleSubmit,
     imagenes,
     videoFile,
+
+    // servicios_servicio
+    servicios,
+    addServicio,
+    removeServicio,
+    handleServicioChange,
+
+    // servicios_plazo
+    plazos,
+    addPlazo,
+    removePlazo,
+    handlePlazoChange,
   };
 };
 

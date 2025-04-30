@@ -12,6 +12,8 @@ import ConfigSections from "@/components/Dashboard/ServicioAnuncio/ConfigSection
 import ExtraFieldsSection from "@/components/Dashboard/ServicioAnuncio/ExtraFieldsSection";
 import Swal from "sweetalert2";
 import { useMemo } from "react";
+import ServicesSection from "./ServicesSection";
+import PlazosSection from "./PlazosSection";
 
 const ServicioAnuncioForm = ({ onSubmit }) => {
   const {
@@ -36,7 +38,14 @@ const ServicioAnuncioForm = ({ onSubmit }) => {
     handleSubmit,
     imagenes,
     videoFile,
-    // servicios logic comentada
+    servicios,
+    handleServicioChange,
+    addServicio,
+    removeServicio,
+    addPlazo,
+    removePlazo,
+    handlePlazoChange,
+    plazos,
   } = useServicioAnuncioForm({ onSubmit });
 
   const handleVideoSelect = (e) => {
@@ -64,11 +73,11 @@ const ServicioAnuncioForm = ({ onSubmit }) => {
     if (!form.direccion_entrega.trim()) list.push("Dirección de entrega");
     if (!form.telefono_contacto.trim()) list.push("Teléfono de contacto");
     if (!form.ciudad.trim()) list.push("Ciudad");
-    if (!form.periodo_nombre.trim()) list.push("Nombre del periodo");
+    //if (!form.periodo_nombre.trim()) list.push("Nombre del periodo");
     //if (!form.cantidad_productos) list.push("Cantidad de productos");
     //if (!form.cantidad_vehiculos) list.push("Cantidad de vehículos");
-    if (!form.peso) list.push("Peso");
-   if (!form.dimensiones.trim()) list.push("Dimensiones");
+    //if (!form.peso) list.push("Peso");
+    //if (!form.dimensiones.trim()) list.push("Dimensiones");
     if (!form.categoriaVehiculoId) list.push("Categoría de vehículo");
     if (form.beneficioIds.length === 0) list.push("Beneficios");
     if (!form.resaltarId) list.push("Resaltador de anuncio");
@@ -206,13 +215,18 @@ const ServicioAnuncioForm = ({ onSubmit }) => {
       />
 
       {/* Servicios dinámicos si los activas más adelante */}
-      {/* <ServicesSection
+      <ServicesSection
         servicios={servicios}
         handleServicioChange={handleServicioChange}
         addServicio={addServicio}
         removeServicio={removeServicio}
-      /> */}
-
+      />
+      <PlazosSection
+        plazos={plazos}
+        addPlazo={addPlazo}
+        removePlazo={removePlazo}
+        handlePlazoChange={handlePlazoChange}
+      />
       {/* Submit */}
       <div className="text-right">
         <button

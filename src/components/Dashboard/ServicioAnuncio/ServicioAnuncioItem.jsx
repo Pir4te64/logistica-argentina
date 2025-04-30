@@ -58,11 +58,19 @@ const ServicioAnuncioItem = ({ servicio, index, onUpdated }) => {
     handleExtraChange,
     addExtra,
     removeExtra,
+    toggleBeneficio,
     handleCancel,
     handleSave,
     handleDelete,
-    toggleBeneficio
+    // AÑADIR las nuevas funciones que definiste en el hook:
+    handleServicioChange,
+    addServicio,
+    removeServicio,
+    handlePlazoChange,
+    addPlazo,
+    removePlazo,
   } = useServicioAnuncioItem(servicio, onUpdated);
+  //console.log("ServicioAnuncioItem", { form });
 
   const { data: catResp } = useCategoriaVehiculos();
   const { data: resResp } = useResaltarAnuncio();
@@ -92,15 +100,22 @@ const ServicioAnuncioItem = ({ servicio, index, onUpdated }) => {
         <ServicioAnuncioItemEdit
           form={form}
           handleChange={handleChange}
+          toggleBeneficio={toggleBeneficio}
           categorias={categorias}
           resaltadores={resaltadores}
           estados={estados}
           handleExtraChange={handleExtraChange}
           addExtra={addExtra}
           removeExtra={removeExtra}
+          // Le pasamos también las funciones de servicios y plazos:
+          handleServicioChange={handleServicioChange}
+          addServicio={addServicio}
+          removeServicio={removeServicio}
+          handlePlazoChange={handlePlazoChange}
+          addPlazo={addPlazo}
+          removePlazo={removePlazo}
           EDITABLE_FIELDS={EDITABLE_FIELDS}
           labelize={labelize}
-          toggleBeneficio={toggleBeneficio}
         />
       ) : (
         <ServicioAnuncioItemView

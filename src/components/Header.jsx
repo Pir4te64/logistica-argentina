@@ -48,9 +48,9 @@ const Header = () => {
           redirectPath = "/formulario-choferes";
         } else if (txt.includes("comisionista")) {
           redirectPath = "/formulario-comisionista";
-        } else if (txt.includes("transportista") || txt.includes("nosotros")) {
+        } /* else if (txt.includes("transportista") || txt.includes("nosotros")) {
           redirectPath = "/formulario";
-        }
+        } */
 
         return (
           <SwiperSlide key={index}>
