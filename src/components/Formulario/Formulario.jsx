@@ -75,16 +75,16 @@ const Formulario = () => {
 
   // Descripciones dinámicas
   const tarifaDesc = `$${servicio.tarifa_total} aprox.`;
-  const plazosDesc = servicio.servicio_plazos
+  const plazosDesc = servicio.servicios_plazo
     .map((p) => `- ${p.nombre}: ${p.descripcion}`)
     .join("\n");
-  const serviciosDesc = servicio.servicio_servicios
+  const serviciosDesc = servicio.servicios_servicio
     .map((s) => `- ${s.nombre}: ${s.descripcion}`)
     .join("\n");
 
   // Flags de ausencia
-  const noPlazos = servicio.servicio_plazos.length === 0;
-  const noServicios = servicio.servicio_servicios.length === 0;
+  const noPlazos = servicio.servicios_plazo.length === 0;
+  const noServicios = servicio.servicios_servicio.length === 0;
 
   return (
     <div className="w-full">

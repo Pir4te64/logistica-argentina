@@ -17,7 +17,6 @@ const TarjetaAplicar = ({ servicio, onInfo }) => {
     categoria_vehiculo: { nombre: vehiculoNombre },
     fecha_inicio_servicio,
   } = servicio;
-  console.log(servicio);
 
   // Leer usuario y token
   const storedUser = localStorage.getItem("user");
