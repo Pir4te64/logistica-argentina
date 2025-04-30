@@ -71,7 +71,7 @@ export default function useServicioAnuncioItem(servicio, onUpdated) {
       ),
     }));
   };
-  
+
   const addServicio = () => {
     setForm(f => ({
       ...f,
@@ -81,7 +81,7 @@ export default function useServicioAnuncioItem(servicio, onUpdated) {
       ],
     }));
   };
-  
+
   const removeServicio = (i) =>
     setForm((f) => ({
       ...f,
@@ -125,7 +125,7 @@ export default function useServicioAnuncioItem(servicio, onUpdated) {
   const handleSave = async () => {
     setSaving(true);
     setError("");
-  
+
     // 1) Desestructuramos para eliminar las relaciones anidadas que no queremos
     const {
       categoria_vehiculo,
@@ -137,37 +137,39 @@ export default function useServicioAnuncioItem(servicio, onUpdated) {
       // todo lo demás en mainFields
       ...mainFields
     } = form;
-  
+
     // 2) Construimos payload “limpio”
     const payload = {
       ...mainFields,
-  
+
       // Campos extra: sólo id (si existe), nombre y valor
       campos_extra: form.campos_extra.map(({ nombre, valor }) => ({
         nombre,
         valor,
       })),
-    
+
       servicio_servicios: form.servicio_servicios.map(({ nombre, descripcion }) => ({
         nombre,
         descripcion,
       })),
-    
+
       servicio_plazos: form.servicio_plazos.map(({ nombre, descripcion }) => ({
         nombre,
         descripcion,
       })),
     };
-  
+
     //console.log("▶️ Payload limpio:", payload);
-  
+
     try {
       const token = localStorage.getItem("token");
       const response = await axios.put(
         `${API_URL.SERVICIO_ANUNCIO}/${servicio.id}`,
         payload,
         { headers: { Authorization: `Bearer ${token}` } }
-      );
+      )
+      Swal.fire({ title: "Servicio Actualizado", icon: "success", confirmButtonText: "Aceptar" })
+        .then(() => window.location.reload());
       setEditMode(false);
       onUpdated();
     } catch (err) {
@@ -177,8 +179,8 @@ export default function useServicioAnuncioItem(servicio, onUpdated) {
       setSaving(false);
     }
   };
-  
-  
+
+
 
   // 8) eliminar servicio
   const handleDelete = async () => {
