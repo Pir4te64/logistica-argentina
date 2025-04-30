@@ -5,14 +5,12 @@ import { API_URL } from "@/Api/Api";
 import Swal from "sweetalert2";
 
 export default function useServicioAnuncioItem(servicio, onUpdated) {
-  // Inicializo form incluyendo los IDs de los beneficios actuales
-  // y asegurándome de que existan los arrays de campos_extra, servicio_servicios y servicio_plazos
   const [form, setForm] = useState({
     ...servicio,
     beneficios: servicio.beneficios?.map((b) => b.id) || [],
     campos_extra: servicio.campos_extra || [],
-    servicio_servicios: servicio.servicio_servicios || [],
-    servicio_plazos: servicio.servicio_plazos || [],
+    servicios_servicio: servicio.servicios_servicio || [],
+    servicios_plazo: servicio.servicios_plazo || [],
   });
 
   const [editMode, setEditMode] = useState(false);
@@ -66,7 +64,7 @@ export default function useServicioAnuncioItem(servicio, onUpdated) {
   const handleServicioChange = (i, field, val) => {
     setForm(f => ({
       ...f,
-      servicio_servicios: f.servicio_servicios.map((s, idx) =>
+      servicios_servicio: f.servicios_servicio.map((s, idx) =>
         idx === i ? { ...s, [field]: val } : s
       ),
     }));
@@ -75,8 +73,8 @@ export default function useServicioAnuncioItem(servicio, onUpdated) {
   const addServicio = () => {
     setForm(f => ({
       ...f,
-      servicio_servicios: [
-        ...f.servicio_servicios,
+      servicios_servicio: [
+        ...f.servicios_servicio,
         { nombre: "", descripcion: "" },
       ],
     }));
@@ -85,14 +83,14 @@ export default function useServicioAnuncioItem(servicio, onUpdated) {
   const removeServicio = (i) =>
     setForm((f) => ({
       ...f,
-      servicio_servicios: f.servicio_servicios.filter((_, idx) => idx !== i),
+      servicios_servicio: f.servicios_servicio.filter((_, idx) => idx !== i),
     }));
 
   // 5) Plazos asociados
   const handlePlazoChange = (i, field, val) => {
     setForm((f) => ({
       ...f,
-      servicio_plazos: f.servicio_plazos.map((p, idx) =>
+      servicios_plazo: f.servicios_plazo.map((p, idx) =>
         idx === i ? { ...p, [field]: val } : p
       ),
     }));
@@ -100,12 +98,12 @@ export default function useServicioAnuncioItem(servicio, onUpdated) {
   const addPlazo = () =>
     setForm((f) => ({
       ...f,
-      servicio_plazos: [...f.servicio_plazos, { nombre: "", descripcion: "" }],
+      servicios_plazo: [...f.servicios_plazo, { nombre: "", descripcion: "" }],
     }));
   const removePlazo = (i) =>
     setForm((f) => ({
       ...f,
-      servicio_plazos: f.servicio_plazos.filter((_, idx) => idx !== i),
+      servicios_plazo: f.servicios_plazo.filter((_, idx) => idx !== i),
     }));
 
   // 6) cancelar edición (resetea también los arrays)
@@ -114,8 +112,8 @@ export default function useServicioAnuncioItem(servicio, onUpdated) {
       ...servicio,
       beneficios: servicio.beneficios?.map((b) => b.id) || [],
       campos_extra: servicio.campos_extra || [],
-      servicio_servicios: servicio.servicio_servicios || [],
-      servicio_plazos: servicio.servicio_plazos || [],
+      servicios_servicio: servicio.servicios_servicio || [],
+      servicios_plazo: servicio.servicios_plazo || [],
     });
     setEditMode(false);
     setError("");
@@ -134,7 +132,6 @@ export default function useServicioAnuncioItem(servicio, onUpdated) {
       imagenes,
       created_at,
       updated_at,
-      // todo lo demás en mainFields
       ...mainFields
     } = form;
 
@@ -148,18 +145,18 @@ export default function useServicioAnuncioItem(servicio, onUpdated) {
         valor,
       })),
 
-      servicio_servicios: form.servicio_servicios.map(({ nombre, descripcion }) => ({
+      servicios_servicio: form.servicios_servicio.map(({ nombre, descripcion }) => ({
         nombre,
         descripcion,
       })),
 
-      servicio_plazos: form.servicio_plazos.map(({ nombre, descripcion }) => ({
+      servicios_plazo: form.servicios_plazo.map(({ nombre, descripcion }) => ({
         nombre,
         descripcion,
       })),
     };
 
-    //console.log("▶️ Payload limpio:", payload);
+    console.log("▶️ Payload limpio:", payload);
 
     try {
       const token = localStorage.getItem("token");

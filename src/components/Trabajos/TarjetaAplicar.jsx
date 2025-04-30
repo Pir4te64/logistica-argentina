@@ -13,9 +13,11 @@ const TarjetaAplicar = ({ servicio, onInfo }) => {
     empresa,
     ciudad,
     tarifa_total,
+    campos_extra = [], // array de objetos
     categoria_vehiculo: { nombre: vehiculoNombre },
     fecha_inicio_servicio,
   } = servicio;
+  console.log(servicio);
 
   // Leer usuario y token
   const storedUser = localStorage.getItem("user");
@@ -31,7 +33,6 @@ const TarjetaAplicar = ({ servicio, onInfo }) => {
   const navigate = useNavigate();
 
   const handleApply = async () => {
-    // 1) Si no hay token: pedir login
     if (!token) {
       await Swal.fire({
         icon: "info",
@@ -42,8 +43,6 @@ const TarjetaAplicar = ({ servicio, onInfo }) => {
       navigate("/login");
       return;
     }
-
-    // 2) Si no es transportista: mostrar mensaje
     if (!isTransportista) {
       await Swal.fire(
         "Formulario incompleto",
@@ -53,7 +52,6 @@ const TarjetaAplicar = ({ servicio, onInfo }) => {
       return;
     }
 
-    // 3) Caso válido: enviamos postulación
     setLoadingApply(true);
     try {
       const payload = {
@@ -74,13 +72,11 @@ const TarjetaAplicar = ({ servicio, onInfo }) => {
         },
       });
 
-      // Solo mostramos éxito, SIN redirección
       await Swal.fire("¡Postulación exitosa!", "", "success");
     } catch (error) {
       const mensajeError =
         error.response?.data?.errors?.[0] || "Ocurrió un error desconocido";
 
-      // Solo aquí redirigimos:
       await Swal.fire(
         "Excelente Decisión",
         `${mensajeError}. Serás redirigido al formulario.`,
@@ -113,6 +109,20 @@ const TarjetaAplicar = ({ servicio, onInfo }) => {
           <p>
             <strong>Tarifa Aprox:</strong> ${tarifa_total}
           </p>
+
+          {/* Mostrar solo el campo "nombre" de cada objeto en campos_extras */}
+          {campos_extra.length > 0 && (
+            <div className="mt-2 flex flex-wrap gap-2 text-sm">
+              {campos_extra.map((c) => (
+                <span
+                  key={c.id}
+                  className="bg-white bg-opacity-20 px-2 py-1 rounded"
+                >
+                  {c.nombre}: {c.valor}
+                </span>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="flex space-x-2">

@@ -203,7 +203,7 @@ const ServicioAnuncioItemEdit = ({
       {/* 4) Servicios asociados */}
       <section className="mt-6">
         <h3 className="text-lg font-semibold text-gray-800 mb-4">Servicios</h3>
-        {form.servicio_servicios.map((s, i) => (
+        {form.servicios_servicio.map((s, i) => (
           <div key={s.id ?? i} className="flex gap-2 mb-3">
             <input
               type="text"
@@ -241,7 +241,7 @@ const ServicioAnuncioItemEdit = ({
       {/* 5) Plazos asociados */}
       <section className="mt-6">
         <h3 className="text-lg font-semibold text-gray-800 mb-4">Plazos</h3>
-        {form.servicio_plazos.map((p, i) => (
+        {form.servicios_plazo.map((p, i) => (
           <div key={p.id || i} className="flex flex-col sm:flex-row gap-2 mb-3">
             <input
               type="text"

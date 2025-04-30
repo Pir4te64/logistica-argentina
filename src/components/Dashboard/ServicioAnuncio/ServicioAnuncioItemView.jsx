@@ -135,13 +135,13 @@ const ServicioAnuncioItemView = ({ form, labelize, OMITIR, OMITIR_NESTED }) => {
           </ul>
         </section>
       )}
-      {form.servicio_servicios?.length > 0 && (
+      {form.servicios_servicio?.length > 0 && (
         <section className="bg-white p-6 rounded-md shadow-sm">
           <h3 className="text-lg font-semibold text-gray-800 mb-3">
             Servicios
           </h3>
           <ul className="list-disc list-inside space-y-1">
-            {form.servicio_servicios.map((s) => (
+            {form.servicios_servicio.map((s) => (
               <li key={s.id} className="text-sm text-gray-800">
                 <span className="font-medium">{s.nombre}:</span> {s.descripcion}
               </li>
@@ -149,11 +149,11 @@ const ServicioAnuncioItemView = ({ form, labelize, OMITIR, OMITIR_NESTED }) => {
           </ul>
         </section>
       )}
-      {form.servicio_plazos?.length > 0 && (
+      {form.servicios_plazo?.length > 0 && (
         <section className="bg-white p-6 rounded-md shadow-sm">
           <h3 className="text-lg font-semibold text-gray-800 mb-3">Plazos</h3>
           <ul className="list-disc list-inside space-y-1">
-            {form.servicio_plazos.map((p) => (
+            {form.servicios_plazo.map((p) => (
               <li key={p.id} className="text-sm text-gray-800">
                 <span className="font-medium">{p.nombre}:</span> {p.descripcion}
               </li>
