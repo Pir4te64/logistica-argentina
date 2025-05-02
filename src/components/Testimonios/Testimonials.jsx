@@ -43,7 +43,7 @@ const Testimonials = () => {
   return (
     <section className="py-16 bg-gray-50" id="testimonios">
       <h2 className="text-3xl font-semibold text-center mb-12">
-        ¿Qué dicen nuestros clientes y distribuidores?
+        ¿Qué dicen nuestros clientes y distribuidores? DDDD
       </h2>
 
 
