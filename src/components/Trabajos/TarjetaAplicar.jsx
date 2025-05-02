@@ -73,6 +73,8 @@ const TarjetaAplicar = ({ servicio, onInfo }) => {
 
       await Swal.fire("¡Postulación exitosa!", "", "success");
     } catch (error) {
+      console.log(error);
+
       const mensajeError =
         error.response?.data?.errors?.[0] || "Ocurrió un error desconocido";
 
