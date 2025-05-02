@@ -46,6 +46,7 @@ const Testimonials = () => {
         ¿Qué dicen nuestros clientes y distribuidores?
       </h2>
 
+
       <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden flex flex-col md:flex-row">
         {/* Texto del testimonio */}
         <div className="p-8 md:w-1/2 flex flex-col justify-between">
