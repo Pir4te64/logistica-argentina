@@ -12,19 +12,21 @@ import FormularioComisionistaPage from "@/pages/FormularioComisionista";
 import DasboardPage from "@/pages/Dasboard";
 import ProtectedRoute from "@/Api/ProtectedRoute";
 import NotFound from "@/404";
+import MensajeTransportista from "./components/MensajeTransportista";
 
 function App() {
   return (
     <Routes>
-      <Route path='/' element={<Home />} />
-      <Route path='/login' element={<Login />} />
-      <Route path='/register' element={<Register />} />
-      <Route path='/register-google' element={<RegisterGoogle />} />
-      <Route path='/formulario' element={<FormularioPage />} />
-      <Route path='/mensaje' element={<Mensaje />} />
-      <Route path='/formulario-choferes' element={<FormularioChoferes />} />
+      <Route path="/" element={<Home />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+      <Route path="/register-google" element={<RegisterGoogle />} />
+      <Route path="/formulario" element={<FormularioPage />} />
+      <Route path="/mensaje" element={<Mensaje />} />
+      <Route path="/mensaje-transportista" element={<MensajeTransportista />} />
+      <Route path="/formulario-choferes" element={<FormularioChoferes />} />
       <Route
-        path='/dashboard'
+        path="/dashboard"
         element={
           <ProtectedRoute allowedIds={[1, 2]}>
             <DasboardPage />
@@ -32,7 +34,7 @@ function App() {
         }
       />
       <Route
-        path='/formulario-comisionista'
+        path="/formulario-comisionista"
         element={<FormularioComisionistaPage />}
       />
       <Route path="*" element={<NotFound />} />

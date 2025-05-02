@@ -14,7 +14,6 @@ const Postulaciones = () => {
     usePostulacionesStore();
   const [editing, setEditing] = useState(null);
   const [form, setForm] = useState({});
-  console.log(postulaciones);
 
   useEffect(() => {
     fetchPostulaciones();
@@ -22,15 +21,27 @@ const Postulaciones = () => {
 
   /* --------------------------- helpers & CRUD --------------------------- */
 
-  const startEdit = (p) => {
-    setEditing(p);
-    setForm({
-      fecha_inicio_servicio: p.fecha_inicio_servicio.slice(0, 10),
-      fecha_fin_servicio: p.fecha_fin_servicio.slice(0, 10),
-      cumple_requisitos: p.cumple_requisitos,
-      asignado: p.asignado,
-      puntos: p.puntos,
-    });
+  // Lanza modo edición completo: ahora recibe el id, hace GET y loguea resultado
+  const startEdit = async (id) => {
+    const token = localStorage.getItem("token");
+
+    try {
+      const { data } = await axios.get(`${API_URL.POSTULACIONES}/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      // 'data' es la postulación individual que devuelve la API
+      setEditing(data.data);
+      setForm({
+        fecha_inicio_servicio: data.data.fecha_inicio_servicio.slice(0, 10),
+        fecha_fin_servicio: data.data.fecha_fin_servicio.slice(0, 10),
+        cumple_requisitos: data.data.cumple_requisitos,
+        asignado: data.data.asignado,
+        puntos: data.data.puntos,
+      });
+    } catch (err) {
+      console.error("❌ Error al obtener postulación:", err);
+      Swal.fire("Error", "No se pudo cargar la postulación.", "error");
+    }
   };
 
   const handleChange = (e) => {
@@ -209,7 +220,7 @@ const Postulaciones = () => {
 
                 <td className="px-4 py-2 text-center text-sm text-gray-700 flex items-center justify-center gap-3">
                   <button
-                    onClick={() => startEdit(p)}
+                    onClick={() => startEdit(p.id)}
                     className="text-indigo-600 hover:text-indigo-800 transition-colors"
                     title="Editar"
                   >
@@ -232,6 +243,7 @@ const Postulaciones = () => {
       {/* Formulario de edición */}
       {editing && (
         <EditForm
+          details={editing}
           form={form}
           handleChange={handleChange}
           submitEdit={submitEdit}

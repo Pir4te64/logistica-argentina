@@ -42,5 +42,5 @@ export const submitDocumentation = async (uploadedFiles) => {
   console.log("Todos los archivos han sido procesados.");
 
   // redirijo a /mensaje
-  window.location.href = "/mensaje";
+  window.location.href = "/mensaje-transportista";
 };

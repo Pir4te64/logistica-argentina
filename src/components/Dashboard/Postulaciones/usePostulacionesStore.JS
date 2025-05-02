@@ -20,6 +20,7 @@ export const usePostulacionesStore = create((set, get) => ({
                     Authorization: `Bearer ${token}`,
                 },
             });
+
             // asumiendo que la data viene en response.data.data
             set({
                 postulaciones: response.data.data ?? response.data,
