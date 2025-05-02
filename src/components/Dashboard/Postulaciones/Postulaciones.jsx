@@ -14,6 +14,7 @@ const Postulaciones = () => {
     usePostulacionesStore();
   const [editing, setEditing] = useState(null);
   const [form, setForm] = useState({});
+  console.log(postulaciones);
 
   useEffect(() => {
     fetchPostulaciones();
@@ -138,6 +139,7 @@ const Postulaciones = () => {
             <tr>
               {[
                 "Email",
+                "Teléfono", // <‑‑ nuevo encabezado
                 "Inicio",
                 "Fin",
                 "Cumple Req.",
@@ -160,6 +162,9 @@ const Postulaciones = () => {
               <tr key={p.id} className="hover:bg-gray-100 transition-colors">
                 <td className="px-4 py-2 text-sm text-gray-700 break-words">
                   {p.email}
+                </td>
+                <td className="px-4 py-2 text-sm text-gray-700 text-center">
+                  {p.usuario?.telefono ?? "-"}
                 </td>
                 <td className="px-4 py-2 text-sm text-gray-700">
                   {p.fecha_inicio_servicio.slice(0, 10)}
