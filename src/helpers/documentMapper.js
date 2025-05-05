@@ -1,6 +1,6 @@
 // ---------- helpers/documentMapper.js (por ejemplo) ----------
 
-import { docMapping } from "../components/Formulario/estaticos";
+import { docMapping } from "@/components/Formulario/estaticos";
 
 export const idToDoc = (() => {
     const map = {};

@@ -12,8 +12,8 @@ import ConfigSections from "@/components/Dashboard/ServicioAnuncio/ConfigSection
 import ExtraFieldsSection from "@/components/Dashboard/ServicioAnuncio/ExtraFieldsSection";
 import Swal from "sweetalert2";
 import { useMemo } from "react";
-import ServicesSection from "./ServicesSection";
-import PlazosSection from "./PlazosSection";
+import ServicesSection from "@/components/Dashboard/ServicioAnuncio/ServicesSection";
+import PlazosSection from "@/components/Dashboard/ServicioAnuncio/PlazosSection";
 
 const ServicioAnuncioForm = ({ onSubmit }) => {
   const {

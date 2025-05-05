@@ -12,7 +12,7 @@ import FormularioComisionistaPage from "@/pages/FormularioComisionista";
 import DasboardPage from "@/pages/Dasboard";
 import ProtectedRoute from "@/Api/ProtectedRoute";
 import NotFound from "@/404";
-import MensajeTransportista from "./components/MensajeTransportista";
+import MensajeTransportista from "@/components/MensajeTransportista";
 
 function App() {
   return (

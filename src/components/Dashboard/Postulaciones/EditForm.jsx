@@ -1,14 +1,14 @@
 // src/components/Dashboard/Postulaciones/EditForm.jsx
 import React from "react";
 import Rating from "@/components/Dashboard/Postulaciones/Rating";
-import { BASE_URL } from "../../../Api/Api";
+import { BASE_URL } from "@/Api/Api";
 import {
   FiAlertCircle,
   FiCheckCircle,
   FiChevronDown,
   FiFileText,
 } from "react-icons/fi";
-import { docMapping, labelAliases } from "../../Formulario/estaticos";
+import { docMapping, labelAliases } from "@/components/Formulario/estaticos";
 
 /* 2.  Diccionario inverso id → label legible                         */
 const idToDoc = (() => {

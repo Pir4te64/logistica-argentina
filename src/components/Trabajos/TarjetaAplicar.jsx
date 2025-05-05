@@ -6,7 +6,7 @@ import { FaInfoCircle } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import tarjeta from "@/assets/tarjeta.jpg";
 import { API_URL } from "@/Api/Api";
-import { usePostulacionesStore } from "../Dashboard/Postulaciones/usePostulacionesStore.JS";
+import { usePostulacionesStore } from "@/components/Dashboard/Postulaciones/usePostulacionesStore.JS";
 
 const TarjetaAplicar = ({ servicio, onInfo }) => {
   const {
