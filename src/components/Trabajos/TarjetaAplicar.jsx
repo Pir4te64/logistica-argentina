@@ -1,11 +1,12 @@
 // src/components/Trabajos/TarjetaAplicar.jsx
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { FaInfoCircle } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import tarjeta from "@/assets/tarjeta.jpg";
 import { API_URL } from "@/Api/Api";
+import { usePostulacionesStore } from "../Dashboard/Postulaciones/usePostulacionesStore.JS";
 
 const TarjetaAplicar = ({ servicio, onInfo }) => {
   const {
@@ -22,7 +23,21 @@ const TarjetaAplicar = ({ servicio, onInfo }) => {
   const storedUser = localStorage.getItem("user");
   const user = storedUser ? JSON.parse(storedUser) : null;
   const token = localStorage.getItem("token");
+  const postulaciones = usePostulacionesStore((state) => state.postulaciones);
+  // const loading = usePostulacionesStore((state) => state.loading);
+  //const error = usePostulacionesStore((state) => state.error);
+  const fetchPostulaciones = usePostulacionesStore(
+    (state) => state.fetchPostulaciones
+  );
 
+  useEffect(() => {
+    fetchPostulaciones();
+  }, [fetchPostulaciones]);
+
+  /*  useEffect(() => {
+    console.log("✅ Postulaciones cargadas:", postulaciones);
+    if (error) console.error("❌ Error al cargar postulaciones:", error);
+  }, [postulaciones, error]); */
   // Comprobar rol Transportistas
   const isTransportista = user?.roles?.some(
     (r) => r.name.toLowerCase() === "transportistas"
@@ -30,8 +45,8 @@ const TarjetaAplicar = ({ servicio, onInfo }) => {
 
   const [loadingApply, setLoadingApply] = useState(false);
   const navigate = useNavigate();
-
   const handleApply = async () => {
+    // 1) Validaciones de sesión y rol
     if (!token) {
       await Swal.fire({
         icon: "info",
@@ -51,6 +66,18 @@ const TarjetaAplicar = ({ servicio, onInfo }) => {
       return;
     }
 
+    // 2) Chequeo GLOBAL sólo por email
+    const yaPostuladoGlobal = postulaciones.some((p) => p.email === user.email);
+    if (yaPostuladoGlobal) {
+      await Swal.fire(
+        "¡Atención!",
+        "Ya te has postulado a un servicio y no puedes postularte nuevamente.",
+        "warning"
+      );
+      return;
+    }
+
+    // 3) Si no existe aún, procedemos al POST
     setLoadingApply(true);
     try {
       const payload = {
@@ -72,9 +99,10 @@ const TarjetaAplicar = ({ servicio, onInfo }) => {
       });
 
       await Swal.fire("¡Postulación exitosa!", "", "success");
+      // refresca lista si quieres
+      fetchPostulaciones();
     } catch (error) {
-      console.log(error);
-
+      console.error(error);
       const mensajeError =
         error.response?.data?.errors?.[0] || "Ocurrió un error desconocido";
 
@@ -139,13 +167,11 @@ const TarjetaAplicar = ({ servicio, onInfo }) => {
           <button
             onClick={handleApply}
             disabled={loadingApply}
-            className={`px-3 py-1 rounded transition-colors 
-              ${
-                loadingApply
-                  ? "bg-gray-500 cursor-wait"
-                  : "bg-custom-red hover:bg-custom-red/80"
-              }
-              text-white`}
+            className={`px-3 py-1 rounded transition-colors ${
+              loadingApply
+                ? "bg-gray-500 cursor-wait"
+                : "bg-custom-red hover:bg-custom-red/80"
+            } text-white`}
           >
             {loadingApply ? "Enviando..." : "Aplicar"}
           </button>
