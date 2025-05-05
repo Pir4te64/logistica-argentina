@@ -1,24 +1,31 @@
+// src/components/Navbar.jsx
 import React, { useState, useContext } from "react";
 import { FaBars, FaSignOutAlt } from "react-icons/fa";
 import Logo from "@/assets/Logo.png";
 import { Link } from "react-router-dom";
 import { HashLink } from "react-router-hash-link";
 import { AuthContext } from "@/Api/AuthContext";
+import { useModalStore } from "@/store/useModalStore";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const { user, logout } = useContext(AuthContext);
-
-  // Si el usuario tiene rol 1 o 2, se ocultan los enlaces de Trabajos, Beneficios y Testimonios
+  const openPost = useModalStore((s) => s.openPostulaciones);
+  // Roles
   const hideHashLinks =
     user &&
     user.roles &&
     user.roles.some((role) => role.id === 1 || role.id === 2);
 
+  const isTransportista =
+    user &&
+    user.roles &&
+    user.roles.some((role) => role.name.toLowerCase() === "transportistas");
+
   return (
     <nav className="bg-custom-dark text-white">
       <div className="max-w-7xl mx-auto px-4 flex items-center justify-between h-16">
-        {/* Sección Izquierda: Logo + Título */}
+        {/* Izquierda: logo */}
         <div className="flex items-center space-x-2">
           <Link to="/">
             <img src={Logo} alt="Logo" className="w-auto h-28 md:h-44" />
@@ -52,6 +59,16 @@ const Navbar = () => {
               </HashLink>
             </>
           )}
+
+          {isTransportista && (
+            <Link
+              onClick={openPost}
+              className="bg-custom-red hover:bg-custom-red/80 px-4 py-2 rounded transition-colors"
+            >
+              Postulaciones
+            </Link>
+          )}
+
           {!user ? (
             <>
               <Link
@@ -69,16 +86,14 @@ const Navbar = () => {
             </>
           ) : (
             <>
-              {user &&
-                user.roles &&
-                user.roles.some((role) => role.id === 1 || role.id === 2) && (
-                  <Link
-                    to="/dashboard"
-                    className="bg-custom-red hover:bg-custom-red/80 px-4 py-2 rounded transition-colors"
-                  >
-                    Dashboard
-                  </Link>
-                )}
+              {user.roles.some((role) => role.id === 1 || role.id === 2) && (
+                <Link
+                  to="/dashboard"
+                  className="bg-custom-red hover:bg-custom-red/80 px-4 py-2 rounded transition-colors"
+                >
+                  Dashboard
+                </Link>
+              )}
               <button
                 onClick={logout}
                 className="bg-custom-red hover:bg-custom-red/80 px-4 py-2 rounded transition-colors"
@@ -90,7 +105,7 @@ const Navbar = () => {
           )}
         </div>
 
-        {/* Botón Hamburguesa (Mobile) */}
+        {/* Hamburgesa Mobile */}
         <button
           className="md:hidden text-xl"
           onClick={() => setMenuOpen(!menuOpen)}
@@ -102,7 +117,7 @@ const Navbar = () => {
 
       {/* Menú Mobile */}
       {menuOpen && (
-        <div className="md:hidden bg-custom-dark px-4 pb-4 flex flex-col space-y-2    transition-all duration-300 ease-in-out">
+        <div className="md:hidden bg-custom-dark px-4 pb-4 flex flex-col space-y-2 transition-all duration-300 ease-in-out">
           {!hideHashLinks && (
             <>
               <HashLink
@@ -128,6 +143,15 @@ const Navbar = () => {
               </HashLink>
             </>
           )}
+
+          {isTransportista && (
+            <Link
+              onClick={openPost}
+              className="bg-custom-red hover:bg-custom-red/80 px-4 py-2 rounded transition-colors"
+            >
+              Postulaciones
+            </Link>
+          )}
           {!user ? (
             <>
               <Link
@@ -145,16 +169,14 @@ const Navbar = () => {
             </>
           ) : (
             <>
-              {user &&
-                user.roles &&
-                user.roles.some((role) => role.id === 1 || role.id === 2) && (
-                  <Link
-                    to="/dashboard"
-                    className="bg-custom-red hover:bg-custom-red/80 px-4 py-2 rounded transition-colors"
-                  >
-                    Dashboard
-                  </Link>
-                )}
+              {user.roles.some((role) => role.id === 1 || role.id === 2) && (
+                <Link
+                  to="/dashboard"
+                  className="bg-custom-red hover:bg-custom-red/80 px-4 py-2 rounded transition-colors"
+                >
+                  Dashboard
+                </Link>
+              )}
               <button
                 onClick={logout}
                 className="bg-custom-red hover:bg-custom-red/80 px-4 py-2 rounded transition-colors"
