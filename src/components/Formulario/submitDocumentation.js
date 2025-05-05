@@ -1,26 +1,38 @@
+// src/components/Formulario/submitDocumentation.js
 import axios from "axios";
 import { API_URL } from "@/Api/Api";
 
-export const submitDocumentation = async (uploadedFiles) => {
-  const userString = localStorage.getItem("user");
+/**
+ * Sube un conjunto de archivos y opcionalmente redirige al finalizar.
+ *
+ * @param {Array<{ id: number, file: File }>} uploadedFiles — array de archivos con su tipo (id).
+ * @param {boolean} [redirectOnComplete=true] — si es true, al terminar hace window.location.
+ */
+export const submitDocumentation = async (
+  uploadedFiles,
+  redirectOnComplete = true
+) => {
+  // 1) Extraer correo del localStorage
   let correo = null;
+  const userString = localStorage.getItem("user");
   if (userString) {
     try {
-      const userObj = JSON.parse(userString);
-      correo = userObj.email;
-    } catch (error) {
-      console.error("Error al parsear user:", error);
+      correo = JSON.parse(userString).email;
+    } catch (err) {
+      console.error("Error al parsear user:", err);
     }
   }
 
-  const dataToSend = uploadedFiles.map((item) => ({
-    file: item.file,
-    filename: item.file.name,
-    tipo_archivo: item.id,
+  // 2) Construir payload para cada archivo
+  const dataToSend = uploadedFiles.map(({ id, file }) => ({
+    file,
+    filename: file.name,
+    tipo_archivo: id,
     tipo_usuario: 3,
     correo: correo || "no-email@example.com",
   }));
 
+  // 3) Subir uno a uno
   for (const data of dataToSend) {
     const formData = new FormData();
     formData.append("file", data.file);
@@ -33,14 +45,15 @@ export const submitDocumentation = async (uploadedFiles) => {
       await axios.post(API_URL.UPLOAD_IMAGE, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-    } catch (error) {
-      console.error(`Error subiendo ${data.filename}:`, error);
-      // decidir si continuar o abortar
+    } catch (err) {
+      console.error(`Error subiendo ${data.filename}:`, err);
+      // aquí podrías decidir abortar o seguir con los siguientes
     }
   }
 
-  console.log("Todos los archivos han sido procesados.");
 
-  // redirijo a /mensaje
-  window.location.href = "/mensaje-transportista";
+  // 4) Redirección opcional
+  if (redirectOnComplete) {
+    window.location.href = "/mensaje-transportista";
+  }
 };
