@@ -4,25 +4,7 @@ import CustomSelect from "@/components/Trabajos/CustomSelect";
 import TarjetaAplicar from "@/components/Trabajos/TarjetaAplicar";
 import { useTrabajos } from "@/components/Trabajos/useTrabajos";
 import ServicioModal from "@/components/Trabajos/Modal";
-
-const VEHICLE_OPTIONS = [
-  {
-    label: "Chico (Kangoo, Fiorino, Partner, etc.)",
-    value: "Chico",
-  },
-  {
-    label: "Mediano (Master, Ducato, Transit, etc.)",
-    value: "Mediano",
-  },
-  {
-    label: "Grande (Accelo 815, Mercedes 710, Atego)",
-    value: "Grande",
-  },
-  {
-    label: "Semis (Scania, Actros, Iveco Stralis, Volvo FM)",
-    value: "Semis",
-  },
-];
+import { EMPRESAS_OPTIONS, VEHICLE_OPTIONS } from "./estaticos";
 
 const Trabajos = () => {
   const { fetchServicios, servicios = [], loading, error } = useTrabajos();
@@ -47,19 +29,7 @@ const Trabajos = () => {
         .map((c) => ({ label: c, value: c })),
     [servicios]
   );
-
-  const empresasOptions = useMemo(
-    () => [
-      { label: "Oca", value: "Oca" },
-      { label: "Loginter", value: "Loginter" },
-      { label: "Pavetron", value: "Pavetron" },
-      { label: "Urbano", value: "Urbano" },
-      { label: "Ocasa", value: "Ocasa" },
-      { label: "intermeptro", value: "intermeptro" },
-      { label: "Andreani", value: "Andreani" },
-    ],
-    []
-  );
+  const empresasOptions = useMemo(() => EMPRESAS_OPTIONS, []);
 
   const serviciosFiltrados = useMemo(
     () =>
@@ -76,11 +46,14 @@ const Trabajos = () => {
     [servicios, filters]
   );
 
+  // **Nuevo: ordenamos por el atributo `orden` de forma ascendente**
+  const sortedServicios = useMemo(() => {
+    return [...serviciosFiltrados].sort((a, b) => a.orden - b.orden);
+  }, [serviciosFiltrados]);
+
   const [visibleCount, setVisibleCount] = useState(4);
   const handleShowMore = () =>
-    setVisibleCount((prev) =>
-      Math.min(prev + 4, serviciosFiltrados.length)
-    );
+    setVisibleCount((prev) => Math.min(prev + 4, sortedServicios.length));
 
   const [selectedServicio, setSelectedServicio] = useState(null);
   const clearFilters = () => {
@@ -143,14 +116,16 @@ const Trabajos = () => {
           <div className="col-span-full flex justify-center items-center py-10">
             <div className="animate-spin rounded-full h-12 w-12 border-4 border-gray-200 border-t-custom-red"></div>
           </div>
-        ) : serviciosFiltrados.length > 0 ? (
-          serviciosFiltrados.slice(0, visibleCount).map((servicio) => (
-            <TarjetaAplicar
-              key={servicio.id}
-              servicio={servicio}
-              onInfo={() => setSelectedServicio(servicio)}
-            />
-          ))
+        ) : sortedServicios.length > 0 ? (
+          sortedServicios
+            .slice(0, visibleCount)
+            .map((servicio) => (
+              <TarjetaAplicar
+                key={servicio.id}
+                servicio={servicio}
+                onInfo={() => setSelectedServicio(servicio)}
+              />
+            ))
         ) : (
           <p className="col-span-full text-gray-600 text-center">
             No se encontraron servicios con esos filtros.
@@ -158,7 +133,7 @@ const Trabajos = () => {
         )}
       </div>
 
-      {!loading && visibleCount < serviciosFiltrados.length && (
+      {!loading && visibleCount < sortedServicios.length && (
         <div className="flex justify-center mt-6">
           <button
             onClick={handleShowMore}

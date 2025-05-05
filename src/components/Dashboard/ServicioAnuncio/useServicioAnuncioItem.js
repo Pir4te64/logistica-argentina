@@ -6,6 +6,7 @@ import Swal from "sweetalert2";
 
 export default function useServicioAnuncioItem(servicio, onUpdated) {
   const [form, setForm] = useState({
+    // Con el spread {...servicio} ya traemos `orden` junto al resto de campos
     ...servicio,
     beneficios: servicio.beneficios?.map((b) => b.id) || [],
     campos_extra: servicio.campos_extra || [],
@@ -18,12 +19,21 @@ export default function useServicioAnuncioItem(servicio, onUpdated) {
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState("");
 
-  // 1) inputs básicos y checkboxes
+  // 1) inputs básicos, checkboxes y números
   const handleChange = (e) => {
     const { name, type, value, checked } = e.target;
+    let parsed;
+    if (type === "checkbox") {
+      parsed = checked ? 1 : 0;
+    } else if (type === "number") {
+      // parseamos a float; si quieres int, usa parseInt(...)
+      parsed = value === "" ? "" : parseFloat(value);
+    } else {
+      parsed = value;
+    }
     setForm((f) => ({
       ...f,
-      [name]: type === "checkbox" ? (checked ? 1 : 0) : value,
+      [name]: parsed,
     }));
   };
 
@@ -62,24 +72,18 @@ export default function useServicioAnuncioItem(servicio, onUpdated) {
 
   // 4) Servicios asociados
   const handleServicioChange = (i, field, val) => {
-    setForm(f => ({
+    setForm((f) => ({
       ...f,
       servicios_servicio: f.servicios_servicio.map((s, idx) =>
         idx === i ? { ...s, [field]: val } : s
       ),
     }));
   };
-
-  const addServicio = () => {
-    setForm(f => ({
+  const addServicio = () =>
+    setForm((f) => ({
       ...f,
-      servicios_servicio: [
-        ...f.servicios_servicio,
-        { nombre: "", descripcion: "" },
-      ],
+      servicios_servicio: [...f.servicios_servicio, { nombre: "", descripcion: "" }],
     }));
-  };
-
   const removeServicio = (i) =>
     setForm((f) => ({
       ...f,
@@ -124,7 +128,7 @@ export default function useServicioAnuncioItem(servicio, onUpdated) {
     setSaving(true);
     setError("");
 
-    // 1) Desestructuramos para eliminar las relaciones anidadas que no queremos
+    // Eliminamos relaciones anidadas no deseadas
     const {
       categoria_vehiculo,
       resaltador,
@@ -135,38 +139,30 @@ export default function useServicioAnuncioItem(servicio, onUpdated) {
       ...mainFields
     } = form;
 
-    // 2) Construimos payload “limpio”
+    // Preparamos payload limpio (mainFields ya contiene `orden`)
     const payload = {
       ...mainFields,
-
-      // Campos extra: sólo id (si existe), nombre y valor
-      campos_extra: form.campos_extra.map(({ nombre, valor }) => ({
-        nombre,
-        valor,
-      })),
-
+      campos_extra: form.campos_extra.map(({ nombre, valor }) => ({ nombre, valor })),
       servicios_servicio: form.servicios_servicio.map(({ nombre, descripcion }) => ({
         nombre,
         descripcion,
       })),
-
       servicios_plazo: form.servicios_plazo.map(({ nombre, descripcion }) => ({
         nombre,
         descripcion,
       })),
     };
 
-    console.log("▶️ Payload limpio:", payload);
-
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.put(
-        `${API_URL.SERVICIO_ANUNCIO}/${servicio.id}`,
-        payload,
-        { headers: { Authorization: `Bearer ${token}` } }
-      )
-      Swal.fire({ title: "Servicio Actualizado", icon: "success", confirmButtonText: "Aceptar" })
-        .then(() => window.location.reload());
+      await axios.put(`${API_URL.SERVICIO_ANUNCIO}/${servicio.id}`, payload, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      await Swal.fire({
+        title: "Servicio Actualizado",
+        icon: "success",
+        confirmButtonText: "Aceptar",
+      });
       setEditMode(false);
       onUpdated();
     } catch (err) {
@@ -176,8 +172,6 @@ export default function useServicioAnuncioItem(servicio, onUpdated) {
       setSaving(false);
     }
   };
-
-
 
   // 8) eliminar servicio
   const handleDelete = async () => {

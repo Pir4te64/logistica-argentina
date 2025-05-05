@@ -41,6 +41,7 @@ const EDITABLE_FIELDS = {
   categoria_vehiculo_id: "select_categoria",
   resaltador_anuncio_id: "select_resaltador",
   estado_servicio_id: "select_estado",
+  orden: "number",
 };
 
 const labelize = (key) =>
@@ -62,7 +63,6 @@ const ServicioAnuncioItem = ({ servicio, index, onUpdated }) => {
     handleCancel,
     handleSave,
     handleDelete,
-    // AÑADIR las nuevas funciones que definiste en el hook:
     handleServicioChange,
     addServicio,
     removeServicio,
@@ -70,7 +70,6 @@ const ServicioAnuncioItem = ({ servicio, index, onUpdated }) => {
     addPlazo,
     removePlazo,
   } = useServicioAnuncioItem(servicio, onUpdated);
-  //console.log("ServicioAnuncioItem", { form });
 
   const { data: catResp } = useCategoriaVehiculos();
   const { data: resResp } = useResaltarAnuncio();
@@ -107,7 +106,6 @@ const ServicioAnuncioItem = ({ servicio, index, onUpdated }) => {
           handleExtraChange={handleExtraChange}
           addExtra={addExtra}
           removeExtra={removeExtra}
-          // Le pasamos también las funciones de servicios y plazos:
           handleServicioChange={handleServicioChange}
           addServicio={addServicio}
           removeServicio={removeServicio}

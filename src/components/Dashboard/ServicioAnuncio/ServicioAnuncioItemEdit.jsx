@@ -12,7 +12,6 @@ const ServicioAnuncioItemEdit = ({
   handleExtraChange,
   addExtra,
   removeExtra,
-  // nuevos props para servicios y plazos:
   handleServicioChange,
   addServicio,
   removeServicio,

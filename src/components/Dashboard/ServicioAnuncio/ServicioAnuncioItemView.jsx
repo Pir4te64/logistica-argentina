@@ -8,9 +8,11 @@ const FLAGS = ["fragil", "liquido", "requiere_refrigeracion"];
  * Componente de solo lectura para ServicioAnuncioItem.
  */
 const ServicioAnuncioItemView = ({ form, labelize, OMITIR, OMITIR_NESTED }) => {
+  console.log("ServicioAnuncioItemView", form);
+
   return (
     <div className="space-y-6">
-      {/* 1) Campos simples y flags */}
+      {/* 1) Campos simples, flags y campo ‘orden’ */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {Object.entries(form)
           .filter(
@@ -83,11 +85,7 @@ const ServicioAnuncioItemView = ({ form, labelize, OMITIR, OMITIR_NESTED }) => {
             {form.beneficios.map((b) => (
               <span
                 key={b}
-                className="
-                inline-flex items-center px-2.5 py-0.5
-                bg-indigo-100 text-indigo-800 text-xs font-medium
-                rounded-full
-              "
+                className="inline-flex items-center px-2.5 py-0.5 bg-indigo-100 text-indigo-800 text-xs font-medium rounded-full"
               >
                 <FaCheck className="mr-1 text-indigo-600" /> {b}
               </span>
@@ -135,6 +133,8 @@ const ServicioAnuncioItemView = ({ form, labelize, OMITIR, OMITIR_NESTED }) => {
           </ul>
         </section>
       )}
+
+      {/* 6) Servicios */}
       {form.servicios_servicio?.length > 0 && (
         <section className="bg-white p-6 rounded-md shadow-sm">
           <h3 className="text-lg font-semibold text-gray-800 mb-3">
@@ -149,6 +149,8 @@ const ServicioAnuncioItemView = ({ form, labelize, OMITIR, OMITIR_NESTED }) => {
           </ul>
         </section>
       )}
+
+      {/* 7) Plazos */}
       {form.servicios_plazo?.length > 0 && (
         <section className="bg-white p-6 rounded-md shadow-sm">
           <h3 className="text-lg font-semibold text-gray-800 mb-3">Plazos</h3>
@@ -161,7 +163,8 @@ const ServicioAnuncioItemView = ({ form, labelize, OMITIR, OMITIR_NESTED }) => {
           </ul>
         </section>
       )}
-      {/* 6) Video */}
+
+      {/* 8) Video */}
       {form.video_url && (
         <section className="bg-white p-6 rounded-md shadow-sm">
           <h3 className="text-lg font-semibold text-gray-800 mb-3">Video</h3>
