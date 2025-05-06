@@ -13,6 +13,7 @@ import DasboardPage from "@/pages/Dasboard";
 import ProtectedRoute from "@/Api/ProtectedRoute";
 import NotFound from "@/404";
 import MensajeTransportista from "@/components/MensajeTransportista";
+import RecuperarPasswordPage from "@/pages/RecuperarPassword";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/recuperar" element={<RecuperarPasswordPage />} />
       <Route path="/register-google" element={<RegisterGoogle />} />
       <Route path="/formulario" element={<FormularioPage />} />
       <Route path="/mensaje" element={<Mensaje />} />

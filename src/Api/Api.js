@@ -13,4 +13,7 @@ export const API_URL = {
   RESALTADOR_ANUNCIO: `${BASE_URL}/api/resaltador-anuncio`,
   SERVICIO_ANUNCIO: `${BASE_URL}/api/servicio-anuncio`,
   POSTULACIONES: `${BASE_URL}/api/postulacion`,
+  CHANGE_PASSWORD: `${BASE_URL}/api/cambiar-password`,
+  CHANGE_PASSWORD_OTHER: `${BASE_URL}/api/usuarios`,
+  LISTAR_USUARIOS: `${BASE_URL}/api/usuarios/listar`,
 };

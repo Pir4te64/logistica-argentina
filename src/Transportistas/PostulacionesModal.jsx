@@ -1,55 +1,22 @@
 // src/components/Trabajos/PostulacionesModal.jsx
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import Swal from "sweetalert2";
-import { FaTimes, FaCheckCircle } from "react-icons/fa";
-import { FiChevronDown } from "react-icons/fi";
+import { FaTimes } from "react-icons/fa";
 import { useModalStore } from "@/store/useModalStore";
-import { BASE_URL } from "@/Api/Api";
-import { usePostulacionDetail } from "./usePostulacionDetail";
-import FileUploader from "@/components/Formulario/FileUploader";
+import { usePostulacionDetail } from "@/Transportistas/usePostulacionDetail";
 import { submitDocumentation } from "@/components/Formulario/submitDocumentation";
+import DocumentosPostulacion from "./DocumentosPostulacion";
+import CambiarPasswordForm from "./CambiarPasswordForm"; // Importa el nuevo componente
 
 const PostulacionesModal = () => {
-  // 1️⃣ Hooks (siempre en el mismo orden)
   const isOpen = useModalStore((s) => s.isPostulacionesOpen);
   const close = useModalStore((s) => s.closePostulaciones);
   const { detail, loading, error } = usePostulacionDetail(isOpen);
 
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [submitting, setSubmitting] = useState(false);
+  const [activeTab, setActiveTab] = useState("documentos"); // Estado para controlar la pestaña activa
 
-  // 2️⃣ Obtenemos los documentos requeridos desde el rol
-  const requiredFields = useMemo(() => {
-    if (!detail) return [];
-    return detail.usuario.roles[0].archivos_necesarios.map((doc) => ({
-      id: doc.id,
-      nombre: doc.nombre,
-    }));
-  }, [detail]);
-
-  // 3️⃣ Archivos ya subidos y sus IDs
-  const archivosCargados = detail?.usuario?.archivos_cargados || [];
-  const cargadosIds = new Set(archivosCargados.map((a) => a.tipo_archivos_id));
-
-  // 4️⃣ Handler al aceptar un archivo
-  const handleFileAccepted = (id, fileData) => {
-    const entries = Array.isArray(fileData)
-      ? fileData.map((f) => ({ id, file: f }))
-      : [{ id, file: fileData }];
-
-    setUploadedFiles((prev) => {
-      const filtered = prev.filter((x) => x.id !== id);
-      return [...filtered, ...entries];
-    });
-  };
-
-  // 5️⃣ Progreso
-  const uploadedCount = uploadedFiles.length;
-  const totalFields = requiredFields.length;
-  const progress =
-    totalFields > 0 ? Math.round((uploadedCount / totalFields) * 100) : 0;
-
-  // 6️⃣ Envío de los archivos nuevos
   const handleSubmit = async () => {
     if (uploadedFiles.length === 0) return;
     setSubmitting(true);
@@ -62,7 +29,6 @@ const PostulacionesModal = () => {
         text: "Tus documentos se enviaron correctamente.",
         confirmButtonText: "Aceptar",
       });
-      // Limpio el estado y cierro el modal
       setUploadedFiles([]);
       close();
     } finally {
@@ -70,12 +36,11 @@ const PostulacionesModal = () => {
     }
   };
 
-  // 7️⃣ Si el modal está cerrado, no renderizamos nada
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-3xl mx-4 max-h-[90vh] overflow-y-auto p-6 relative">
+      <div className="bg-white rounded-lg shadow-xl w-full max-w-3xl mx-4 max-h-[90vh] overflow-y-auto p-6 relative flex">
         {/* Botón Cerrar */}
         <button
           onClick={close}
@@ -85,103 +50,56 @@ const PostulacionesModal = () => {
           <FaTimes size={20} />
         </button>
 
-        <h2 className="text-3xl font-bold text-center mb-4">Documentos</h2>
-        {loading && <p className="text-center">Cargando…</p>}
-        {error && <p className="text-center text-red-500">Error: {error}</p>}
-        {!loading && !error && !detail && (
-          <p className="text-center text-gray-600">
-            No hay postulación activa.
-          </p>
-        )}
+        {/* Sidebar */}
+        <aside className="w-48 border-r pr-4">
+          <h3 className="text-lg font-semibold mb-2">Opciones</h3>
+          <button
+            onClick={() => setActiveTab("documentos")}
+            className={`block py-2 text-left ${
+              activeTab === "documentos"
+                ? "font-bold text-red-500"
+                : "hover:text-gray-700"
+            }`}
+          >
+            Cargar Documentos
+          </button>
+          <button
+            onClick={() => setActiveTab("password")}
+            className={`block py-2 text-left ${
+              activeTab === "password"
+                ? "font-bold text-red-500"
+                : "hover:text-gray-700"
+            }`}
+          >
+            Cambiar Contraseña
+          </button>
+        </aside>
 
-        {detail && (
-          <div className="space-y-6">
-            {/* —— Archivos ya cargados —— */}
-            <details className="group mb-4">
-              <summary className="flex justify-between items-center cursor-pointer">
-                <span className="font-medium">
-                  Archivos Cargados ({archivosCargados.length})
-                </span>
-                <FiChevronDown className="transform group-open:rotate-180 transition" />
-              </summary>
-              <ul className="mt-2 space-y-2 ml-4">
-                {archivosCargados.map((a) => {
-                  const tipoInfo =
-                    detail.usuario.roles[0].archivos_necesarios.find(
-                      (doc) => doc.id === a.tipo_archivos_id
-                    );
-                  const label = tipoInfo?.nombre ?? a.url.split("/").pop();
-                  return (
-                    <li key={a.id} className="flex items-center space-x-2">
-                      <FaCheckCircle className="text-green-600" />
-                      <a
-                        href={`${BASE_URL}/${a.url}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-600 hover:underline break-all"
-                      >
-                        {label}
-                      </a>
-                    </li>
-                  );
-                })}
-              </ul>
-            </details>
+        {/* Contenido principal */}
+        <div className="flex-1 pl-6">
+          <h2 className="text-3xl font-bold text-center mb-4">
+            {activeTab === "documentos" ? "Documentos" : "Cambiar Contraseña"}
+          </h2>
+          {loading && <p className="text-center">Cargando…</p>}
+          {error && <p className="text-center text-red-500">Error: {error}</p>}
+          {!loading && !error && !detail && (
+            <p className="text-center text-gray-600">
+              No hay postulación activa.
+            </p>
+          )}
 
-            {/* —— Uploaders para documentos faltantes —— */}
-            <details className="group mb-4">
-              <summary className="flex justify-between items-center cursor-pointer">
-                <span className="font-medium">
-                  Subir documentos faltantes ({uploadedCount}/{totalFields})
-                </span>
-                <FiChevronDown className="transform group-open:rotate-180 transition" />
-              </summary>
+          {detail && activeTab === "documentos" && (
+            <DocumentosPostulacion
+              detail={detail}
+              uploadedFiles={uploadedFiles}
+              setUploadedFiles={setUploadedFiles}
+              submitting={submitting}
+              handleSubmit={handleSubmit}
+            />
+          )}
 
-              {/* Barra de progreso */}
-              <div className="mt-4">
-                <div className="w-full bg-gray-200 h-2 rounded overflow-hidden">
-                  <div
-                    className="h-2 bg-red-500"
-                    style={{ width: `${progress}%` }}
-                  />
-                </div>
-              </div>
-
-              {/* Solo los que faltan */}
-              <div className="mt-4 space-y-4">
-                {requiredFields
-                  .filter(({ id }) => !cargadosIds.has(id))
-                  .map(({ id, nombre }) => (
-                    <div key={id} className="p-2 border rounded">
-                      <div className="font-medium mb-2">{nombre}</div>
-                      <FileUploader
-                        label={nombre}
-                        multiple={false}
-                        onFilesAccepted={(file) => handleFileAccepted(id, file)}
-                      />
-                    </div>
-                  ))}
-              </div>
-            </details>
-
-            {/* —— Botón de envío —— */}
-            <div className="text-center">
-              <button
-                onClick={handleSubmit}
-                disabled={uploadedFiles.length === 0 || submitting}
-                className={`px-6 py-2 rounded text-white transition ${
-                  uploadedFiles.length > 0
-                    ? submitting
-                      ? "bg-gray-500 cursor-wait"
-                      : "bg-red-500 hover:bg-red-600"
-                    : "bg-gray-300 cursor-not-allowed"
-                }`}
-              >
-                {submitting ? "Enviando…" : "Enviar Documentos"}
-              </button>
-            </div>
-          </div>
-        )}
+          {detail && activeTab === "password" && <CambiarPasswordForm />}
+        </div>
       </div>
     </div>
   );

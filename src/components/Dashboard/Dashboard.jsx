@@ -11,6 +11,7 @@ import ResaltarAnuncio from "@/components/Dashboard/ResaltarAnuncio/ResaltarAnun
 import ServicioAnuncio from "@/components/Dashboard/ServicioAnuncio/ServicioAnuncio";
 import Sidebar from "@/components/Dashboard/Dashboard/Sidebar";
 import Postulaciones from "@/components/Dashboard/Postulaciones/Postulaciones";
+import Cambiar from "./CambiarContraseña/Cambiar";
 
 const Dashboard = () => {
   const [activeView, setActiveView] = useState("default");
@@ -42,10 +43,12 @@ const Dashboard = () => {
         return <ServicioAnuncio />;
       case "postulaciones":
         return <Postulaciones />;
+      case "cambiar":
+        return <Cambiar />;
       default:
         return (
-          <div className='flex items-center justify-center h-full'>
-            <img src={Logo} alt='Logo' className='w-1/2 opacity-50' />
+          <div className="flex items-center justify-center h-full">
+            <img src={Logo} alt="Logo" className="w-1/2 opacity-50" />
           </div>
         );
     }
@@ -53,16 +56,20 @@ const Dashboard = () => {
 
   return (
     <Layout>
-      <div className='flex h-screen'>
+      <div className="flex h-screen">
         {/* Sidebar: se muestra siempre en pantallas grandes; en móviles se controla con sidebarOpen */}
-        <Sidebar sidebarOpen={sidebarOpen} handleViewChange={handleViewChange} />
+        <Sidebar
+          sidebarOpen={sidebarOpen}
+          handleViewChange={handleViewChange}
+        />
 
-        <main className='flex-1 p-5 overflow-auto'>
+        <main className="flex-1 p-5 overflow-auto">
           {/* Botón para abrir o cerrar el menú, visible solo en móviles */}
-          <div className='sm:hidden mb-4'>
+          <div className="sm:hidden mb-4">
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
-              className='px-4 py-2 bg-custom-blue text-white rounded hover:bg-custom-blue/80 transition-colors'>
+              className="px-4 py-2 bg-custom-blue text-white rounded hover:bg-custom-blue/80 transition-colors"
+            >
               {sidebarOpen ? (
                 <FaChevronLeft size={20} />
               ) : (

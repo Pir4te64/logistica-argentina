@@ -14,9 +14,9 @@ import { FaDollarSign, FaCalendarAlt, FaRoute } from "react-icons/fa";
 // Componentes
 import FormularioCard from "@/components/Formulario/FormularioCard";
 import FormularioDocumentacion from "@/components/Formulario/FormularioDocumentacion";
+import { BASE_URL } from "../../Api/Api";
 
 // Base URL para imágenes de backend
-const BASE_URL = "https://backend.logisticaargentinasrl.com.ar";
 
 const Formulario = () => {
   const navigate = useNavigate();
@@ -57,8 +57,8 @@ const Formulario = () => {
 
   // Mapeo de imágenes del servicio con prefijo, si existen
   const serviceImages =
-    servicio.imagenes?.length > 0
-      ? servicio.imagenes.map((img) =>
+    servicio?.imagenes?.length > 0
+      ? servicio?.imagenes.map((img) =>
           img.imagen_url.startsWith("http")
             ? img.imagen_url
             : `${BASE_URL}${img.imagen_url.startsWith("/") ? "" : "/"}${
@@ -74,17 +74,17 @@ const Formulario = () => {
   const displayImages = [...serviceImages, ...defaultImages].slice(0, 3);
 
   // Descripciones dinámicas
-  const tarifaDesc = `$${servicio.tarifa_total} aprox.`;
-  const plazosDesc = servicio.servicios_plazo
+  const tarifaDesc = `$${servicio?.tarifa_total} aprox.`;
+  const plazosDesc = servicio?.servicios_plazo
     .map((p) => `- ${p.nombre}: ${p.descripcion}`)
     .join("\n");
-  const serviciosDesc = servicio.servicios_servicio
+  const serviciosDesc = servicio?.servicios_servicio
     .map((s) => `- ${s.nombre}: ${s.descripcion}`)
     .join("\n");
 
   // Flags de ausencia
-  const noPlazos = servicio.servicios_plazo.length === 0;
-  const noServicios = servicio.servicios_servicio.length === 0;
+  const noPlazos = servicio?.servicios_plazo.length === 0;
+  const noServicios = servicio?.servicios_servicio.length === 0;
 
   return (
     <div className="w-full">
@@ -98,7 +98,7 @@ const Formulario = () => {
             <img
               src={src}
               alt={`Imagen ${idx + 1}`}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover hover:scale-150 transition-transform duration-300"
               loading="lazy"
             />
           </div>
@@ -128,7 +128,7 @@ const Formulario = () => {
 
       {/* Sección Inferior: Documentación */}
       <div className="p-4 max-w-7xl mx-auto">
-        <FormularioDocumentacion servicioId={servicio.id} />
+        <FormularioDocumentacion servicioId={servicio?.id} />
       </div>
     </div>
   );

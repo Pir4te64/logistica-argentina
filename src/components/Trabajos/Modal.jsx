@@ -1,7 +1,32 @@
 // src/components/Trabajos/ServicioModal.jsx
-import React from "react";
-import { FaTimes } from "react-icons/fa";
+import React, { useState } from "react";
+import { FaTimes, FaSpinner } from "react-icons/fa";
 import { BASE_URL } from "@/Api/Api";
+
+// Componente auxiliar para manejar el loader
+const ImageWithLoader = ({ src, alt, className }) => {
+  const [loading, setLoading] = useState(true);
+
+  return (
+    <div className="relative w-full md:h-64">
+      {loading && (
+        <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
+          <FaSpinner className="animate-spin text-2xl text-gray-400" />
+        </div>
+      )}
+      <img
+        loading="lazy"
+        src={src}
+        alt={alt}
+        className={`${className} ${
+          loading ? "opacity-0" : "opacity-100"
+        } transition-opacity duration-300`}
+        onLoad={() => setLoading(false)}
+        onError={() => setLoading(false)}
+      />
+    </div>
+  );
+};
 
 const ServicioModal = ({ servicio, onClose }) => {
   if (!servicio) return null;
@@ -24,7 +49,7 @@ const ServicioModal = ({ servicio, onClose }) => {
       <div
         className="
           bg-white rounded-lg shadow-xl
-          max-w-4xl w-full mx-4
+          max-w-4xl w-full mx-4 overflow-x-hidden
           max-h-[90vh] md:max-h-none overflow-y-auto
           flex flex-col
         "
@@ -132,22 +157,23 @@ const ServicioModal = ({ servicio, onClose }) => {
             )}
           </div>
 
-          {/* Columna derecha: imágenes */}
+          {/* Columna derecha: imágenes con loader */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {imagenes.length > 0 ? (
               imagenes.map((img) => (
-                <img
+                <ImageWithLoader
                   key={img.id}
                   src={`${BASE_URL}/${img.imagen_url}`}
                   alt={`Servicio imagen ${img.id}`}
                   className="
                     w-full 
-                    h-48 md:h-64 
+                    h-auto md:h-64 
                     object-cover rounded 
                     transition-transform duration-200 ease-in-out 
-                    hover:scale-105 
-                    active:scale-110 
+                    hover:scale-125
+                    active:scale-120 
                     cursor-pointer
+                    z-50
                   "
                 />
               ))
