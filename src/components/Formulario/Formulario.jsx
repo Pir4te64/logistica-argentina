@@ -16,14 +16,11 @@ import FormularioCard from "@/components/Formulario/FormularioCard";
 import FormularioDocumentacion from "@/components/Formulario/FormularioDocumentacion";
 import { BASE_URL } from "../../Api/Api";
 
-// Base URL para imágenes de backend
-
 const Formulario = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const servicio = location.state?.servicio;
 
-  // Scroll y verificación de token
   useEffect(() => {
     window.scrollTo(0, 0);
     const token = localStorage.getItem("token");
@@ -37,8 +34,6 @@ const Formulario = () => {
       }).then(() => navigate("/login"));
     }
   }, [navigate]);
-
-  // Si no llegó servicio en el state
   if (!servicio) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center p-4">
@@ -54,11 +49,10 @@ const Formulario = () => {
       </div>
     );
   }
-
-  // Mapeo de imágenes del servicio con prefijo, si existen
+  // Prepara URLs de imágenes del servicio
   const serviceImages =
     servicio?.imagenes?.length > 0
-      ? servicio?.imagenes.map((img) =>
+      ? servicio.imagenes.map((img) =>
           img.imagen_url.startsWith("http")
             ? img.imagen_url
             : `${BASE_URL}${img.imagen_url.startsWith("/") ? "" : "/"}${
@@ -67,10 +61,7 @@ const Formulario = () => {
         )
       : [];
 
-  // Tres imágenes por defecto
   const defaultImages = [img1, img2, img3];
-
-  // Combina las del servicio con las por defecto hasta completar 3
   const displayImages = [...serviceImages, ...defaultImages].slice(0, 3);
 
   // Descripciones dinámicas
@@ -82,27 +73,34 @@ const Formulario = () => {
     .map((s) => `- ${s.nombre}: ${s.descripcion}`)
     .join("\n");
 
-  // Flags de ausencia
   const noPlazos = servicio?.servicios_plazo.length === 0;
   const noServicios = servicio?.servicios_servicio.length === 0;
 
   return (
     <div className="w-full">
-      {/* Sección Superior: Imágenes */}
-      <div className="hidden md:flex bg-gradient-to-b from-custom-blue-medium to-white p-4 h-[500px] justify-around items-center">
-        {displayImages.map((src, idx) => (
-          <div
-            key={idx}
-            className="bg-gray-300 w-1/4 h-96 flex items-center justify-center rounded-2xl overflow-hidden"
-          >
-            <img
-              src={src}
-              alt={`Imagen ${idx + 1}`}
-              className="w-full h-full object-cover hover:scale-150 transition-transform duration-300"
-              loading="lazy"
-            />
-          </div>
-        ))}
+      {/* Sección Superior: Imágenes responsive */}
+      <div className="bg-gradient-to-b from-custom-blue-medium to-white p-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+          {displayImages.map((src, idx) => (
+            <div
+              key={idx}
+              className="
+                bg-gray-300 
+                w-full 
+                h-64 sm:h-80 md:h-96 
+                flex items-center justify-center 
+                rounded-2xl overflow-hidden
+              "
+            >
+              <img
+                src={src}
+                alt={`Imagen ${idx + 1}`}
+                className="w-full h-full object-cover hover:scale-150 transition-transform duration-300"
+                loading="lazy"
+              />
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Sección Intermedia: Tarjetas con datos del servicio */}
