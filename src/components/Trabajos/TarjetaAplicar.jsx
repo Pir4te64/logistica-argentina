@@ -14,7 +14,7 @@ const TarjetaAplicar = ({ servicio, onInfo }) => {
     empresa,
     ciudad,
     tarifa_total,
-    campos_extra = [], // array de objetos
+    campos_extra = [],
     categoria_vehiculo: { nombre: vehiculoNombre },
     fecha_inicio_servicio,
   } = servicio;
@@ -23,9 +23,9 @@ const TarjetaAplicar = ({ servicio, onInfo }) => {
   const storedUser = localStorage.getItem("user");
   const user = storedUser ? JSON.parse(storedUser) : null;
   const token = localStorage.getItem("token");
+
+  // Postulaciones globales
   const postulaciones = usePostulacionesStore((state) => state.postulaciones);
-  // const loading = usePostulacionesStore((state) => state.loading);
-  //const error = usePostulacionesStore((state) => state.error);
   const fetchPostulaciones = usePostulacionesStore(
     (state) => state.fetchPostulaciones
   );
@@ -34,10 +34,6 @@ const TarjetaAplicar = ({ servicio, onInfo }) => {
     fetchPostulaciones();
   }, [fetchPostulaciones]);
 
-  /*  useEffect(() => {
-    console.log("✅ Postulaciones cargadas:", postulaciones);
-    if (error) console.error("❌ Error al cargar postulaciones:", error);
-  }, [postulaciones, error]); */
   // Comprobar rol Transportistas
   const isTransportista = user?.roles?.some(
     (r) => r.name.toLowerCase() === "transportistas"
@@ -45,6 +41,7 @@ const TarjetaAplicar = ({ servicio, onInfo }) => {
 
   const [loadingApply, setLoadingApply] = useState(false);
   const navigate = useNavigate();
+
   const handleApply = async () => {
     // 1) Validaciones de sesión y rol
     if (!token) {
@@ -66,18 +63,22 @@ const TarjetaAplicar = ({ servicio, onInfo }) => {
       return;
     }
 
-    // 2) Chequeo GLOBAL sólo por email
-    const yaPostuladoGlobal = postulaciones.some((p) => p.email === user.email);
-    if (yaPostuladoGlobal) {
+    // 2) Chequeo: mismo servicio_id Y mismo email
+    const yaEnEsteServicio = postulaciones.some(
+      (p) =>
+        p.servicios_id === servicioId &&
+        p.email.toLowerCase() === user.email.toLowerCase()
+    );
+    if (yaEnEsteServicio) {
       await Swal.fire(
         "¡Atención!",
-        "Ya te has postulado a un servicio y no puedes postularte nuevamente.",
+        "Ya te has postulado a este servicio anteriormente.",
         "warning"
       );
       return;
     }
 
-    // 3) Si no existe aún, procedemos al POST
+    // 3) Si no existe aún para este servicio, procedemos al POST
     setLoadingApply(true);
     try {
       const payload = {
@@ -99,7 +100,6 @@ const TarjetaAplicar = ({ servicio, onInfo }) => {
       });
 
       await Swal.fire("¡Postulación exitosa!", "", "success");
-      // refresca lista si quieres
       fetchPostulaciones();
     } catch (error) {
       console.error(error);
@@ -138,8 +138,6 @@ const TarjetaAplicar = ({ servicio, onInfo }) => {
           <p>
             <strong>Tarifa Aprox:</strong> ${tarifa_total}
           </p>
-
-          {/* Mostrar solo el campo "nombre" de cada objeto en campos_extras */}
           {campos_extra.length > 0 && (
             <div className="mt-2 flex flex-wrap gap-2 text-sm">
               {campos_extra.map((c) => (
@@ -155,15 +153,12 @@ const TarjetaAplicar = ({ servicio, onInfo }) => {
         </div>
 
         <div className="flex space-x-2">
-          {/* + Info */}
           <button
             onClick={onInfo}
             className="flex items-center gap-1 bg-custom-blue px-3 py-1 rounded hover:bg-custom-blue/80 transition-colors"
           >
             <FaInfoCircle /> + Info
           </button>
-
-          {/* Aplicar */}
           <button
             onClick={handleApply}
             disabled={loadingApply}
