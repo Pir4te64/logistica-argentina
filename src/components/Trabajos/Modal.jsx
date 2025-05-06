@@ -106,32 +106,28 @@ const ServicioModal = ({ servicio, onClose }) => {
                 <h3 className="font-semibold text-custom-blue">
                   🚚 Tipos de Servicio
                 </h3>
-                <div className="mt-2 flex flex-wrap gap-2">
+                <ul className="mt-2 list-disc list-inside space-y-1">
                   {servicios_servicio.map((s) => (
-                    <span
-                      key={s.id}
-                      className="bg-custom-blue bg-opacity-10 text-custom-blue px-3 py-1 rounded-full text-sm"
-                    >
-                      {s.nombre}
-                    </span>
+                    <li key={s.id}>
+                      <span className="font-medium">{s.nombre}</span>{" "}
+                      {s.descripcion}
+                    </li>
                   ))}
-                </div>
+                </ul>
               </div>
             )}
 
             {servicios_plazo.length > 0 && (
               <div>
                 <h3 className="font-semibold text-custom-blue">⏱️ Plazos</h3>
-                <div className="mt-2 flex flex-wrap gap-2">
+                <ul className="mt-2 list-disc list-inside space-y-1">
                   {servicios_plazo.map((p) => (
-                    <span
-                      key={p.id}
-                      className="bg-custom-blue bg-opacity-10 text-custom-blue px-3 py-1 rounded-full text-sm"
-                    >
-                      {p.nombre}
-                    </span>
+                    <li key={p.id}>
+                      <span className="font-medium">{p.nombre}</span>:{" "}
+                      {p.descripcion}
+                    </li>
                   ))}
-                </div>
+                </ul>
               </div>
             )}
           </div>

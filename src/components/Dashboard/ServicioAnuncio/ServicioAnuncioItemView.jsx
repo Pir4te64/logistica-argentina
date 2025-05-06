@@ -8,8 +8,6 @@ const FLAGS = ["fragil", "liquido", "requiere_refrigeracion"];
  * Componente de solo lectura para ServicioAnuncioItem.
  */
 const ServicioAnuncioItemView = ({ form, labelize, OMITIR, OMITIR_NESTED }) => {
-  console.log("ServicioAnuncioItemView", form);
-
   return (
     <div className="space-y-6">
       {/* 1) Campos simples, flags y campo ‘orden’ */}

@@ -10,7 +10,7 @@ import Swal from "sweetalert2";
 import { nanoid } from "nanoid";
 
 const useServicioAnuncioForm = ({ onSubmit }) => {
-  // ── Selects ─────────────────────────────────────────────────────────
+  // Selects
   const { data: benResp, loading: loadingBen } = useBeneficioRepartidor();
   const beneficios = benResp?.data || [];
   const { data: catResp, loading: loadingCat } = useCategoriaVehiculos();
@@ -20,7 +20,7 @@ const useServicioAnuncioForm = ({ onSubmit }) => {
   const { data: estResp, loading: loadingEst } = useEstadoServicio();
   const estados = estResp?.data || [];
 
-  // ── Form básico ──────────────────────────────────────────────────────
+  // Form básico
   const [form, setForm] = useState({
     empresa: "",
     fecha_inicio_servicio: "",
@@ -38,6 +38,7 @@ const useServicioAnuncioForm = ({ onSubmit }) => {
     fragil: false,
     liquido: false,
     requiere_refrigeracion: false,
+    orden: "",                         // ← campo orden inicializado
     video_url: "",
     categoriaVehiculoId: "",
     beneficioIds: [],
@@ -46,14 +47,17 @@ const useServicioAnuncioForm = ({ onSubmit }) => {
     camposExtra: [],
   });
 
-  // ── Multimedia ───────────────────────────────────────────────────────
+  // Multimedia
   const [imagenes, setImagenes] = useState([]);
   const [videoFile, setVideoFile] = useState(null);
 
-  // ── Servicios (ya existente) ────────────────────────────────────────
+  // Servicios dinámicos
   const [servicios, setServicios] = useState([]);
   const addServicio = () =>
-    setServicios((prev) => [...prev, { id: nanoid(), nombre: "", descripcion: "" }]);
+    setServicios((prev) => [
+      ...prev,
+      { id: nanoid(), nombre: "", descripcion: "" },
+    ]);
   const removeServicio = (i) =>
     setServicios((prev) => prev.filter((_, idx) => idx !== i));
   const handleServicioChange = (i, field, val) =>
@@ -61,10 +65,13 @@ const useServicioAnuncioForm = ({ onSubmit }) => {
       prev.map((s, idx) => (idx === i ? { ...s, [field]: val } : s))
     );
 
-  // ── Plazos (nuevo) ──────────────────────────────────────────────────
+  // Plazos dinámicos
   const [plazos, setPlazos] = useState([]);
   const addPlazo = () =>
-    setPlazos((prev) => [...prev, { id: nanoid(), nombre: "", descripcion: "" }]);
+    setPlazos((prev) => [
+      ...prev,
+      { id: nanoid(), nombre: "", descripcion: "" },
+    ]);
   const removePlazo = (i) =>
     setPlazos((prev) => prev.filter((_, idx) => idx !== i));
   const handlePlazoChange = (i, field, val) =>
@@ -72,17 +79,20 @@ const useServicioAnuncioForm = ({ onSubmit }) => {
       prev.map((p, idx) => (idx === i ? { ...p, [field]: val } : p))
     );
 
-  // ── Handlers básicos y de selects ───────────────────────────────────
+  // Handlers básicos
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setForm((prev) => ({ ...prev, [name]: type === "checkbox" ? checked : value }));
+    setForm((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
   };
   const handleBeneficiosChange = (e) => {
     const opts = Array.from(e.target.selectedOptions, (o) => Number(o.value));
     setForm((prev) => ({ ...prev, beneficioIds: opts }));
   };
 
-  // ── Campos extra ────────────────────────────────────────────────────
+  // Campos extra
   const handleCampoExtraChange = (i, field, val) => {
     setForm((prev) => ({
       ...prev,
@@ -102,7 +112,7 @@ const useServicioAnuncioForm = ({ onSubmit }) => {
       camposExtra: prev.camposExtra.filter((_, idx) => idx !== i),
     }));
 
-  // ── Manejo de imágenes ───────────────────────────────────────────────
+  // Manejo de imágenes
   const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
   const handleFileChange = (e) => {
     const files = Array.from(e.target.files);
@@ -121,14 +131,14 @@ const useServicioAnuncioForm = ({ onSubmit }) => {
   const removeImage = (i) =>
     setImagenes((imgs) => imgs.filter((_, idx) => idx !== i));
 
-  // ── Manejo de video ─────────────────────────────────────────────────
+  // Manejo de video
   const handleVideoChange = (e) => {
     const file = e.target.files[0] || null;
     setVideoFile(file);
   };
   const removeVideo = () => setVideoFile(null);
 
-  // ── Submit ──────────────────────────────────────────────────────────
+  // Submit
   const handleSubmit = async (e) => {
     e.preventDefault();
     const anuncioId = nanoid(4);
@@ -170,7 +180,7 @@ const useServicioAnuncioForm = ({ onSubmit }) => {
       (c) => c.nombre.trim() !== "" || c.valor.trim() !== ""
     );
 
-    // 4) Armar payload, incluyendo ambos arrays
+    // 4) Armar payload
     const payload = {
       empresa: form.empresa,
       fecha_inicio_servicio: form.fecha_inicio_servicio,
@@ -188,6 +198,7 @@ const useServicioAnuncioForm = ({ onSubmit }) => {
       fragil: form.fragil,
       liquido: form.liquido,
       requiere_refrigeracion: form.requiere_refrigeracion,
+      orden: Number(form.orden),            // ← enviamos orden
       video_url: videoUrl,
       categoria_vehiculo_id: Number(form.categoriaVehiculoId),
       resaltador_anuncio_id: Number(form.resaltarId),
@@ -204,8 +215,7 @@ const useServicioAnuncioForm = ({ onSubmit }) => {
         descripcion,
       })),
     };
-    console.log(payload);
-    
+
     try {
       const resp = await axios.post(API_URL.SERVICIO_ANUNCIO, payload, {
         headers: { Authorization: `Bearer ${token}` },
@@ -220,7 +230,7 @@ const useServicioAnuncioForm = ({ onSubmit }) => {
         icon: "error",
         confirmButtonText: "Cerrar",
       });
-    } 
+    }
   };
 
   return {
@@ -242,21 +252,17 @@ const useServicioAnuncioForm = ({ onSubmit }) => {
     removeImage,
     handleVideoChange,
     removeVideo,
-    handleSubmit,
-    imagenes,
-    videoFile,
-
-    // servicios_servicio
     servicios,
     addServicio,
     removeServicio,
     handleServicioChange,
-
-    // servicios_plazo
     plazos,
     addPlazo,
     removePlazo,
     handlePlazoChange,
+    imagenes,
+    videoFile,
+    handleSubmit,
   };
 };
 

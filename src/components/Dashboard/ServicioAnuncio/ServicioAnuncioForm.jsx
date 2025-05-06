@@ -35,17 +35,17 @@ const ServicioAnuncioForm = ({ onSubmit }) => {
     removeImage,
     handleVideoChange,
     removeVideo,
-    handleSubmit,
-    imagenes,
-    videoFile,
     servicios,
     handleServicioChange,
     addServicio,
     removeServicio,
+    plazos,
     addPlazo,
     removePlazo,
     handlePlazoChange,
-    plazos,
+    handleSubmit,
+    imagenes,
+    videoFile,
   } = useServicioAnuncioForm({ onSubmit });
 
   const handleVideoSelect = (e) => {
@@ -63,7 +63,6 @@ const ServicioAnuncioForm = ({ onSubmit }) => {
     handleVideoChange(e);
   };
 
-  // Validación de campos obligatorios y listado de faltantes
   const missingFields = useMemo(() => {
     const list = [];
     if (!form.empresa.trim()) list.push("Empresa");
@@ -73,11 +72,6 @@ const ServicioAnuncioForm = ({ onSubmit }) => {
     if (!form.direccion_entrega.trim()) list.push("Dirección de entrega");
     if (!form.telefono_contacto.trim()) list.push("Teléfono de contacto");
     if (!form.ciudad.trim()) list.push("Ciudad");
-    //if (!form.periodo_nombre.trim()) list.push("Nombre del periodo");
-    //if (!form.cantidad_productos) list.push("Cantidad de productos");
-    //if (!form.cantidad_vehiculos) list.push("Cantidad de vehículos");
-    //if (!form.peso) list.push("Peso");
-    //if (!form.dimensiones.trim()) list.push("Dimensiones");
     if (!form.categoriaVehiculoId) list.push("Categoría de vehículo");
     if (form.beneficioIds.length === 0) list.push("Beneficios");
     if (!form.resaltarId) list.push("Resaltador de anuncio");
@@ -91,7 +85,7 @@ const ServicioAnuncioForm = ({ onSubmit }) => {
       Swal.fire({
         icon: "warning",
         title: "Faltan campos obligatorios",
-        html: `<p>Por favor completa los siguientes campos:</p><ul style=\"text-align:left;\">${missingFields
+        html: `<p>Por favor completa los siguientes campos:</p><ul style="text-align:left;">${missingFields
           .map((f) => `<li>${f}</li>`)
           .join("")}</ul>`,
         confirmButtonText: "Entendido",
@@ -108,10 +102,22 @@ const ServicioAnuncioForm = ({ onSubmit }) => {
     >
       <h2 className="text-2xl font-semibold">Crear Servicio de Anuncio</h2>
 
-      {/* 1–5: Datos básicos, periodo, direcciones, contacto, cantidades */}
+      {/* 1–5: Datos básicos */}
       <GeneralInfoSections form={form} handleChange={handleChange} />
 
-      {/* 6. Características (flags) */}
+      {/* 6: Orden de visualización */}
+      <Section title="Orden de visualización">
+        <InputText
+          name="orden"
+          label="Orden"
+          type="number"
+          value={form.orden}
+          onChange={handleChange}
+          placeholder="Ej: 1, 2, 3…"
+        />
+      </Section>
+
+      {/* 7: Características (flags) */}
       <Section title="Características del envío (Opcional)">
         <div className="flex flex-wrap gap-4">
           <Check
@@ -135,7 +141,7 @@ const ServicioAnuncioForm = ({ onSubmit }) => {
         </div>
       </Section>
 
-      {/* 7. Multimedia */}
+      {/* 8: Multimedia */}
       <Section title="Multimedia *">
         <label className="block font-medium">Video (máx 2 MB)</label>
         <input
@@ -191,7 +197,7 @@ const ServicioAnuncioForm = ({ onSubmit }) => {
         )}
       </Section>
 
-      {/* 8. Selects */}
+      {/* 9: Configuración (selects) */}
       <ConfigSections
         form={form}
         categorias={categorias}
@@ -206,7 +212,7 @@ const ServicioAnuncioForm = ({ onSubmit }) => {
         handleBeneficiosChange={handleBeneficiosChange}
       />
 
-      {/* 9. Campos extra */}
+      {/* 10: Campos extra */}
       <ExtraFieldsSection
         camposExtra={form.camposExtra}
         handleCampoExtraChange={handleCampoExtraChange}
@@ -214,19 +220,22 @@ const ServicioAnuncioForm = ({ onSubmit }) => {
         removeCampoExtra={removeCampoExtra}
       />
 
-      {/* Servicios dinámicos si los activas más adelante */}
+      {/* 11: Servicios dinámicos */}
       <ServicesSection
         servicios={servicios}
         handleServicioChange={handleServicioChange}
         addServicio={addServicio}
         removeServicio={removeServicio}
       />
+
+      {/* 12: Plazos dinámicos */}
       <PlazosSection
         plazos={plazos}
         addPlazo={addPlazo}
         removePlazo={removePlazo}
         handlePlazoChange={handlePlazoChange}
       />
+
       {/* Submit */}
       <div className="text-right">
         <button
