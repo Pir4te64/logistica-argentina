@@ -19,6 +19,14 @@ const TarjetaAplicar = ({ servicio, onInfo }) => {
     fecha_inicio_servicio,
   } = servicio;
 
+  // Formatear tarifa con separador de miles y decimales
+  const tarifaFormateada = new Intl.NumberFormat("es-AR", {
+    style: "currency",
+    currency: "ARS",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(Number(tarifa_total));
+
   // Leer usuario y token
   const storedUser = localStorage.getItem("user");
   const user = storedUser ? JSON.parse(storedUser) : null;
@@ -63,7 +71,7 @@ const TarjetaAplicar = ({ servicio, onInfo }) => {
       return;
     }
 
-    // 2) Chequeo: mismo servicio_id Y mismo email
+    // 2) Chequeo: mismo servicio_id y mismo email
     const yaEnEsteServicio = postulaciones.some(
       (p) =>
         p.servicios_id === servicioId &&
@@ -118,33 +126,32 @@ const TarjetaAplicar = ({ servicio, onInfo }) => {
   };
 
   return (
-    <div className="relative w-full h-64 rounded shadow overflow-hidden">
+    <div className='relative w-full h-64 rounded shadow overflow-hidden'>
       <img
         src={tarjeta}
-        alt="Fondo tarjeta"
-        className="absolute inset-0 w-full h-full object-cover"
+        alt='Fondo tarjeta'
+        className='absolute inset-0 w-full h-full object-cover'
       />
-      <div className="absolute inset-0 bg-gradient-to-r from-custom-blue to-transparent" />
+      <div className='absolute inset-0 bg-gradient-to-r from-custom-blue to-transparent' />
 
-      <div className="relative z-10 p-4 h-full flex flex-col justify-between text-white">
+      <div className='relative z-10 p-4 h-full flex flex-col justify-between text-white'>
         <div>
-          <h2 className="text-xl font-semibold">{empresa}</h2>
-          <p className="mt-2">
+          <h2 className='text-xl font-semibold'>{empresa}</h2>
+          <p className='mt-2'>
             <strong>Ciudad:</strong> {ciudad}
           </p>
           <p>
             <strong>Vehículo:</strong> {vehiculoNombre}
           </p>
           <p>
-            <strong>Tarifa Aprox:</strong> ${tarifa_total}
+            <strong>Tarifa Aprox:</strong> {tarifaFormateada}
           </p>
           {campos_extra.length > 0 && (
-            <div className="mt-2 flex flex-wrap gap-2 text-sm">
+            <div className='mt-2 flex flex-wrap gap-2 text-sm'>
               {campos_extra.map((c) => (
                 <span
                   key={c.id}
-                  className="bg-white bg-opacity-20 px-2 py-1 rounded"
-                >
+                  className='bg-white bg-opacity-20 px-2 py-1 rounded'>
                   {c.nombre}: {c.valor}
                 </span>
               ))}
@@ -152,11 +159,10 @@ const TarjetaAplicar = ({ servicio, onInfo }) => {
           )}
         </div>
 
-        <div className="flex space-x-2">
+        <div className='flex space-x-2'>
           <button
             onClick={onInfo}
-            className="flex items-center gap-1 bg-custom-blue px-3 py-1 rounded hover:bg-custom-blue/80 transition-colors"
-          >
+            className='flex items-center gap-1 bg-custom-blue px-3 py-1 rounded hover:bg-custom-blue/80 transition-colors'>
             <FaInfoCircle /> + Info
           </button>
           <button
@@ -166,8 +172,7 @@ const TarjetaAplicar = ({ servicio, onInfo }) => {
               loadingApply
                 ? "bg-gray-500 cursor-wait"
                 : "bg-custom-red hover:bg-custom-red/80"
-            } text-white`}
-          >
+            } text-white`}>
             {loadingApply ? "Enviando..." : "Aplicar"}
           </button>
         </div>
