@@ -26,7 +26,7 @@ const Footer = () => {
           <ul className="space-y-3 text-gray-300">
             <li className="flex items-center">
               <FaMapMarkerAlt className="mr-2 text-xl" />
-              <span>Av. Mendoza 1315 Corrientes, Argentina</span>
+              <span>Mendoza 1315 Corrientes, Argentina</span>
             </li>
             <li className="flex items-center">
               <FaEnvelope className="mr-2 text-xl" />
