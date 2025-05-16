@@ -109,7 +109,6 @@ const Cambiar = () => {
                 <FaMap className="text-custom-gray" />
                 Provincia: {user.datos_usuario?.provincia}
               </p>
-             
             </div>
             <button
               onClick={() => setEditingUserId(user.id)}
