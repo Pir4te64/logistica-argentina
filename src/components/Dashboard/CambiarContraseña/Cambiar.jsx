@@ -96,7 +96,6 @@ const Cambiar = () => {
                 <FaPhone className="text-custom-gray" />
                 Teléfono: {user?.telefono || "—"}
               </p>
-             
               <p className="flex items-center gap-2 text-sm text-gray-600">
                 <FaMapMarkerAlt className="text-custom-gray" />
                 Dirección: {user.datos_usuario?.direccion}
