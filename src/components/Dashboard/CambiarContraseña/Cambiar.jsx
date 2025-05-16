@@ -99,25 +99,17 @@ const Cambiar = () => {
              
               <p className="flex items-center gap-2 text-sm text-gray-600">
                 <FaMapMarkerAlt className="text-custom-gray" />
-                Dirección: {user.datos_usuario.direccion}
+                Dirección: {user.datos_usuario?.direccion}
               </p>
               <p className="flex items-center gap-2 text-sm text-gray-600">
                 <FaCity className="text-custom-gray" />
-                Ciudad: {user.datos_usuario.ciudad}
+                Ciudad: {user.datos_usuario?.ciudad}
               </p>
               <p className="flex items-center gap-2 text-sm text-gray-600">
                 <FaMap className="text-custom-gray" />
-                Provincia: {user.datos_usuario.provincia}
+                Provincia: {user.datos_usuario?.provincia}
               </p>
-              <div>
-                {userFields.map(({ key, icon: Icon, label, className, path }) => (
-                  <p key={key} className={`flex items-center gap-2 ${key === 'name' ? 'font-medium' : 'text-sm text-gray-600'}`}>
-                    <Icon className={className} />
-                    {label}
-                    {path ? user[path] : user[key] || "—"}
-                  </p>
-                ))}
-              </div>
+             
             </div>
             <button
               onClick={() => setEditingUserId(user.id)}
