@@ -1,4 +1,3 @@
-// App.jsx
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 import Home from "@/pages/Home";
@@ -27,14 +26,17 @@ function App() {
       <Route path="/mensaje" element={<Mensaje />} />
       <Route path="/mensaje-transportista" element={<MensajeTransportista />} />
       <Route path="/formulario-choferes" element={<FormularioChoferes />} />
+
+      {/* Dashboard con rutas anidadas */}
       <Route
-        path="/dashboard"
+        path="/dashboard/*"
         element={
           <ProtectedRoute allowedIds={[1, 2]}>
             <DasboardPage />
           </ProtectedRoute>
         }
       />
+
       <Route
         path="/formulario-comisionista"
         element={<FormularioComisionistaPage />}

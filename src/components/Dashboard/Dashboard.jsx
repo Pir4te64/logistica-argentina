@@ -1,88 +1,76 @@
 import React, { useState } from "react";
+import { FaArrowRight } from "react-icons/fa";
+import { Routes, Route, useNavigate } from "react-router-dom";
+import Sidebar from "@/components/Dashboard/Dashboard/Sidebar";
 import Layout from "@/components/Layout";
+import DashboardIndex from "@/components/Dashboard/DashboardIndex";
+
+// Importa tus vistas de Dashboard
 import BeneficioRepartidor from "@/components/Dashboard/Beneficios/BeneficioRepartidor";
 import CategoriaVehiculos from "@/components/Dashboard/Categoria/CategoriaVehiculos";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import Logo from "@/assets/Logo.png";
 import EstadoServicio from "@/components/Dashboard/EstadoServicio/EstadoServicio";
 import EstadoRepartidor from "@/components/Dashboard/EstadoRepartidor/EstadoRepartidor";
-import TipoArchivo from "@/components/Dashboard/TipoArchivos/TipoArchivo";
-import ResaltarAnuncio from "@/components/Dashboard/ResaltarAnuncio/ResaltarAnuncio";
+import ResaltadoAnuncio from "@/components/Dashboard/ResaltarAnuncio/ResaltarAnuncio";
 import ServicioAnuncio from "@/components/Dashboard/ServicioAnuncio/ServicioAnuncio";
-import Sidebar from "@/components/Dashboard/Dashboard/Sidebar";
 import Postulaciones from "@/components/Dashboard/Postulaciones/Postulaciones";
-import Cambiar from "./CambiarContraseña/Cambiar";
+import CambiarContraseña from "@/components/Dashboard/CambiarContraseña/Cambiar";
+import TipoArchivo from "@/components/Dashboard/TipoArchivos/TipoArchivo";
 
-const Dashboard = () => {
-  const [activeView, setActiveView] = useState("default");
+export default function DasboardPage() {
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-
-  // Cambia la vista y, si la pantalla es móvil (menos de 640px), colapsa el menú.
-  const handleViewChange = (view) => {
-    setActiveView(view);
-    if (typeof window !== "undefined" && window.innerWidth < 640) {
-      setSidebarOpen(false);
-    }
-  };
-
-  const renderContent = () => {
-    switch (activeView) {
-      case "beneficioRepartidor":
-        return <BeneficioRepartidor />;
-      case "categoriaVehiculos":
-        return <CategoriaVehiculos />;
-      case "estadoServicio":
-        return <EstadoServicio />;
-      case "estadoRepartidor":
-        return <EstadoRepartidor />;
-      case "tipoArchivo":
-        return <TipoArchivo />;
-      case "resaltadoAnuncio":
-        return <ResaltarAnuncio />;
-      case "servicioAnuncio":
-        return <ServicioAnuncio />;
-      case "postulaciones":
-        return <Postulaciones />;
-      case "cambiar":
-        return <Cambiar />;
-      default:
-        return (
-          <div className="flex items-center justify-center h-full">
-            <img src={Logo} alt="Logo" className="w-1/2 opacity-50" />
-          </div>
-        );
-    }
-  };
 
   return (
     <Layout>
-      <div className="flex h-screen">
-        {/* Sidebar: se muestra siempre en pantallas grandes; en móviles se controla con sidebarOpen */}
+      <div className="flex">
+        {/* Botón flotante para abrir el sidebar en mobile */}
+        {!sidebarOpen && (
+          <button
+            className="top-15 fixed left-0 z-50 rounded-full p-2 text-custom-dark md:hidden"
+            onClick={() => setSidebarOpen(true)}
+            aria-label="Abrir menú"
+          >
+            <FaArrowRight size={24} />
+          </button>
+        )}
         <Sidebar
           sidebarOpen={sidebarOpen}
-          handleViewChange={handleViewChange}
+          handleViewChange={(key) => navigate(key)}
+          onToggle={() => setSidebarOpen(!sidebarOpen)}
         />
+        <main className="flex-grow p-6">
+          <Routes>
+            {/* Ruta por defecto */}
+            <Route index element={<DashboardIndex />} />
 
-        <main className="flex-1 p-5 overflow-auto">
-          {/* Botón para abrir o cerrar el menú, visible solo en móviles */}
-          <div className="sm:hidden mb-4">
-            <button
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="px-4 py-2 bg-custom-blue text-white rounded hover:bg-custom-blue/80 transition-colors"
-            >
-              {sidebarOpen ? (
-                <FaChevronLeft size={20} />
-              ) : (
-                <FaChevronRight size={20} />
-              )}
-            </button>
-          </div>
+            {/* Vistas del Dashboard */}
+            <Route
+              path="beneficioRepartidor"
+              element={<BeneficioRepartidor />}
+            />
+            <Route
+              path="categoriaVehiculos"
+              element={<CategoriaVehiculos />}
+            />
+            <Route path="estadoServicio" element={<EstadoServicio />} />
+            <Route path="estadoRepartidor" element={<EstadoRepartidor />} />
+            <Route path="tipoArchivo" element={<TipoArchivo />} />
+            <Route
+              path="resaltadoAnuncio"
+              element={<ResaltadoAnuncio />}
+            />
+            <Route
+              path="servicioAnuncio"
+              element={<ServicioAnuncio />}
+            />
+            <Route path="postulaciones" element={<Postulaciones />} />
+            <Route path="cambiar" element={<CambiarContraseña />} />
 
-          {renderContent()}
+            {/* Fallback */}
+            <Route path="*" element={<p>Vista no encontrada</p>} />
+          </Routes>
         </main>
       </div>
     </Layout>
   );
-};
-
-export default Dashboard;
+}

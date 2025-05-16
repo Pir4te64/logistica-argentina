@@ -1,8 +1,7 @@
-// src/components/Navbar.jsx
 import React, { useState, useContext } from "react";
 import { FaBars, FaSignOutAlt } from "react-icons/fa";
 import Logo from "@/assets/Logo.png";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { HashLink } from "react-router-hash-link";
 import { AuthContext } from "@/Api/AuthContext";
 import { useModalStore } from "@/store/useModalStore";
@@ -11,6 +10,8 @@ const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const { user, logout } = useContext(AuthContext);
   const openPost = useModalStore((s) => s.openPostulaciones);
+  const location = useLocation();
+
   // Roles
   const hideHashLinks =
     user &&
@@ -22,38 +23,44 @@ const Navbar = () => {
     user.roles &&
     user.roles.some((role) => role.name.toLowerCase() === "transportistas");
 
+  // Link dinámico del logo
+  const logoLink =
+    hideHashLinks && location.pathname.startsWith("/dashboard")
+      ? "/dashboard"
+      : "/";
+
   return (
     <nav className="bg-custom-dark text-white">
-      <div className="max-w-7xl mx-auto px-4 flex items-center justify-between h-16">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4">
         {/* Izquierda: logo */}
         <div className="flex items-center space-x-2">
-          <Link to="/">
-            <img src={Logo} alt="Logo" className="w-auto h-28 md:h-44" />
+          <Link to={logoLink}>
+            <img src={Logo} alt="Logo" className="h-28 w-auto md:h-44" />
           </Link>
         </div>
 
         {/* Menú Desktop */}
-        <div className="hidden md:flex items-center space-x-6">
+        <div className="hidden items-center space-x-6 md:flex">
           {!hideHashLinks && (
             <>
               <HashLink
                 smooth
                 to="/#trabajos"
-                className="hover:text-gray-300 transition-colors"
+                className="transition-colors hover:text-gray-300"
               >
                 Trabajos
               </HashLink>
               <HashLink
                 smooth
                 to="/#beneficios"
-                className="hover:text-gray-300 transition-colors"
+                className="transition-colors hover:text-gray-300"
               >
                 Beneficios
               </HashLink>
               <HashLink
                 smooth
                 to="/#testimonios"
-                className="hover:text-gray-300 transition-colors"
+                className="transition-colors hover:text-gray-300"
               >
                 Testimonios
               </HashLink>
@@ -63,7 +70,7 @@ const Navbar = () => {
           {isTransportista && (
             <Link
               onClick={openPost}
-              className="bg-custom-red hover:bg-custom-red/80 px-4 py-2 rounded transition-colors"
+              className="rounded bg-custom-red px-4 py-2 transition-colors hover:bg-custom-red/80"
             >
               Postulaciones
             </Link>
@@ -73,13 +80,13 @@ const Navbar = () => {
             <>
               <Link
                 to="/register"
-                className="hover:text-gray-300 text-custom-red transition-colors"
+                className="text-custom-red transition-colors hover:text-gray-300"
               >
                 Registrarse
               </Link>
               <Link
                 to="/login"
-                className="bg-custom-red hover:bg-custom-red/80 px-4 py-2 rounded transition-colors"
+                className="rounded bg-custom-red px-4 py-2 transition-colors hover:bg-custom-red/80"
               >
                 Iniciar sesión
               </Link>
@@ -89,14 +96,14 @@ const Navbar = () => {
               {user.roles.some((role) => role.id === 1 || role.id === 2) && (
                 <Link
                   to="/dashboard"
-                  className="bg-custom-red hover:bg-custom-red/80 px-4 py-2 rounded transition-colors"
+                  className="rounded bg-custom-red px-4 py-2 transition-colors hover:bg-custom-red/80"
                 >
                   Dashboard
                 </Link>
               )}
               <button
                 onClick={logout}
-                className="bg-custom-red hover:bg-custom-red/80 px-4 py-2 rounded transition-colors"
+                className="rounded bg-custom-red px-4 py-2 transition-colors hover:bg-custom-red/80"
                 aria-label="Cerrar sesión"
               >
                 <FaSignOutAlt size={20} />
@@ -107,7 +114,7 @@ const Navbar = () => {
 
         {/* Hamburgesa Mobile */}
         <button
-          className="md:hidden text-xl"
+          className="text-xl md:hidden"
           onClick={() => setMenuOpen(!menuOpen)}
           aria-label="Toggle menu"
         >
@@ -117,27 +124,27 @@ const Navbar = () => {
 
       {/* Menú Mobile */}
       {menuOpen && (
-        <div className="md:hidden bg-custom-dark px-4 pb-4 flex flex-col space-y-2 transition-all duration-300 ease-in-out">
+        <div className="flex flex-col space-y-2 bg-custom-dark px-4 pb-4 transition-all duration-300 ease-in-out md:hidden">
           {!hideHashLinks && (
             <>
               <HashLink
                 smooth
                 to="/#trabajos"
-                className="hover:text-gray-300 transition-colors"
+                className="transition-colors hover:text-gray-300"
               >
                 Trabajos
               </HashLink>
               <HashLink
                 smooth
                 to="/#beneficios"
-                className="hover:text-gray-300 transition-colors"
+                className="transition-colors hover:text-gray-300"
               >
                 Beneficios
               </HashLink>
               <HashLink
                 smooth
                 to="/#testimonios"
-                className="hover:text-gray-300 transition-colors"
+                className="transition-colors hover:text-gray-300"
               >
                 Testimonios
               </HashLink>
@@ -147,7 +154,7 @@ const Navbar = () => {
           {isTransportista && (
             <Link
               onClick={openPost}
-              className="bg-custom-red hover:bg-custom-red/80 px-4 py-2 rounded transition-colors"
+              className="rounded bg-custom-red px-4 py-2 transition-colors hover:bg-custom-red/80"
             >
               Postulaciones
             </Link>
@@ -156,13 +163,13 @@ const Navbar = () => {
             <>
               <Link
                 to="/register"
-                className="hover:text-gray-300 text-custom-red transition-colors"
+                className="text-custom-red transition-colors hover:text-gray-300"
               >
                 Registrarse
               </Link>
               <Link
                 to="/login"
-                className="bg-custom-red hover:bg-custom-red/80 px-4 py-2 rounded transition-colors"
+                className="rounded bg-custom-red px-4 py-2 transition-colors hover:bg-custom-red/80"
               >
                 Iniciar sesión
               </Link>
@@ -172,14 +179,14 @@ const Navbar = () => {
               {user.roles.some((role) => role.id === 1 || role.id === 2) && (
                 <Link
                   to="/dashboard"
-                  className="bg-custom-red hover:bg-custom-red/80 px-4 py-2 rounded transition-colors"
+                  className="rounded bg-custom-red px-4 py-2 transition-colors hover:bg-custom-red/80"
                 >
                   Dashboard
                 </Link>
               )}
               <button
                 onClick={logout}
-                className="bg-custom-red hover:bg-custom-red/80 px-4 py-2 rounded transition-colors"
+                className="rounded bg-custom-red px-4 py-2 transition-colors hover:bg-custom-red/80"
                 aria-label="Cerrar sesión"
               >
                 <FaSignOutAlt size={20} />

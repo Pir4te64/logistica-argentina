@@ -5,8 +5,8 @@ import { FaTimes } from "react-icons/fa";
 import { useModalStore } from "@/store/useModalStore";
 import { usePostulacionDetail } from "@/Transportistas/usePostulacionDetail";
 import { submitDocumentation } from "@/components/Formulario/submitDocumentation";
-import DocumentosPostulacion from "./DocumentosPostulacion";
-import CambiarPasswordForm from "./CambiarPasswordForm"; // Importa el nuevo componente
+import DocumentosPostulacion from "@/Transportistas/DocumentosPostulacion";
+import CambiarPasswordForm from "@/Transportistas/CambiarPasswordForm"; // Importa el nuevo componente
 
 const PostulacionesModal = () => {
   const isOpen = useModalStore((s) => s.isPostulacionesOpen);

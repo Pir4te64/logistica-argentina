@@ -3,8 +3,8 @@ import React, { useState, useEffect, useContext, useCallback } from "react";
 import axios from "axios";
 import { API_URL } from "@/Api/Api";
 import { AuthContext } from "@/Api/AuthContext";
-import { FaSearch, FaEdit } from "react-icons/fa";
-import ChangePasswordModal from "./ChangePasswordModal";
+import { FaSearch, FaEdit, FaUser, FaEnvelope, FaPhone, FaMapMarkerAlt, FaCity, FaMap } from "react-icons/fa";
+import ChangePasswordModal from "@/components/Dashboard/CambiarContraseña/ChangePasswordModal";
 
 const Cambiar = () => {
   const [users, setUsers] = useState([]);
@@ -12,9 +12,15 @@ const Cambiar = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [editingUserId, setEditingUserId] = useState(null);
+  const [itemsToShow, setItemsToShow] = useState(10);
   const { token: contextToken } = useContext(AuthContext);
 
-  // 1. Función para listar usuarios
+  // Reset pagination cuando cambian users o query
+  useEffect(() => {
+    setItemsToShow(10);
+  }, [users, query]);
+
+  // Función para listar usuarios
   const fetchUsers = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -37,12 +43,12 @@ const Cambiar = () => {
     }
   }, [contextToken]);
 
-  // 2. Al montar, carga inicial
+  // Carga inicial
   useEffect(() => {
     fetchUsers();
   }, [fetchUsers]);
 
-  // 3. Filtrado en tiempo real
+  // Filtrado en tiempo real
   const filteredUsers = users.filter((u) => {
     const term = query.toLowerCase();
     return (
@@ -51,32 +57,67 @@ const Cambiar = () => {
     );
   });
 
+  // Usuarios visibles según paginación
+  const visibleUsers = filteredUsers.slice(0, itemsToShow);
+
   if (loading) return <p>Cargando usuarios...</p>;
   if (error) return <p className="text-red-500">Error: {error}</p>;
 
   return (
     <div>
-      <h2 className="text-xl font-semibold mb-4">Listado de Usuarios</h2>
+      <h2 className="mb-4 text-xl font-semibold">Listado de Usuarios</h2>
 
       {/* Buscador */}
       <div className="relative mb-4">
-        <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+        <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 transform text-gray-400" />
         <input
           type="text"
           placeholder="Buscar usuarios..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          className="pl-10 pr-4 py-2 w-full border rounded focus:outline-none focus:ring focus:border-blue-300"
+          className="w-full rounded border py-2 pl-10 pr-4 focus:border-blue-300 focus:outline-none focus:ring"
         />
       </div>
 
       {/* Lista con botón Editar */}
       <ul className="divide-y divide-gray-200">
-        {filteredUsers.map((user) => (
-          <li key={user.id} className="py-2 flex justify-between items-center">
+        {visibleUsers.map((user) => (
+          <li key={user.id} className="flex items-center justify-between py-2">
             <div>
-              <p className="font-medium">{user.name || "—"}</p>
-              <p className="text-sm text-gray-600">{user.email}</p>
+              <p className="flex items-center gap-2 font-medium">
+                <FaUser className="text-custom-gray" />
+                {user.name || "—"}
+              </p>
+              <p className="flex items-center gap-2 text-sm text-gray-600">
+                <FaEnvelope className="text-custom-gray" />
+                {user.email}
+              </p>
+              <p className="flex items-center gap-2 text-sm text-gray-600">
+                <FaPhone className="text-custom-gray" />
+                Teléfono: {user?.telefono || "—"}
+              </p>
+             
+              <p className="flex items-center gap-2 text-sm text-gray-600">
+                <FaMapMarkerAlt className="text-custom-gray" />
+                Dirección: {user.datos_usuario.direccion}
+              </p>
+              <p className="flex items-center gap-2 text-sm text-gray-600">
+                <FaCity className="text-custom-gray" />
+                Ciudad: {user.datos_usuario.ciudad}
+              </p>
+              <p className="flex items-center gap-2 text-sm text-gray-600">
+                <FaMap className="text-custom-gray" />
+                Provincia: {user.datos_usuario.provincia}
+              </p>
+              <div>
+                {userFields.map(({ key, icon: Icon, label, className, path }) => (
+                  <p key={key} className={`flex items-center gap-2 ${key === 'name' ? 'font-medium' : 'text-sm text-gray-600'}`}>
+                    <Icon className={className} />
+                    {label}
+                    {path ? user[path] : user[key] || "—"}
+                  </p>
+                ))}
+              </div>
             </div>
             <button
               onClick={() => setEditingUserId(user.id)}
@@ -88,14 +129,26 @@ const Cambiar = () => {
         ))}
       </ul>
 
+      {/* Botón Mostrar más */}
+      {filteredUsers.length > itemsToShow && (
+        <div className="mt-4 text-center">
+          <button
+            onClick={() => setItemsToShow((prev) => prev + 10)}
+            className="rounded bg-custom-blue-medium px-4 py-2 text-white hover:bg-custom-blue"
+          >
+            Mostrar más
+          </button>
+        </div>
+      )}
+
       {/* Modal de cambio de contraseña */}
       <ChangePasswordModal
         userId={editingUserId}
         isOpen={editingUserId !== null}
         onClose={() => setEditingUserId(null)}
         onSuccess={() => {
-          fetchUsers(); // 4. Volver a listar usuarios
-          setEditingUserId(null); // 5. Cerrar modal
+          fetchUsers();
+          setEditingUserId(null);
         }}
       />
     </div>

@@ -1,4 +1,4 @@
-export const vehiculosOptions = [
+export const VEHICULOS_OPTIONS = [
     {
         label: "Chico",
         options: [
@@ -35,7 +35,7 @@ export const vehiculosOptions = [
 ];
 
 // Opciones para "Empresas"
-export const empresasOptions = [
+export const EMPRESAS_OPTIONS = [
     { label: "Loginter", value: "Loginter" },
     { label: "OCA", value: "OCA" },
     { label: "Urbano", value: "Urbano" },

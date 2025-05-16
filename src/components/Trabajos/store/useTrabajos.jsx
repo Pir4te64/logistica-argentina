@@ -3,7 +3,7 @@ import { create } from "zustand";
 import axios from "axios";
 import { API_URL } from "@/Api/Api";
 
-export const useTrabajos = create((set, get) => ({
+export const useTrabajos = create((set) => ({
   servicios: [],
   loading: false,
   error: null,

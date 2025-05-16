@@ -26,8 +26,8 @@ const BeneficioRepartidor = () => {
 
   if (loading) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-extrabold text-gray-800 mb-6">
+      <div className="container mx-auto px-2 py-8 sm:px-4">
+        <h1 className="mb-6 text-2xl font-extrabold text-gray-800 sm:text-3xl">
           Beneficio Repartidor
         </h1>
         <p className="text-gray-600">Cargando...</p>
@@ -37,24 +37,24 @@ const BeneficioRepartidor = () => {
 
   if (error) {
     return (
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-2 py-8 sm:px-4">
         <p className="text-red-600">Error al obtener los datos.</p>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-extrabold text-gray-800 mb-6">
+    <div className="container mx-auto px-2 py-8 sm:px-4">
+      <h1 className="mb-6 text-2xl font-extrabold text-gray-800 sm:text-3xl">
         Beneficio Repartidor
       </h1>
 
       {/* Botón para abrir el formulario de creación */}
-      <div className="flex flex-col sm:flex-row items-center justify-between mb-6">
+      <div className="mb-6 flex flex-col items-center justify-between gap-4 sm:flex-row">
         <button
           onClick={() => setShowForm(!showForm)}
           disabled={isEditing}
-          className={`flex items-center gap-2 px-5 py-2 rounded-md shadow-md transition-colors
+          className={`w-full sm:w-auto flex items-center justify-center gap-2 px-4 sm:px-5 py-2 rounded-md shadow-md transition-colors
             ${
               isEditing
                 ? "bg-gray-300 text-gray-600 cursor-not-allowed"
@@ -65,105 +65,72 @@ const BeneficioRepartidor = () => {
         </button>
       </div>
 
-      {/* Formulario para crear un nuevo beneficio (solo si no estamos editando) */}
-      {showForm && !isEditing && (
+      {/* Formulario para crear o editar un beneficio */}
+      {(showForm || isEditing) && (
         <form
-          onSubmit={handleFormSubmit}
-          className="mb-6 p-6 bg-white rounded-lg shadow-lg border border-gray-200"
+          onSubmit={isEditing ? handleEditSubmit : handleFormSubmit}
+          className="mb-6 rounded-lg border border-gray-200 bg-white p-6 shadow-lg"
         >
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Nombre
-            </label>
-            <input
-              type="text"
-              name="nombre"
-              value={formData.nombre}
-              onChange={handleFormChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              required
-            />
+          <div className="mb-4 flex flex-col gap-4 sm:flex-row">
+            <div className="flex-1">
+              <label className="mb-1 block text-sm font-medium text-gray-700">
+                Nombre
+              </label>
+              <input
+                type="text"
+                name="nombre"
+                value={isEditing ? editFormData.nombre : formData.nombre}
+                onChange={isEditing ? handleEditFormChange : handleFormChange}
+                className="w-full whitespace-nowrap rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                required
+              />
+            </div>
+            <div className="flex-1">
+              <label className="mb-1 block text-sm font-medium text-gray-700">
+                Descripción
+              </label>
+              <textarea
+                name="descripcion"
+                value={isEditing ? editFormData.descripcion : formData.descripcion}
+                onChange={isEditing ? handleEditFormChange : handleFormChange}
+                className="w-full whitespace-nowrap rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                required
+              />
+            </div>
           </div>
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Descripción
-            </label>
-            <textarea
-              name="descripcion"
-              value={formData.descripcion}
-              onChange={handleFormChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              required
-            />
-          </div>
-          {createError && (
+          {((!isEditing && createError) || (isEditing && editing && createError)) && (
             <p className="mb-4 text-sm text-red-600">
-              Error al crear el beneficio.
+              Error al {isEditing ? "guardar el beneficio" : "crear el beneficio"}.
             </p>
           )}
           <button
             type="submit"
-            disabled={creating}
-            className="w-full sm:w-auto px-5 py-2 bg-custom-blue text-white rounded-md shadow hover:bg-custom-blue-medium transition-colors"
+            disabled={isEditing ? editing : creating}
+            className="w-full rounded-md bg-custom-blue px-4 py-2 text-white shadow transition-colors hover:bg-custom-blue-medium sm:w-auto sm:px-5"
           >
-            {creating ? "Creando..." : "Crear Beneficio"}
+            {isEditing
+              ? editing
+                ? "Guardando..."
+                : "Guardar Cambios"
+              : creating
+              ? "Creando..."
+              : "Crear Beneficio"}
           </button>
         </form>
       )}
 
-      {/* Formulario para editar un beneficio existente */}
-      {isEditing && (
-        <form
-          onSubmit={handleEditSubmit}
-          className="mb-6 p-6 bg-white rounded-lg shadow-lg border border-gray-200"
-        >
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Nombre
-            </label>
-            <input
-              type="text"
-              name="nombre"
-              value={editFormData.nombre}
-              onChange={handleEditFormChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Descripción
-            </label>
-            <textarea
-              name="descripcion"
-              value={editFormData.descripcion}
-              onChange={handleEditFormChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              required
-            />
-          </div>
-          <button
-            type="submit"
-            disabled={editing}
-            className="w-full sm:w-auto px-5 py-2 bg-custom-blue text-white rounded-md shadow hover:bg-custom-blue-medium transition-colors"
-          >
-            {editing ? "Guardando..." : "Guardar Cambios"}
-          </button>
-        </form>
-      )}
-
-      {/* Tabla que lista los beneficios */}
-      <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200 bg-white shadow rounded-lg">
+      {/* Tabla que lista los beneficios con scroll horizontal */}
+      <div className="w-full overflow-x-auto">
+        <table className="w-full min-w-max table-auto divide-y divide-gray-200 whitespace-nowrap rounded-lg bg-white shadow">
           <thead className="bg-gray-50">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="whitespace-nowrap px-3 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 sm:px-6">
                 Nombre
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="whitespace-nowrap px-3 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 sm:px-6">
                 Descripción
               </th>
-              <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="whitespace-nowrap px-3 py-3 text-center text-xs font-medium uppercase tracking-wider text-gray-500 sm:px-6">
                 Acciones
               </th>
             </tr>
@@ -173,24 +140,24 @@ const BeneficioRepartidor = () => {
               data.data.map((beneficio) => (
                 <tr
                   key={beneficio.id}
-                  className="hover:bg-gray-100 transition-colors"
+                  className="transition-colors hover:bg-gray-100"
                 >
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                  <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-700 sm:px-6">
                     {beneficio.nombre}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                    {beneficio.descripcion}
+                  <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-700 sm:px-6">
+                    {beneficio.descripción}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 flex items-center justify-center gap-3">
+                  <td className="flex items-center justify-center gap-3 whitespace-nowrap px-3 py-4 text-sm text-gray-700 sm:px-6">
                     <button
                       onClick={() => handleEditClick(beneficio)}
-                      className="text-indigo-600 hover:text-indigo-800 transition-colors"
+                      className="text-indigo-600 transition-colors hover:text-indigo-800"
                     >
                       <FaEdit />
                     </button>
                     <button
                       onClick={() => handleDelete(beneficio.id)}
-                      className="text-red-600 hover:text-red-800 transition-colors"
+                      className="text-red-600 transition-colors hover:text-red-800"
                     >
                       <FaTrash />
                     </button>
@@ -200,7 +167,7 @@ const BeneficioRepartidor = () => {
             ) : (
               <tr>
                 <td
-                  className="px-6 py-4 text-center text-sm text-gray-500"
+                  className="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500 sm:px-6"
                   colSpan="3"
                 >
                   No hay registros.

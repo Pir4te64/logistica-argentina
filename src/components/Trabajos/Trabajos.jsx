@@ -2,9 +2,9 @@
 import React, { useEffect, useState, useMemo } from "react";
 import CustomSelect from "@/components/Trabajos/CustomSelect";
 import TarjetaAplicar from "@/components/Trabajos/TarjetaAplicar";
-import { useTrabajos } from "@/components/Trabajos/useTrabajos";
+import { useTrabajos } from "@/components/Trabajos/store/useTrabajos";
 import ServicioModal from "@/components/Trabajos/Modal";
-import { EMPRESAS_OPTIONS, VEHICLE_OPTIONS } from "@/components/Trabajos/estaticos";
+import { EMPRESAS_OPTIONS, VEHICULOS_OPTIONS } from "@/components/Trabajos/text";
 
 const Trabajos = () => {
   const { fetchServicios, servicios = [], loading, error } = useTrabajos();
@@ -62,11 +62,11 @@ const Trabajos = () => {
   };
 
   return (
-    <div className="container mx-auto w-11/12 mt-10" id="trabajos">
-      <h1 className="text-3xl font-extrabold text-gray-800 mb-6">Trabajos</h1>
+    <div className="container mx-auto mt-10 w-11/12" id="trabajos">
+      <h1 className="mb-6 text-3xl font-extrabold text-gray-800">Trabajos</h1>
 
       {/* Filtros */}
-      <div className="bg-custom-dark p-4 rounded mb-6">
+      <div className="mb-6 rounded bg-custom-dark p-4">
         <div className="flex flex-col gap-4 md:flex-row">
           <CustomSelect
             className="flex-1"
@@ -82,7 +82,7 @@ const Trabajos = () => {
             name="vehiculo"
             value={filters.vehiculo}
             onChange={(v) => handleSelectChange("vehiculo", v)}
-            options={VEHICLE_OPTIONS}
+            options={VEHICULOS_OPTIONS}
           />
           <CustomSelect
             className="flex-1"
@@ -94,10 +94,10 @@ const Trabajos = () => {
           />
         </div>
 
-        <div className="mt-4 flex justify-center w-full">
+        <div className="mt-4 flex w-full justify-center">
           <button
             onClick={clearFilters}
-            className="text-white bg-gray-500 px-4 py-2 rounded w-full hover:bg-gray-600 transition"
+            className="w-full rounded bg-gray-500 px-4 py-2 text-white transition hover:bg-gray-600"
           >
             Limpiar filtros
           </button>
@@ -105,16 +105,16 @@ const Trabajos = () => {
       </div>
 
       {error && (
-        <p className="text-red-600 mb-4">
+        <p className="mb-4 text-red-600">
           Error al cargar servicios. Por favor intenta de nuevo.
         </p>
       )}
 
       {/* Grid de tarjetas */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 min-h-[200px]">
+      <div className="grid min-h-[200px] grid-cols-1 gap-4 md:grid-cols-2">
         {loading ? (
-          <div className="col-span-full flex justify-center items-center py-10">
-            <div className="animate-spin rounded-full h-12 w-12 border-4 border-gray-200 border-t-custom-red"></div>
+          <div className="col-span-full flex items-center justify-center py-10">
+            <div className="h-12 w-12 animate-spin rounded-full border-4 border-gray-200 border-t-custom-red"></div>
           </div>
         ) : sortedServicios.length > 0 ? (
           sortedServicios
@@ -127,17 +127,17 @@ const Trabajos = () => {
               />
             ))
         ) : (
-          <p className="col-span-full text-gray-600 text-center">
+          <p className="col-span-full text-center text-gray-600">
             No se encontraron servicios con esos filtros.
           </p>
         )}
       </div>
 
       {!loading && visibleCount < sortedServicios.length && (
-        <div className="flex justify-center mt-6">
+        <div className="mt-6 flex justify-center">
           <button
             onClick={handleShowMore}
-            className="bg-custom-red text-white px-6 py-2 rounded hover:bg-custom-red/80 transition-colors"
+            className="rounded bg-custom-red px-6 py-3 text-xl text-white transition-colors hover:bg-custom-red/80"
           >
             Ver más
           </button>

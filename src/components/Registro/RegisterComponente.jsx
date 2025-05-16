@@ -1,263 +1,180 @@
 // src/components/Registro/RegisterComponente.jsx
-
-import React, { useState } from "react";
-import { useFormik } from "formik";
-import axios from "axios";
-import RegisterImg from "@/assets/Login.jpg"; // Ajusta la ruta según corresponda
-import { API_URL } from "@/Api/Api";
-import {
-  initialValues,
-  validationSchema,
-} from "@/components/Registro/registerValidation";
-import { useNavigate } from "react-router-dom";
-import Swal from "sweetalert2";
+import React from 'react'
+import { useFormik } from 'formik'
+import { initialValues, validationSchema } from './registerValidation'
+import { useNavigate } from 'react-router-dom'
+import { useRegisterStore } from './useRegisterStore'
+import RegisterImage from './RegisterImage'
+import TextInput from './Ui/TextInput'
+import { roleOptions } from './utils/roleOptions'
 
 const RegisterComponente = () => {
-  const [message, _] = useState("");
-  const navigate = useNavigate(); // Asegúrate de importar useNavigate si lo necesitas
+  const navigate = useNavigate()
+  const {
+    name,
+    telefono,
+    email,
+    password,
+    passwordConfirmation,
+    roles,
+    direccion,
+    provincia,
+    ciudad,
+    isSubmitting,
+    setField,
+    submit,
+  } = useRegisterStore()
+
   const formik = useFormik({
     initialValues,
     validationSchema,
-    onSubmit: async (values, { setSubmitting }) => {
-      const data = {
-        name: values.name,
-        telefono: values.telefono,
-        email: values.email,
-        password: values.password,
-        password_confirmation: values.passwordConfirmation,
-        roles: values.roles,
-      };
-
-      try {
-        await axios.post(API_URL.REGISTER, data);
-        await Swal.fire({
-          icon: "success",
-          title: "¡Registro exitoso!",
-          text: "Serás redirigido a la página de inicio de sesión.",
-          confirmButtonText: "Continuar",
-        });
-        navigate("/login");
-      } catch (error) {
-        // detectamos si viene un error 422 con validaciones
-        const resp = error.response;
-        if (resp && resp.status === 422 && resp.data.errors) {
-          // extraemos el mensaje original
-          const emailErrors = resp.data.errors.email;
-          let mensajeUsuario = "Hubo un error en el registro.";
-          if (emailErrors && emailErrors.length) {
-            // traducimos el primer mensaje
-            const msg = emailErrors[0];
-            if (msg.includes("taken")) {
-              mensajeUsuario = "El correo electrónico ya fue utilizado.";
-            } else {
-              // por si hubiera otros errores de email
-              mensajeUsuario = msg;
-            }
-          }
-          await Swal.fire({
-            icon: "error",
-            title: "Error de validación",
-            text: mensajeUsuario,
-            confirmButtonText: "Aceptar",
-          });
-        } else {
-          // error genérico
-          await Swal.fire({
-            icon: "error",
-            title: "Oops...",
-            text: "Hubo un problema al registrarte. Intenta de nuevo.",
-            confirmButtonText: "Aceptar",
-          });
-        }
-      } finally {
-        setSubmitting(false);
-      }
+    onSubmit: async () => {
+      const result = await submit()
+      if (result.success) navigate('/login')
     },
-  });
+  })
+
+  const handleChange = e => {
+    const { name, value } = e.target
+    formik.handleChange(e)
+    setField(name, value)
+  }
 
   return (
-    <div className="flex flex-col md:flex-row h-screen">
-      {/* Sección izquierda: imagen (visible en pantallas medianas en adelante) */}
-      <div className="hidden md:block md:w-1/2">
-        <img
-          src={RegisterImg}
-          lazy="true"
-          alt="Imagen de registro"
-          className="h-full w-full object-cover"
-        />
-      </div>
-
-      {/* Sección derecha: formulario de registro */}
-      <div className="w-full md:w-1/2 bg-custom-gray flex items-center justify-center">
-        <div className="max-w-md w-full p-8">
-          <h2 className="text-2xl font-bold text-white mb-6">Registro</h2>
+    <div className="flex h-screen flex-col overflow-y-auto md:flex-row">
+      <RegisterImage />
+      <div className="flex w-full items-center justify-center bg-custom-gray md:w-1/2">
+        <div className="w-full max-w-md p-8">
+          <h2 className="mb-6 text-2xl font-bold text-white">Registro</h2>
           <form onSubmit={formik.handleSubmit}>
-            {/* Apellido y Nombre */}
-            <div className="mb-4 relative">
-              <label htmlFor="name" className="block text-sm mb-2 text-white">
-                Apellido y Nombre
-              </label>
-              <input
-                id="name"
-                name="name"
-                type="text"
-                placeholder="Ingresa tu nombre completo"
-                className="w-full px-3 py-2 border border-gray-300 rounded"
-                value={formik.values.name}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-              />
-              {formik.touched.name && formik.errors.name && (
-                <div className="top-full left-0 mt-1 text-red-600 bg-white rounded-sm p-1 text-sm">
-                  {formik.errors.name}
-                </div>
-              )}
-            </div>
+            <TextInput
+              id="name"
+              label="Apellido y Nombre"
+              placeholder="Ingresa tu nombre completo"
+              value={name}
+              onChange={handleChange}
+              onBlur={formik.handleBlur}
+              touched={formik.touched.name}
+              error={formik.errors.name}
+            />
 
-            {/* Número de Teléfono */}
-            <div className="mb-4 relative">
-              <label
-                htmlFor="telefono"
-                className="block text-sm mb-2 text-white"
-              >
-                Número de Teléfono
-              </label>
-              <input
-                id="telefono"
-                name="telefono"
-                type="text"
-                placeholder="Ingresa tu número de teléfono"
-                className="w-full px-3 py-2 border border-gray-300 rounded"
-                value={formik.values.telefono}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-              />
-              {formik.touched.telefono && formik.errors.telefono && (
-                <div className=" top-full left-0 mt-1 text-red-600 bg-white rounded-sm p-1 text-sm">
-                  {formik.errors.telefono}
-                </div>
-              )}
-            </div>
+            <TextInput
+              id="telefono"
+              label="Número de Teléfono"
+              placeholder="Ingresa tu número de teléfono"
+              value={telefono}
+              onChange={handleChange}
+              onBlur={formik.handleBlur}
+              touched={formik.touched.telefono}
+              error={formik.errors.telefono}
+            />
 
-            {/* Email */}
-            <div className="mb-4 relative">
-              <label htmlFor="email" className="block text-sm mb-2 text-white">
-                Email
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                placeholder="Ingresa tu email"
-                className="w-full px-3 py-2 border border-gray-300 rounded"
-                value={formik.values.email}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-              />
-              {formik.touched.email && formik.errors.email && (
-                <div className=" top-full left-0 mt-1 text-red-600 bg-white rounded-sm p-1 text-sm">
-                  {formik.errors.email}
-                </div>
-              )}
-            </div>
+            <TextInput
+              id="email"
+              type="email"
+              label="Email"
+              placeholder="Ingresa tu email"
+              value={email}
+              onChange={handleChange}
+              onBlur={formik.handleBlur}
+              touched={formik.touched.email}
+              error={formik.errors.email}
+            />
 
-            {/* Select de Roles */}
-            <div className="mb-4 relative">
-              <label htmlFor="roles" className="block text-sm mb-2 text-white">
+            <div className="relative mb-4">
+              <label htmlFor="roles" className="mb-2 block text-sm text-white">
                 Selecciona un rol
               </label>
               <select
                 id="roles"
                 name="roles"
-                {...formik.getFieldProps("roles")}
-                className="w-full px-3 py-2 border border-gray-300 rounded bg-white text-black"
+                value={roles}
+                onChange={handleChange}
+                onBlur={formik.handleBlur}
+                className="w-full rounded border border-gray-300 bg-white px-3 py-2 text-black"
               >
-                <option value="">-- Elige uno --</option>
-                <option value="Transportistas">Transportistas</option>
-                <option value="Choferes y/o Acompañantes">
-                  Choferes y/o Acompañantes
-                </option>
-                <option value="Empresas">Empresas</option>
-                <option value="Colaboradores">Comisionistas</option>
+                {roleOptions.map(option => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
               </select>
               {formik.touched.roles && formik.errors.roles && (
-                <div className=" top-full left-0 mt-1 text-red-600 bg-white rounded-sm p-1 text-sm">
+                <div className="absolute left-0 top-full mt-1 rounded-sm bg-white p-1 text-sm text-red-600">
                   {formik.errors.roles}
                 </div>
               )}
             </div>
 
-            {/* Contraseña */}
-            <div className="mb-4 relative">
-              <label
-                htmlFor="password"
-                className="block text-sm mb-2 text-white"
-              >
-                Contraseña
-              </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                placeholder="Ingresa tu contraseña"
-                className="w-full px-3 py-2 border border-gray-300 rounded"
-                value={formik.values.password}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-              />
-              {formik.touched.password && formik.errors.password && (
-                <div className=" top-full left-0 mt-1 text-red-600 bg-white rounded-sm p-1 text-sm">
-                  {formik.errors.password}
-                </div>
-              )}
-            </div>
+            <TextInput
+              id="direccion"
+              label="Dirección"
+              placeholder="Ingresa tu dirección"
+              value={direccion}
+              onChange={handleChange}
+              onBlur={formik.handleBlur}
+              touched={formik.touched.direccion}
+              error={formik.errors.direccion}
+            />
 
-            {/* Repetir Contraseña */}
-            <div className="mb-6 relative">
-              <label
-                htmlFor="passwordConfirmation"
-                className="block text-sm mb-2 text-white"
-              >
-                Repetir Contraseña
-              </label>
-              <input
-                id="passwordConfirmation"
-                name="passwordConfirmation"
-                type="password"
-                placeholder="Repite tu contraseña"
-                className="w-full px-3 py-2 border border-gray-300 rounded"
-                value={formik.values.passwordConfirmation}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-              />
-              {formik.touched.passwordConfirmation &&
-                formik.errors.passwordConfirmation && (
-                  <div className=" top-full left-0 mt-1 text-red-600 bg-white rounded-sm p-1 text-sm">
-                    {formik.errors.passwordConfirmation}
-                  </div>
-                )}
-            </div>
+            <TextInput
+              id="provincia"
+              label="Provincia"
+              placeholder="Ingresa tu provincia"
+              value={provincia}
+              onChange={handleChange}
+              onBlur={formik.handleBlur}
+              touched={formik.touched.provincia}
+              error={formik.errors.provincia}
+            />
 
-            {/* Botón Registrarme */}
+            <TextInput
+              id="ciudad"
+              label="Ciudad"
+              placeholder="Ingresa tu ciudad"
+              value={ciudad}
+              onChange={handleChange}
+              onBlur={formik.handleBlur}
+              touched={formik.touched.ciudad}
+              error={formik.errors.ciudad}
+            />
+
+            <TextInput
+              id="password"
+              type="password"
+              label="Contraseña"
+              placeholder="Ingresa tu contraseña"
+              value={password}
+              onChange={handleChange}
+              onBlur={formik.handleBlur}
+              touched={formik.touched.password}
+              error={formik.errors.password}
+            />
+
+            <TextInput
+              id="passwordConfirmation"
+              type="password"
+              label="Repetir Contraseña"
+              placeholder="Repite tu contraseña"
+              value={passwordConfirmation}
+              onChange={handleChange}
+              onBlur={formik.handleBlur}
+              touched={formik.touched.passwordConfirmation}
+              error={formik.errors.passwordConfirmation}
+            />
+
             <button
               type="submit"
-              className="bg-custom-red hover:bg-custom-red/80 text-white py-2 px-4 rounded w-full mt-5"
-              disabled={formik.isSubmitting}
+              className="mt-5 w-full rounded bg-custom-red px-4 py-2 text-white hover:bg-custom-red/80"
+              disabled={isSubmitting}
             >
-              Registrarme
+              {isSubmitting ? 'Registrando...' : 'Registrarme'}
             </button>
           </form>
-
-          {/* Mensaje de respuesta de la petición */}
-          {message && (
-            <div className="mt-4 text-center text-white">
-              {message} intente de nuevo
-            </div>
-          )}
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default RegisterComponente;
+export default RegisterComponente

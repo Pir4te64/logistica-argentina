@@ -98,7 +98,7 @@ const ServicioAnuncioForm = ({ onSubmit }) => {
   return (
     <form
       onSubmit={onFormSubmit}
-      className="w-full max-w-4xl mx-auto bg-white rounded shadow text-[15px] sm:text-base sm:p-4 md:p-6 space-y-6"
+      className="mx-auto w-full max-w-4xl space-y-6 rounded bg-white text-[15px] sm:p-4 sm:text-base md:p-6"
     >
       <h2 className="text-2xl font-semibold">Crear Servicio de Anuncio</h2>
 
@@ -148,46 +148,46 @@ const ServicioAnuncioForm = ({ onSubmit }) => {
           type="file"
           accept="video/*"
           onChange={handleVideoSelect}
-          className="w-full mt-1 p-2 border rounded"
+          className="mt-1 w-full rounded border p-2"
         />
         {videoFile && (
-          <div className="relative mt-4 group">
+          <div className="group relative mt-4">
             <video
               src={URL.createObjectURL(videoFile)}
               controls
-              className="w-full max-h-48 object-cover rounded"
+              className="max-h-48 w-full rounded object-cover"
             />
             <button
               type="button"
               onClick={removeVideo}
-              className="absolute top-1 right-1 bg-red-600 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition"
+              className="absolute right-1 top-1 rounded-full bg-red-600 p-1 text-white opacity-0 transition group-hover:opacity-100"
             >
               <FaTimes />
             </button>
           </div>
         )}
 
-        <label className="block font-medium mt-4">Imágenes</label>
+        <label className="mt-4 block font-medium">Imágenes</label>
         <input
           type="file"
           accept="image/*"
           multiple
           onChange={handleFileChange}
-          className="w-full mt-1 p-2 border rounded"
+          className="mt-1 w-full rounded border p-2"
         />
         {imagenes.length > 0 && (
-          <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+          <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
             {imagenes.map((file, idx) => (
-              <div key={idx} className="relative group">
+              <div key={idx} className="group relative">
                 <img
                   src={URL.createObjectURL(file)}
                   alt={`Preview ${idx + 1}`}
-                  className="w-full h-32 object-cover rounded"
+                  className="h-32 w-full rounded object-cover"
                 />
                 <button
                   type="button"
                   onClick={() => removeImage(idx)}
-                  className="absolute top-1 right-1 bg-red-600 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition"
+                  className="absolute right-1 top-1 rounded-full bg-red-600 p-1 text-white opacity-0 transition group-hover:opacity-100"
                 >
                   <FaTimes />
                 </button>
@@ -240,7 +240,7 @@ const ServicioAnuncioForm = ({ onSubmit }) => {
       <div className="text-right">
         <button
           type="submit"
-          className="bg-custom-blue text-white rounded px-6 py-2 w-full sm:w-auto hover:bg-custom-blue-medium transition"
+          className="w-full rounded bg-custom-blue px-6 py-2 text-white transition hover:bg-custom-blue-medium sm:w-auto"
         >
           Crear servicio
         </button>

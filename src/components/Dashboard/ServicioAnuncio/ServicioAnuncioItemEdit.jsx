@@ -27,20 +27,20 @@ const ServicioAnuncioItemEdit = ({
 
   return (
     <>
-      {/* 1) Campos editables */}
-      <dl className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* ───────── 1) CAMPOS EDITABLES ───────── */}
+      <dl className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {Object.entries(form)
           .filter(([k]) => EDITABLE_FIELDS[k])
           .map(([k]) => {
             const type = EDITABLE_FIELDS[k];
 
-            // Fecha
+            /* --- date --- */
             if (type === "date") {
               return (
                 <div key={k} className="flex flex-col">
                   <label
                     htmlFor={k}
-                    className="text-sm font-medium text-gray-700 mb-1"
+                    className="mb-1 text-sm font-medium text-gray-700"
                   >
                     {labelize(k)}
                   </label>
@@ -51,13 +51,13 @@ const ServicioAnuncioItemEdit = ({
                     min={today}
                     value={form[k] || ""}
                     onChange={handleChange}
-                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+                    className="w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm transition focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
                 </div>
               );
             }
 
-            // Checkbox
+            /* --- checkbox --- */
             if (type === "checkbox") {
               return (
                 <div key={k} className="flex items-center">
@@ -67,7 +67,7 @@ const ServicioAnuncioItemEdit = ({
                     name={k}
                     checked={!!form[k]}
                     onChange={handleChange}
-                    className="h-5 w-5 text-indigo-600 border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+                    className="h-5 w-5 rounded border-gray-300 text-indigo-600 transition focus:ring-2 focus:ring-indigo-500"
                   />
                   <label htmlFor={k} className="ml-2 text-sm text-gray-700">
                     {labelize(k)}
@@ -76,7 +76,7 @@ const ServicioAnuncioItemEdit = ({
               );
             }
 
-            // Selects simples
+            /* --- selects --- */
             if (type.startsWith("select_")) {
               const options =
                 type === "select_categoria"
@@ -84,6 +84,7 @@ const ServicioAnuncioItemEdit = ({
                   : type === "select_resaltador"
                   ? resaltadores
                   : estados;
+
               const nameKey =
                 type === "select_categoria"
                   ? "categoria_vehiculo_id"
@@ -95,7 +96,7 @@ const ServicioAnuncioItemEdit = ({
                 <div key={k} className="flex flex-col">
                   <label
                     htmlFor={nameKey}
-                    className="text-sm font-medium text-gray-700 mb-1"
+                    className="mb-1 text-sm font-medium text-gray-700"
                   >
                     {labelize(k)}
                   </label>
@@ -104,7 +105,7 @@ const ServicioAnuncioItemEdit = ({
                     name={nameKey}
                     value={form[nameKey] || ""}
                     onChange={handleChange}
-                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+                    className="w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm transition focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   >
                     <option value="">Selecciona…</option>
                     {options.map((o) => (
@@ -117,12 +118,12 @@ const ServicioAnuncioItemEdit = ({
               );
             }
 
-            // text / number
+            /* --- text / number --- */
             return (
               <div key={k} className="flex flex-col">
                 <label
                   htmlFor={k}
-                  className="text-sm font-medium text-gray-700 mb-1"
+                  className="mb-1 text-sm font-medium text-gray-700"
                 >
                   {labelize(k)}
                 </label>
@@ -132,59 +133,59 @@ const ServicioAnuncioItemEdit = ({
                   name={k}
                   value={form[k] || ""}
                   onChange={handleChange}
-                  className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+                  className="w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm transition focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 />
               </div>
             );
           })}
       </dl>
 
-      {/* 2) Beneficios */}
-      <div className="sm:col-span-2 lg:col-span-3 mt-6">
-        <h3 className="text-sm font-medium text-gray-700 mb-2">Beneficios</h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      {/* ───────── 2) BENEFICIOS ───────── */}
+      <section className="mt-6 sm:col-span-2 lg:col-span-3">
+        <h3 className="mb-2 text-sm font-medium text-gray-700">Beneficios</h3>
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           {beneficiosOpc.map((b) => (
             <label
               key={b.id}
-              className="flex items-center gap-2 bg-white border border-gray-300 rounded-md p-3 shadow-sm hover:shadow-md transition cursor-pointer"
+              className="flex cursor-pointer items-center gap-2 rounded-md border border-gray-300 bg-white p-3 shadow-sm transition hover:shadow-md"
             >
               <input
                 type="checkbox"
                 checked={form.beneficios.includes(b.id)}
                 onChange={() => toggleBeneficio(b.id)}
-                className="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+                className="h-4 w-4 rounded border-gray-300 text-indigo-600 transition focus:ring-2 focus:ring-indigo-500"
               />
-              <span className="text-gray-800 text-sm">{b.nombre}</span>
+              <span className="text-sm text-gray-800">{b.nombre}</span>
             </label>
           ))}
         </div>
-      </div>
+      </section>
 
-      {/* 3) Campos Extra */}
+      {/* ───────── 3) CAMPOS EXTRA ───────── */}
       <section className="mt-6">
-        <h3 className="text-lg font-semibold text-gray-800 mb-4">
-          Campos Extra
+        <h3 className="mb-4 text-lg font-semibold text-gray-800">
+          Campos&nbsp;Extra
         </h3>
         {form.campos_extra.map((c, i) => (
-          <div key={i} className="flex flex-col sm:flex-row gap-2 mb-3">
+          <div key={i} className="mb-3 flex flex-col gap-2 sm:flex-row">
             <input
               type="text"
               placeholder="Nombre"
               value={c.nombre}
               onChange={(e) => handleExtraChange(i, "nombre", e.target.value)}
-              className="flex-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+              className="flex-1 rounded-md border border-gray-300 px-3 py-2 shadow-sm transition focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
             <input
               type="text"
               placeholder="Valor"
               value={c.valor}
               onChange={(e) => handleExtraChange(i, "valor", e.target.value)}
-              className="flex-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+              className="flex-1 rounded-md border border-gray-300 px-3 py-2 shadow-sm transition focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
             <button
               type="button"
               onClick={() => removeExtra(i)}
-              className="inline-flex items-center px-3 py-2 text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 transition"
+              className="inline-flex items-center rounded-md bg-red-600 px-3 py-2 text-sm font-medium text-white transition hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"
             >
               Eliminar
             </button>
@@ -193,17 +194,17 @@ const ServicioAnuncioItemEdit = ({
         <button
           type="button"
           onClick={addExtra}
-          className="inline-flex items-center px-4 py-2 mt-2 text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+          className="mt-2 inline-flex items-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
         >
-          Agregar campo extra
+          Agregar&nbsp;campo&nbsp;extra
         </button>
       </section>
 
-      {/* 4) Servicios asociados */}
+      {/* ───────── 4) SERVICIOS ───────── */}
       <section className="mt-6">
-        <h3 className="text-lg font-semibold text-gray-800 mb-4">Servicios</h3>
+        <h3 className="mb-4 text-lg font-semibold text-gray-800">Servicios</h3>
         {form.servicios_servicio.map((s, i) => (
-          <div key={s.id ?? i} className="flex gap-2 mb-3">
+          <div key={s.id ?? i} className="mb-3 flex flex-col gap-2 sm:flex-row">
             <input
               type="text"
               placeholder="Nombre servicio"
@@ -211,7 +212,7 @@ const ServicioAnuncioItemEdit = ({
               onChange={(e) =>
                 handleServicioChange(i, "nombre", e.target.value)
               }
-              className="flex-1 px-3 py-2 border rounded"
+              className="flex-1 rounded-md border border-gray-300 px-3 py-2 shadow-sm transition focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
             <input
               type="text"
@@ -220,34 +221,40 @@ const ServicioAnuncioItemEdit = ({
               onChange={(e) =>
                 handleServicioChange(i, "descripcion", e.target.value)
               }
-              className="flex-1 px-3 py-2 border rounded"
+              className="flex-1 rounded-md border border-gray-300 px-3 py-2 shadow-sm transition focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
             <button
+              type="button"
               onClick={() => removeServicio(i)}
-              className="px-3 bg-red-600 text-white rounded"
+              className="inline-flex items-center rounded-md bg-red-600 px-3 py-2 text-sm font-medium text-white transition hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"
             >
               Eliminar
             </button>
           </div>
         ))}
         <button
+          type="button"
           onClick={addServicio}
-          className="px-4 py-2 bg-indigo-600 text-white rounded"
+          className="inline-flex items-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
         >
-          Agregar servicio
+          Agregar&nbsp;servicio
         </button>
       </section>
-      {/* 5) Plazos asociados */}
+
+      {/* ───────── 5) PLAZOS ───────── */}
       <section className="mt-6">
-        <h3 className="text-lg font-semibold text-gray-800 mb-4">Plazos</h3>
+        <h3 className="mb-4 text-lg font-semibold text-gray-800">Plazos</h3>
         {form.servicios_plazo.map((p, i) => (
-          <div key={p.id || i} className="flex flex-col sm:flex-row gap-2 mb-3">
+          <div
+            key={p.id ?? i}
+            className="mb-3 flex flex-col gap-2 sm:flex-row"
+          >
             <input
               type="text"
               placeholder="Nombre plazo"
               value={p.nombre}
               onChange={(e) => handlePlazoChange(i, "nombre", e.target.value)}
-              className="flex-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+              className="flex-1 rounded-md border border-gray-300 px-3 py-2 shadow-sm transition focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
             <input
               type="text"
@@ -256,12 +263,12 @@ const ServicioAnuncioItemEdit = ({
               onChange={(e) =>
                 handlePlazoChange(i, "descripcion", e.target.value)
               }
-              className="flex-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+              className="flex-1 rounded-md border border-gray-300 px-3 py-2 shadow-sm transition focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
             <button
               type="button"
               onClick={() => removePlazo(i)}
-              className="inline-flex items-center px-3 py-2 text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 transition"
+              className="inline-flex items-center rounded-md bg-red-600 px-3 py-2 text-sm font-medium text-white transition hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"
             >
               Eliminar
             </button>
@@ -270,9 +277,9 @@ const ServicioAnuncioItemEdit = ({
         <button
           type="button"
           onClick={addPlazo}
-          className="inline-flex items-center px-4 py-2 mt-2 text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+          className="mt-2 inline-flex items-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
         >
-          Agregar plazo
+          Agregar&nbsp;plazo
         </button>
       </section>
     </>

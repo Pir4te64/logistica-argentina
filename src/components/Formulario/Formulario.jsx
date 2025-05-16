@@ -14,7 +14,7 @@ import { FaDollarSign, FaCalendarAlt, FaRoute } from "react-icons/fa";
 // Componentes
 import FormularioCard from "@/components/Formulario/FormularioCard";
 import FormularioDocumentacion from "@/components/Formulario/FormularioDocumentacion";
-import { BASE_URL } from "../../Api/Api";
+import { BASE_URL } from "@/Api/Api";
 
 const Formulario = () => {
   const navigate = useNavigate();

@@ -31,7 +31,7 @@ const Recuperar = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row h-auto md:h-screen">
+    <div className="flex h-auto flex-col md:h-screen md:flex-row">
       {/* Izquierda: imagen */}
       <div className="hidden md:block md:w-1/2">
         <img
@@ -43,22 +43,22 @@ const Recuperar = () => {
       </div>
 
       {/* Derecha: formulario */}
-      <div className="w-full md:w-1/2 bg-custom-gray flex items-center justify-center">
-        <div className="max-w-md w-full p-8">
-          <h2 className="text-2xl font-bold mb-6 text-white">
+      <div className="flex w-full items-center justify-center bg-custom-gray md:w-1/2">
+        <div className="w-full max-w-md p-8">
+          <h2 className="mb-6 text-2xl font-bold text-white">
             Recuperar contraseña
           </h2>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="mb-4">
-              <label htmlFor="email" className="block text-sm mb-2 text-white">
+              <label htmlFor="email" className="mb-2 block text-sm text-white">
                 Correo electrónico
               </label>
               <input
                 id="email"
                 type="email"
                 placeholder="Ingresa tu email"
-                className="w-full px-3 py-2 border border-gray-300 rounded"
+                className="w-full rounded border border-gray-300 px-3 py-2"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -67,7 +67,7 @@ const Recuperar = () => {
 
             <button
               type="submit"
-              className="bg-custom-red hover:bg-custom-red/80 text-white py-2 px-4 rounded w-full"
+              className="w-full rounded bg-custom-red px-4 py-2 text-white hover:bg-custom-red/80"
               disabled={loading}
             >
               {loading ? "Enviando..." : "Enviar enlace"}
@@ -75,12 +75,12 @@ const Recuperar = () => {
           </form>
 
           {message && (
-            <div className="my-4 text-center text-white bg-opacity-50 bg-black p-3 rounded-lg">
+            <div className="my-4 rounded-lg bg-black bg-opacity-50 p-3 text-center text-white">
               {message}
             </div>
           )}
 
-          <p className="text-center text-sm mt-4 text-white">
+          <p className="mt-4 text-center text-sm text-white">
             <Link to="/login" className="underline">
               Volver a iniciar sesión
             </Link>

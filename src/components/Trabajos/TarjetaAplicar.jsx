@@ -6,7 +6,7 @@ import { FaInfoCircle } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import tarjeta from "@/assets/tarjeta.jpg";
 import { API_URL } from "@/Api/Api";
-import { usePostulacionesStore } from "@/components/Dashboard/Postulaciones/usePostulacionesStore.JS";
+import { usePostulacionesStore } from "../Dashboard/Postulaciones/store/usePostulacionesStore";
 
 const TarjetaAplicar = ({ servicio, onInfo }) => {
   const {
@@ -118,15 +118,15 @@ const TarjetaAplicar = ({ servicio, onInfo }) => {
   };
 
   return (
-    <div className="relative w-full h-64 rounded shadow overflow-hidden">
+    <div className="relative h-64 w-full overflow-hidden rounded shadow">
       <img
         src={tarjeta}
         alt="Fondo tarjeta"
-        className="absolute inset-0 w-full h-full object-cover"
+        className="absolute inset-0 h-full w-full object-cover"
       />
       <div className="absolute inset-0 bg-gradient-to-r from-custom-blue to-transparent" />
 
-      <div className="relative z-10 p-4 h-full flex flex-col justify-between text-white">
+      <div className="relative z-10 flex h-full flex-col justify-between p-4 text-white">
         <div>
           <h2 className="text-xl font-semibold">{empresa}</h2>
           <p className="mt-2">
@@ -143,7 +143,7 @@ const TarjetaAplicar = ({ servicio, onInfo }) => {
               {campos_extra.map((c) => (
                 <span
                   key={c.id}
-                  className="bg-white bg-opacity-20 px-2 py-1 rounded"
+                  className="rounded bg-white bg-opacity-20 px-2 py-1"
                 >
                   {c.nombre}: {c.valor}
                 </span>
@@ -155,7 +155,7 @@ const TarjetaAplicar = ({ servicio, onInfo }) => {
         <div className="flex space-x-2">
           <button
             onClick={onInfo}
-            className="flex items-center gap-1 bg-custom-blue px-3 py-1 rounded hover:bg-custom-blue/80 transition-colors"
+            className="flex items-center gap-1 rounded bg-custom-blue px-3 py-1 transition-colors hover:bg-custom-blue/80"
           >
             <FaInfoCircle /> + Info
           </button>

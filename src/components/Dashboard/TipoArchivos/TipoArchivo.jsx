@@ -1,4 +1,4 @@
-// components/CategoriaVehiculos.jsx
+// components/TipoArchivo.jsx
 import React from "react";
 import { FaPlus, FaTrash, FaEdit } from "react-icons/fa";
 import useTipoArchivos from "@/components/Dashboard/TipoArchivos/useTipoArchivos";
@@ -24,166 +24,142 @@ const TipoArchivo = () => {
     handleDelete,
   } = useTipoArchivos();
 
+  /* ─────────── estados de carga / error ─────────── */
   if (loading) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-extrabold text-gray-800 mb-6">
-          Estado de Repartidor
+      <div className="container mx-auto px-2 py-8 sm:px-4">
+        <h1 className="mb-6 text-2xl font-extrabold text-gray-800 sm:text-3xl">
+          Tipo&nbsp;Archivos
         </h1>
-        <p className="text-gray-600">Cargando...</p>
+        <p className="text-gray-600">Cargando…</p>
       </div>
     );
   }
-
   if (error) {
     return (
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-2 py-8 sm:px-4">
         <p className="text-red-600">Error al obtener los datos.</p>
       </div>
     );
   }
 
+  /* ───────────────── UI ───────────────── */
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-extrabold text-gray-800 mb-6">
-        Tipo Archivos
+    <div className="container mx-auto px-2 py-8 sm:px-4">
+      <h1 className="mb-6 text-2xl font-extrabold text-gray-800 sm:text-3xl">
+        Tipo&nbsp;Archivos
       </h1>
 
-      {/* Encabezado y botón para abrir el formulario de creación */}
-      <div className="flex flex-col sm:flex-row items-center justify-between mb-6">
+      {/* BOTÓN NUEVO */}
+      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center">
         <button
           onClick={() => setShowForm(!showForm)}
           disabled={isEditing}
-          className={`flex items-center gap-2 px-5 py-2 rounded-md shadow-md transition-colors
-            ${isEditing
-              ? "bg-gray-300 text-gray-600 cursor-not-allowed"
-              : "bg-custom-blue text-white hover:bg-custom-blue-medium"
+          className={`w-full max-w-xs sm:max-w-none sm:w-auto flex items-center justify-center gap-2 px-4 sm:px-5 py-2 rounded-md shadow-md transition-colors
+            ${
+              isEditing
+                ? "bg-gray-300 text-gray-600 cursor-not-allowed"
+                : "bg-custom-blue text-white hover:bg-custom-blue-medium"
             }`}
         >
-          <FaPlus /> Agregar Tipo archivos
+          <FaPlus /> Agregar&nbsp;Tipo
         </button>
       </div>
 
-      {/* Formulario para agregar un nuevo vehículo (solo si no estamos editando) */}
-      {showForm && !isEditing && (
+      {/* FORM CREAR / EDITAR */}
+      {(showForm || isEditing) && (
         <form
-          onSubmit={handleFormSubmit}
-          className="mb-6 p-6 bg-white rounded-lg shadow-lg border border-gray-200"
+          onSubmit={isEditing ? handleEditSubmit : handleFormSubmit}
+          className="mb-6 rounded-lg border border-gray-200 bg-white p-6 shadow-lg"
         >
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Nombre
-            </label>
-            <input
-              type="text"
-              name="nombre"
-              value={formData.nombre}
-              onChange={handleFormChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              required
-            />
+          <div className="mb-4 flex flex-col gap-4 sm:flex-row">
+            <div className="flex-1">
+              <label className="mb-1 block text-sm font-medium text-gray-700">
+                Nombre
+              </label>
+              <input
+                type="text"
+                name="nombre"
+                value={isEditing ? editFormData.nombre : formData.nombre}
+                onChange={isEditing ? handleEditFormChange : handleFormChange}
+                className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                required
+              />
+            </div>
+            <div className="flex-1">
+              <label className="mb-1 block text-sm font-medium text-gray-700">
+                Descripción
+              </label>
+              <textarea
+                name="descripcion"
+                value={
+                  isEditing ? editFormData.descripcion : formData.descripcion
+                }
+                onChange={isEditing ? handleEditFormChange : handleFormChange}
+                className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                required
+              />
+            </div>
           </div>
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Descripción
-            </label>
-            <textarea
-              name="descripcion"
-              value={formData.descripcion}
-              onChange={handleFormChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              required
-            />
-          </div>
+
           {createError && (
             <p className="mb-4 text-sm text-red-600">
-              Error al crear el tipo de archivo.
+              Error al {isEditing ? "guardar" : "crear"} el tipo de archivo.
             </p>
           )}
+
           <button
             type="submit"
-            disabled={creating}
-            className="w-full sm:w-auto px-5 py-2 bg-custom-blue text-white rounded-md shadow hover:bg-custom-blue-medium transition-colors"
+            disabled={isEditing ? editing : creating}
+            className="w-full rounded-md bg-custom-blue px-4 py-2 text-white shadow transition-colors hover:bg-custom-blue-medium sm:w-auto sm:px-5"
           >
-            {creating ? "Creando..." : "Crear Archivo Nuevo"}
+            {isEditing
+              ? editing
+                ? "Guardando…"
+                : "Guardar Cambios"
+              : creating
+              ? "Creando…"
+              : "Crear Tipo"}
           </button>
         </form>
       )}
 
-      {/* Formulario para editar un vehículo existente */}
-      {isEditing && (
-        <form
-          onSubmit={handleEditSubmit}
-          className="mb-6 p-6 bg-white rounded-lg shadow-lg border border-gray-200"
-        >
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Nombre
-            </label>
-            <input
-              type="text"
-              name="nombre"
-              value={editFormData.nombre}
-              onChange={handleEditFormChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Descripción
-            </label>
-            <textarea
-              name="descripcion"
-              value={editFormData.descripcion}
-              onChange={handleEditFormChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              required
-            />
-          </div>
-          <button
-            type="submit"
-            disabled={editing}
-            className="w-full sm:w-auto px-5 py-2 bg-custom-blue text-white rounded-md shadow hover:bg-custom-blue-medium transition-colors"
-          >
-            {editing ? "Actualizando..." : "Actualizar Archivo"}
-          </button>
-        </form>
-      )}
-
-      {/* Contenedor responsive */}
-      <div className="w-full overflow-x-auto max-h-80">
-        <table className="min-w-full divide-y divide-gray-200 bg-white shadow rounded-lg">
-          <thead className="bg-gray-50 sticky top-0">
+      {/* TABLA + SCROLL HORIZONTAL */}
+      <div className="w-full overflow-x-auto">
+        <table className="w-full table-auto divide-y divide-gray-200 rounded-lg bg-white shadow">
+          <thead className="bg-gray-50">
             <tr>
-              <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 sm:px-6">
                 Nombre
               </th>
-              <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 sm:px-6">
                 Descripción
               </th>
-              <th className="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wider text-gray-500 sm:px-6">
                 Acciones
               </th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
-            {data?.data && data.data.length > 0 ? (
-              data.data.map((vehiculo) => (
-                <tr
-                  key={vehiculo.id}
-                  className="hover:bg-gray-100 transition-colors"
-                >
-                  <td className="px-4 py-2 text-sm text-gray-700 break-words">
-                    {vehiculo.nombre}
+            {data?.data?.length ? (
+              data.data.map((item) => (
+                <tr key={item.id} className="transition-colors hover:bg-gray-100">
+                  <td className="px-3 py-4 text-sm text-gray-700 sm:px-6">
+                    {item.nombre}
                   </td>
-                  <td className="px-4 py-2 text-sm text-gray-700 break-words">
-                    {vehiculo.descripcion}
+                  <td className="px-3 py-4 text-sm text-gray-700 sm:px-6">
+                    {item.descripcion}
                   </td>
-                  <td className="px-4 py-2 text-sm text-gray-700 flex items-center justify-center gap-3">
+                  <td className="flex items-center justify-center gap-3 px-3 py-4 text-sm text-gray-700 sm:px-6">
                     <button
-                      onClick={() => handleDelete(vehiculo.id)}
-                      className="text-red-600 hover:text-red-800 transition-colors"
+                      onClick={() => handleEditClick(item)}
+                      className="text-indigo-600 transition-colors hover:text-indigo-800"
+                    >
+                      <FaEdit />
+                    </button>
+                    <button
+                      onClick={() => handleDelete(item.id)}
+                      className="text-red-600 transition-colors hover:text-red-800"
                     >
                       <FaTrash />
                     </button>
@@ -193,8 +169,8 @@ const TipoArchivo = () => {
             ) : (
               <tr>
                 <td
-                  className="px-4 py-2 text-center text-sm text-gray-500"
                   colSpan="3"
+                  className="px-3 py-4 text-center text-sm text-gray-500 sm:px-6"
                 >
                   No hay registros.
                 </td>
@@ -203,8 +179,6 @@ const TipoArchivo = () => {
           </tbody>
         </table>
       </div>
-
-
     </div>
   );
 };

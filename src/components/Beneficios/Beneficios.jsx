@@ -5,8 +5,8 @@ import MiniCard from "@/components/Beneficios/Card";
 const BeneficiosHeader = () => {
   return (
     <div id="beneficios">
-      <header className="bg-custom-blue p-6 h-40 mt-20 flex flex-col justify-center">
-        <h2 className="text-custom-dark text-4xl font-bold text-center">
+      <header className="mt-20 flex h-40 flex-col justify-center bg-custom-blue p-6">
+        <h2 className="text-center text-4xl font-bold text-custom-dark">
           Beneficios
         </h2>
       </header>
