@@ -7,6 +7,9 @@ import { useRegisterStore } from './useRegisterStore'
 import RegisterImage from './RegisterImage'
 import TextInput from './Ui/TextInput'
 import { roleOptions } from './utils/roleOptions'
+import RolesSelect from './Ui/RolesSelect'
+import CiudadSelect from './Ui/CiudadSelect'
+import ProvinciaSelect from './Ui/ProvinciaSelect'
 
 const RegisterComponente = () => {
   const navigate = useNavigate()
@@ -81,30 +84,13 @@ const RegisterComponente = () => {
               error={formik.errors.email}
             />
 
-            <div className="relative mb-4">
-              <label htmlFor="roles" className="mb-2 block text-sm text-white">
-                Selecciona un rol
-              </label>
-              <select
-                id="roles"
-                name="roles"
-                value={roles}
-                onChange={handleChange}
-                onBlur={formik.handleBlur}
-                className="w-full rounded border border-gray-300 bg-white px-3 py-2 text-black"
-              >
-                {roleOptions.map(option => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-              {formik.touched.roles && formik.errors.roles && (
-                <div className="absolute left-0 top-full mt-1 rounded-sm bg-white p-1 text-sm text-red-600">
-                  {formik.errors.roles}
-                </div>
-              )}
-            </div>
+            <RolesSelect
+              value={roles}
+              onChange={handleChange}
+              onBlur={formik.handleBlur}
+              touched={formik.touched.roles}
+              error={formik.errors.roles}
+            />
 
             <TextInput
               id="direccion"
@@ -117,10 +103,7 @@ const RegisterComponente = () => {
               error={formik.errors.direccion}
             />
 
-            <TextInput
-              id="provincia"
-              label="Provincia"
-              placeholder="Ingresa tu provincia"
+            <ProvinciaSelect
               value={provincia}
               onChange={handleChange}
               onBlur={formik.handleBlur}
@@ -128,10 +111,8 @@ const RegisterComponente = () => {
               error={formik.errors.provincia}
             />
 
-            <TextInput
-              id="ciudad"
-              label="Ciudad"
-              placeholder="Ingresa tu ciudad"
+            <CiudadSelect
+              provincia={provincia}
               value={ciudad}
               onChange={handleChange}
               onBlur={formik.handleBlur}
