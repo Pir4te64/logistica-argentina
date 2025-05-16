@@ -1,29 +1,30 @@
 // components/TipoArchivo.jsx
-import React from "react";
+import React, { useEffect } from "react";
 import { FaPlus, FaTrash, FaEdit } from "react-icons/fa";
-import useTipoArchivos from "@/components/Dashboard/TipoArchivos/useTipoArchivos";
-
+import { useTipoArchivosStore } from "./useTipoArchivos";
 const TipoArchivo = () => {
   const {
     data,
     loading,
     error,
-    showForm,
     formData,
     creating,
     createError,
     isEditing,
     editFormData,
     editing,
-    setShowForm,
     handleFormChange,
     handleFormSubmit,
     handleEditClick,
     handleEditFormChange,
     handleEditSubmit,
     handleDelete,
-  } = useTipoArchivos();
+    fetchData
+  } = useTipoArchivosStore();
 
+  useEffect(() => {
+    fetchData();
+  }, []);
   /* ─────────── estados de carga / error ─────────── */
   if (loading) {
     return (
@@ -50,24 +51,8 @@ const TipoArchivo = () => {
         Tipo&nbsp;Archivos
       </h1>
 
-      {/* BOTÓN NUEVO */}
-      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center">
-        <button
-          onClick={() => setShowForm(!showForm)}
-          disabled={isEditing}
-          className={`w-full max-w-xs sm:max-w-none sm:w-auto flex items-center justify-center gap-2 px-4 sm:px-5 py-2 rounded-md shadow-md transition-colors
-            ${
-              isEditing
-                ? "bg-gray-300 text-gray-600 cursor-not-allowed"
-                : "bg-custom-blue text-white hover:bg-custom-blue-medium"
-            }`}
-        >
-          <FaPlus /> Agregar&nbsp;Tipo
-        </button>
-      </div>
-
       {/* FORM CREAR / EDITAR */}
-      {(showForm || isEditing) && (
+      {isEditing && (
         <form
           onSubmit={isEditing ? handleEditSubmit : handleFormSubmit}
           className="mb-6 rounded-lg border border-gray-200 bg-white p-6 shadow-lg"
@@ -141,8 +126,8 @@ const TipoArchivo = () => {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
-            {data?.data?.length ? (
-              data.data.map((item) => (
+            {data?.length ? (
+              data.map((item) => (
                 <tr key={item.id} className="transition-colors hover:bg-gray-100">
                   <td className="px-3 py-4 text-sm text-gray-700 sm:px-6">
                     {item.nombre}

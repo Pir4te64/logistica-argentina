@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { FaArrowRight } from "react-icons/fa";
-import { Routes, Route, useNavigate } from "react-router-dom";
+
 import Sidebar from "@/components/Dashboard/Dashboard/Sidebar";
 import Layout from "@/components/Layout";
 import DashboardIndex from "@/components/Dashboard/DashboardIndex";
@@ -15,6 +14,9 @@ import ServicioAnuncio from "@/components/Dashboard/ServicioAnuncio/ServicioAnun
 import Postulaciones from "@/components/Dashboard/Postulaciones/Postulaciones";
 import CambiarContraseña from "@/components/Dashboard/CambiarContraseña/Cambiar";
 import TipoArchivo from "@/components/Dashboard/TipoArchivos/TipoArchivo";
+import { Route, Routes, useNavigate } from "react-router-dom";
+import CambiarHeader from "./CambiarHeader/CambiarHeader";
+import { FaArrowRight } from "react-icons/fa";
 
 export default function DasboardPage() {
   const navigate = useNavigate();
@@ -65,7 +67,7 @@ export default function DasboardPage() {
             />
             <Route path="postulaciones" element={<Postulaciones />} />
             <Route path="cambiar" element={<CambiarContraseña />} />
-
+            <Route path="cambiarHeader" element={<CambiarHeader />} />
             {/* Fallback */}
             <Route path="*" element={<p>Vista no encontrada</p>} />
           </Routes>

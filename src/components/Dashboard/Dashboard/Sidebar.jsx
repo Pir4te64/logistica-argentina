@@ -11,6 +11,7 @@ import {
   FaClipboardList,
   FaKey,
   FaTimes,
+  FaImage
 } from "react-icons/fa";
 
 // Define cada vista con su icono correspondiente
@@ -24,6 +25,7 @@ const views = [
   { key: "servicioAnuncio", label: "Servicio Anuncio", icon: FaBullhorn },
   { key: "postulaciones", label: "Postulaciones", icon: FaClipboardList },
   { key: "cambiar", label: "Cambiar Contraseña", icon: FaKey },
+  /*  { key: "cambiarHeader", label: "Cambiar Header", icon: FaImage }, */
 ];
 
 const Sidebar = ({ sidebarOpen, onToggle }) => {
@@ -45,10 +47,9 @@ const Sidebar = ({ sidebarOpen, onToggle }) => {
           key={key}
           to={`/dashboard/${key}`}
           className={({ isActive }) =>
-            `flex items-center w-full mb-4 px-4 py-2 rounded transition-colors ${
-              isActive
-                ? "bg-custom-gray text-custom-dark"
-                : "bg-custom-dark text-white hover:bg-custom-gray"
+            `flex items-center w-full mb-4 px-4 py-2 rounded transition-colors ${isActive
+              ? "bg-custom-gray text-custom-dark"
+              : "bg-custom-dark text-white hover:bg-custom-gray"
             }`
           }
         >

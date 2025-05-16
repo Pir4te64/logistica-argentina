@@ -10,6 +10,7 @@ import {
   FaBullhorn,
   FaClipboardList,
   FaKey,
+  FaImage
 } from "react-icons/fa";
 import Logo from "@/assets/Logo.png";
 
@@ -24,6 +25,7 @@ const views = [
   { key: "servicioAnuncio", label: "Servicio Anuncio", icon: FaBullhorn },
   { key: "postulaciones", label: "Postulaciones", icon: FaClipboardList },
   { key: "cambiar", label: "Cambiar Contraseña", icon: FaKey },
+  /*  { key: "cambiarHeader", label: "Cambiar Header", icon: FaImage }, */
 ];
 
 const DashboardIndex = () => {
@@ -42,7 +44,7 @@ const DashboardIndex = () => {
             <NavLink
               key={key}
               to={`/dashboard/${key}`}
-              className="flex transform flex-col items-center rounded-lg bg-white bg-opacity-80 p-4 shadow transition-transform duration-200 hover:scale-105 hover:shadow-lg sm:p-6"
+              className="flex transform flex-col items-center rounded-lg bg-white p-4 shadow transition-transform duration-200 hover:scale-105 hover:bg-custom-blue hover:shadow-lg sm:p-6"
             >
               <Icon className="mb-2 h-10 w-10 text-gray-700 sm:h-12 sm:w-12" />
               <span className="text-center text-base text-gray-800 sm:text-lg">

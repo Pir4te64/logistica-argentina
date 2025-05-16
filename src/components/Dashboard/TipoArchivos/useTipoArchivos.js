@@ -1,162 +1,127 @@
-// hooks/useCategoriaVehiculos.js
-import { useState, useEffect } from "react";
+// stores/useTipoArchivosStore.ts
+import { create } from "zustand";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { API_URL } from "@/Api/Api";
 
-const useTipoArchivos = () => {
-  // Estados generales
-  const [data, setData] = useState(null); // Respuesta de la API
-  const [loading, setLoading] = useState(true); // Estado de carga
-  const [error, setError] = useState(null); // Estado para errores
 
-  // Estados para creación de un nuevo vehículo
-  const [showForm, setShowForm] = useState(false);
-  const [formData, setFormData] = useState({ nombre: "", descripcion: "" });
-  const [creating, setCreating] = useState(false);
-  const [createError, setCreateError] = useState(null);
 
-  // Estados para edición de un vehículo existente
-  const [isEditing, setIsEditing] = useState(false);
-  const [editFormData, setEditFormData] = useState({ nombre: "", descripcion: "" });
-  const [editId, setEditId] = useState(null);
-  const [editError, setEditError] = useState(null);
-  const [editing, setEditing] = useState(false);
+export const useTipoArchivosStore = create((set, get) => ({
+  data: null,
+  loading: true,
+  error: null,
+  showForm: false,
+  formData: { nombre: "", descripcion: "" },
+  creating: false,
+  createError: null,
+  isEditing: false,
+  editFormData: { nombre: "", descripcion: "" },
+  editId: null,
+  editError: null,
+  editing: false,
 
-  // --------------------------------------------
-  // 1. Obtener datos (GET)
-  // --------------------------------------------
-  const fetchData = async () => {
+  fetchData: async () => {
     const token = localStorage.getItem("token");
+    set({ loading: true });
     try {
-      const response = await axios.get(API_URL.TIPO_ARCHIVOS, {
+      const res = await axios.get(API_URL.TIPO_ARCHIVOS, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setData(response.data);
+      set({ data: res.data.data, error: null });
     } catch (err) {
-      console.error("Error al obtener los datos:", err);
-      setError(err);
+      console.error("Error al obtener:", err);
+      set({ error: err });
     } finally {
-      setLoading(false);
+      set({ loading: false });
     }
-  };
+  },
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  setShowForm: (show) => set({ showForm: show }),
 
-  // --------------------------------------------
-  // 2. Crear nuevo vehículo (POST)
-  // --------------------------------------------
-  const handleFormChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  handleFormChange: (e) => {
+    const { name, value } = e.target;
+    set((state) => ({
+      formData: { ...state.formData, [name]: value },
+    }));
+  },
 
-  const handleFormSubmit = async (e) => {
+  handleFormSubmit: async (e) => {
     e.preventDefault();
-    setCreating(true);
-    setCreateError(null);
+    const { formData, data } = get();
     const token = localStorage.getItem("token");
+    set({ creating: true, createError: null });
+    try {
+      const res = await axios.post(API_URL.TIPO_ARCHIVOS, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      set({
+        data: data ? [...data, res.data.data] : [res.data.data],
+        formData: { nombre: "", descripcion: "" },
+        showForm: false,
+      });
+      Swal.fire("¡Creado!", "Tipo de archivo creado exitosamente", "success");
+    } catch (err) {
+      set({ createError: err });
+      console.error("Error al crear:", err);
+    } finally {
+      set({ creating: false });
+    }
+  },
+
+  handleEditClick: (item) =>
+    set({
+      isEditing: true,
+      editId: item.id,
+      editFormData: {
+        nombre: item.nombre,
+        descripcion: item.descripcion,
+        role_id: item.role_id, // ✅ incluimos role_id
+      },
+      editError: null,
+    }),
+
+  handleEditFormChange: (e) => {
+    const { name, value } = e.target;
+    set((state) => ({
+      editFormData: { ...state.editFormData, [name]: value },
+    }));
+  },
+
+  handleEditSubmit: async (e) => {
+    e.preventDefault();
+    const { editFormData, editId, data } = get();
+    const token = localStorage.getItem("token");
+    set({ editing: true, editError: null });
 
     try {
-      const response = await axios.post(API_URL.TIPO_ARCHIVOS, formData, {
+      const res = await axios.put(`${API_URL.TIPO_ARCHIVOS}/${editId}`, editFormData, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
       });
-      // Suponemos que la respuesta contiene en response.data.data el objeto recién creado
-      setData({
-        ...data,
-        data: [...data.data, response.data.data],
-      });
-      setFormData({ nombre: "", descripcion: "" });
-      setShowForm(false);
-      // Mostrar alerta de éxito en la creación
-      Swal.fire({
-        title: "¡Creado!",
-        text: "El repartidor ha sido creado.",
-        icon: "success",
-        confirmButtonText: "Aceptar",
-      });
+      const updatedItem = res.data.data;
+      const updatedList = data?.map((item) => (item.id === editId ? updatedItem : item)) ?? [];
+      set({ data: updatedList, isEditing: false, editId: null });
     } catch (err) {
-      console.error("Error al crear el repartidor:", err);
-      setCreateError(err);
+      set({ editError: err });
+      console.error("Error al editar:", err);
     } finally {
-      setCreating(false);
+      set({ editing: false });
     }
-  };
+  },
 
-  // --------------------------------------------
-  // 3. Editar vehículo (PUT)
-  // --------------------------------------------
-  const handleEditClick = (vehiculo) => {
-    setEditFormData({
-      nombre: vehiculo.nombre,
-      descripcion: vehiculo.descripcion,
-    });
-    setEditId(vehiculo.id);
-    setIsEditing(true);
-    setEditError(null);
-  };
-
-  const handleEditFormChange = (e) => {
-    setEditFormData({ ...editFormData, [e.target.name]: e.target.value });
-  };
-
- // --------------------------------------------
-// 3. Editar vehículo (PUT)
-// --------------------------------------------
-const handleEditSubmit = async (e) => {
-  e.preventDefault();
-  setEditing(true);
-  setEditError(null);
-  const token = localStorage.getItem("token");
-
-  try {
-    // Enviamos el id como parte de la ruta, y solo el form data en el body
-    const response = await axios.put(
-      `${API_URL.TIPO_ARCHIVOS}/${editId}`,
-      editFormData,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
-
-    // Actualizamos la lista con el ítem modificado
-    const updatedItem = response.data.data;
-    const updatedList = data.data.map((item) =>
-      item.id === editId ? updatedItem : item
-    );
-    setData({ ...data, data: updatedList });
-
-    // Limpiamos estado de edición
-    setIsEditing(false);
-    setEditId(null);
-  } catch (err) {
-    console.error("Error al editar el repartidor:", err);
-    setEditError(err);
-  } finally {
-    setEditing(false);
-  }
-};
-
-
-  // --------------------------------------------
-  // 4. Eliminar vehículo (DELETE)
-  // --------------------------------------------
-  const handleDelete = async (id) => {
+  handleDelete: async (id) => {
     const token = localStorage.getItem("token");
-    // Mostrar confirmación con SweetAlert2
     const result = await Swal.fire({
       title: "¿Estás seguro?",
       text: "Esta acción no se puede revertir.",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonText: "Sí, borrar",
+      confirmButtonText: "Sí, eliminar",
       cancelButtonText: "Cancelar",
     });
 
@@ -165,51 +130,13 @@ const handleEditSubmit = async (e) => {
         await axios.delete(`${API_URL.TIPO_ARCHIVOS}/${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
-        // Filtramos el registro eliminado
-        setData({
-          ...data,
-          data: data.data.filter((vehiculo) => vehiculo.id !== id),
-        });
-        Swal.fire({
-          title: "¡Borrado!",
-          text: "El archivo ha sido eliminado.",
-          icon: "success",
-          confirmButtonText: "Aceptar",
-        });
+        const filtered = get().data?.filter((item) => item.id !== id);
+        set({ data: filtered ?? [] });
+        Swal.fire("¡Eliminado!", "El tipo de archivo fue eliminado.", "success");
       } catch (err) {
-        console.error("Error al eliminar el archivo:", err);
-        Swal.fire({
-          title: "Error",
-          text: "Hubo un problema al eliminar el archivo.",
-          icon: "error",
-          confirmButtonText: "Aceptar",
-        });
+        console.error("Error al eliminar:", err);
+        Swal.fire("Error", "No se pudo eliminar el tipo de archivo.", "error");
       }
     }
-  };
-
-  return {
-    data,
-    loading,
-    error,
-    showForm,
-    formData,
-    creating,
-    createError,
-    isEditing,
-    editFormData,
-    editId,
-    editError,
-    editing,
-    setShowForm,
-    fetchData,
-    handleFormChange,
-    handleFormSubmit,
-    handleEditClick,
-    handleEditFormChange,
-    handleEditSubmit,
-    handleDelete,
-  };
-};
-
-export default useTipoArchivos;
+  },
+}));
