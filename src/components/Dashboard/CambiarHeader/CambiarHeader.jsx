@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from "react";
-import { uploadImage } from "./uploadImage";
+import { uploadImage } from "@/components/Dashboard/CambiarHeader/uploadImage";
 import Swal from "sweetalert2";
 
 const ZONAS = [
@@ -40,8 +40,8 @@ const CambiarHeader = () => {
       if (img.width < 1920 || img.height < 1080) {
         Swal.fire({
           icon: "error",
-            title: "Error",
-            text: "La imagen debe tener una resolución mínima de 1080p (1920x1080).",
+          title: "Error",
+          text: "La imagen debe tener una resolución mínima de 1080p (1920x1080).",
         });
         return;
       }
@@ -58,25 +58,25 @@ const CambiarHeader = () => {
   const handleCambiarHeader = async (tipo) => {
     const imagen = imagenes[tipo];
     if (!imagen) return;
-  
+
     const tipoArchivoMap = {
       transportistas: 26,
       choferes: 27,
       comisionistas: 28,
     };
-  
+
     const tipo_archivo = tipoArchivoMap[tipo];
-    const tipo_usuario = 1;
-  
+    const tipo_usuario = 2;
+
     const user = {
       email: JSON.parse(localStorage.getItem("user")).email,
     };
-  
+
     const correo = user.email;
-  
+
     try {
       await uploadImage(imagen.file, tipo_archivo, correo, tipo_usuario);
-  
+
       Swal.fire({
         icon: "success",
         title: "¡Imagen enviada!",
@@ -91,9 +91,9 @@ const CambiarHeader = () => {
       });
     }
   };
-  
-  
-  
+
+
+
 
   const preventDefaults = (e) => {
     e.preventDefault();
@@ -137,11 +137,10 @@ const CambiarHeader = () => {
           <button
             onClick={() => handleCambiarHeader(zona.key)}
             disabled={!imagenes[zona.key]}
-            className={`mt-4 w-full py-2 rounded-md text-white font-medium shadow transition-colors ${
-              imagenes[zona.key]
+            className={`mt-4 w-full py-2 rounded-md text-white font-medium shadow transition-colors ${imagenes[zona.key]
                 ? "bg-custom-blue hover:bg-custom-blue-medium"
                 : "bg-gray-400 cursor-not-allowed"
-            }`}
+              }`}
           >
             Cambiar Header
           </button>

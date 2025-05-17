@@ -25,7 +25,7 @@ const views = [
   { key: "servicioAnuncio", label: "Servicio Anuncio", icon: FaBullhorn },
   { key: "postulaciones", label: "Postulaciones", icon: FaClipboardList },
   { key: "cambiar", label: "Cambiar Contraseña", icon: FaKey },
-  /*  { key: "cambiarHeader", label: "Cambiar Header", icon: FaImage }, */
+  /* { key: "cambiarHeader", label: "Cambiar Header", icon: FaImage }, */
 ];
 
 const Sidebar = ({ sidebarOpen, onToggle }) => {

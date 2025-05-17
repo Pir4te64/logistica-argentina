@@ -1,7 +1,7 @@
 // src/components/Ui/CiudadSelect.jsx
 import React, { useMemo } from 'react'
 import Select from 'react-select'
-import provinciasYCiudades from '../utils/provinciasYCiudades'
+import provinciasYCiudades from '@/components/Registro/utils/provinciasYCiudades'
 
 const CiudadSelect = ({
     provincia,

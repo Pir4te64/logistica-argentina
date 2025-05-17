@@ -9,8 +9,8 @@ import {
   FiFileText,
 } from "react-icons/fi";
 import {  labelAliases } from "@/components/Formulario/estaticos";
-import BasicInfo from "./BasicInfo";
-import { idToDoc } from "../utils/estaticos";
+import BasicInfo from "@/components/Dashboard/Postulaciones/EditFormulario/BasicInfo";
+import { idToDoc } from "@/components/Dashboard/Postulaciones/utils/estaticos";
 
 /* 2.  Diccionario inverso id → label legible                         */
 

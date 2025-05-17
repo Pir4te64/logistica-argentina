@@ -15,7 +15,7 @@ import Postulaciones from "@/components/Dashboard/Postulaciones/Postulaciones";
 import CambiarContraseña from "@/components/Dashboard/CambiarContraseña/Cambiar";
 import TipoArchivo from "@/components/Dashboard/TipoArchivos/TipoArchivo";
 import { Route, Routes, useNavigate } from "react-router-dom";
-import CambiarHeader from "./CambiarHeader/CambiarHeader";
+import CambiarHeader from "@/components/Dashboard/CambiarHeader/CambiarHeader";
 import { FaArrowRight } from "react-icons/fa";
 
 export default function DasboardPage() {

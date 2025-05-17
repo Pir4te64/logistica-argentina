@@ -1,15 +1,15 @@
 // src/components/Registro/RegisterComponente.jsx
 import React from 'react'
 import { useFormik } from 'formik'
-import { initialValues, validationSchema } from './registerValidation'
+import { initialValues, validationSchema } from '@/components/Registro/registerValidation'
 import { useNavigate } from 'react-router-dom'
-import { useRegisterStore } from './useRegisterStore'
-import RegisterImage from './RegisterImage'
-import TextInput from './Ui/TextInput'
-import { roleOptions } from './utils/roleOptions'
-import RolesSelect from './Ui/RolesSelect'
-import CiudadSelect from './Ui/CiudadSelect'
-import ProvinciaSelect from './Ui/ProvinciaSelect'
+import { useRegisterStore } from '@/components/Registro/useRegisterStore'
+import RegisterImage from '@/components/Registro/RegisterImage'
+import TextInput from '@/components/Registro/Ui/TextInput'
+import { roleOptions } from '@/components/Registro/utils/roleOptions'
+import RolesSelect from '@/components/Registro/Ui/RolesSelect'
+import CiudadSelect from '@/components/Registro/Ui/CiudadSelect'
+import ProvinciaSelect from '@/components/Registro/Ui/ProvinciaSelect'
 
 const RegisterComponente = () => {
   const navigate = useNavigate()

@@ -1,7 +1,7 @@
 // components/TipoArchivo.jsx
 import React, { useEffect } from "react";
 import { FaPlus, FaTrash, FaEdit } from "react-icons/fa";
-import { useTipoArchivosStore } from "./useTipoArchivos";
+import { useTipoArchivosStore } from "@/components/Dashboard/TipoArchivos/useTipoArchivos";
 const TipoArchivo = () => {
   const {
     data,

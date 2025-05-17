@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react'
 import { FaTrash, FaEdit, FaRegStar, FaStar } from 'react-icons/fa'
-import BooleanInline from './BooleanInline'
-import { usePostulacionesStore } from './store/usePostulacionesStore'
-import EditForm from './EditFormulario/EditForm'
+import BooleanInline from '@/components/Dashboard/Postulaciones/BooleanInline'
+import { usePostulacionesStore } from '@/components/Dashboard/Postulaciones/store/usePostulacionesStore'
+import EditForm from '@/components/Dashboard/Postulaciones/EditFormulario/EditForm'
 
 const Postulaciones = () => {
   const {

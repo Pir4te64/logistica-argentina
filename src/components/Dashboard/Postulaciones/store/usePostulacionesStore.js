@@ -2,7 +2,7 @@
 
 import { create } from "zustand";
 import axios from "axios";
-import { API_URL } from "../../../../Api/Api";
+import { API_URL } from "@/Api/Api";
 
 
 export const usePostulacionesStore = create((set, get) => ({

@@ -1,7 +1,7 @@
 // src/components/Ui/RolesSelect.jsx
 import React from 'react'
 import Select from 'react-select'
-import { roleOptions } from '../utils/roleOptions'
+import { roleOptions } from '@/components/Registro/utils/roleOptions'
 
 /**
  * Props:

@@ -1,7 +1,7 @@
 // src/components/Ui/ProvinciaSelect.jsx
 import React from 'react'
 import Select from 'react-select'
-import provinciasYCiudades from '../utils/provinciasYCiudades'
+import provinciasYCiudades from '@/components/Registro/utils/provinciasYCiudades'
 const ProvinciaSelect = ({ value, onChange, onBlur, touched, error }) => {
     const options = provinciasYCiudades.map(([prov]) => ({
         value: prov,

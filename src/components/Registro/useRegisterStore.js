@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import axios from 'axios';
 import Swal from 'sweetalert2';
-import { API_URL } from '../../Api/Api';
+import { API_URL } from '@/Api/Api';
 
 export const useRegisterStore = create((set, get) => ({
     // Form state
