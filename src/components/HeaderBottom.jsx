@@ -12,9 +12,10 @@ import img3 from "@/assets/empresas/oca.jpg";
 import img4 from "@/assets/empresas/pavetron.jpg";
 import img5 from "@/assets/empresas/urbano.jpg";
 import img6 from "@/assets/empresas/OCASA.jpg";
-
+import img7 from "@/assets/empresas/andesmar.jpeg";
+import img8 from "@/assets/empresas/qx.jpeg";
 function HeaderBottom() {
-  const images = [img1, img2, img3, img4, img5, img6];
+  const images = [img1, img2, img3, img4, img5, img6, img7, img8];
 
   return (
     <div className='w-full px-2'>
@@ -36,7 +37,7 @@ function HeaderBottom() {
             <img
               src={img}
               alt={`Logo ${index}`}
-              className='w-full h-auto rounded-lg shadow-md'
+              className='h-auto w-full rounded-lg shadow-md'
             />
           </SwiperSlide>
         ))}

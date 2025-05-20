@@ -14,6 +14,11 @@ const CambiarHeader = () => {
     choferes: null,
     comisionistas: null,
   });
+  const [loading, setLoading] = useState({
+    transportistas: false,
+    choferes: false,
+    comisionistas: false,
+  });
 
   const handleDrop = useCallback(async (e, tipo) => {
     e.preventDefault();
@@ -75,6 +80,7 @@ const CambiarHeader = () => {
     const correo = user.email;
 
     try {
+      setLoading(prev => ({ ...prev, [tipo]: true }));
       await uploadImage(imagen.file, tipo_archivo, correo, tipo_usuario);
 
       Swal.fire({
@@ -89,6 +95,8 @@ const CambiarHeader = () => {
         title: "Error",
         text: "Hubo un problema al subir la imagen.",
       });
+    } finally {
+      setLoading(prev => ({ ...prev, [tipo]: false }));
     }
   };
 
@@ -136,13 +144,20 @@ const CambiarHeader = () => {
 
           <button
             onClick={() => handleCambiarHeader(zona.key)}
-            disabled={!imagenes[zona.key]}
-            className={`mt-4 w-full py-2 rounded-md text-white font-medium shadow transition-colors ${imagenes[zona.key]
-                ? "bg-custom-blue hover:bg-custom-blue-medium"
-                : "bg-gray-400 cursor-not-allowed"
+            disabled={!imagenes[zona.key] || loading[zona.key]}
+            className={`mt-4 w-full py-2 rounded-md text-white font-medium shadow transition-colors ${imagenes[zona.key] && !loading[zona.key]
+              ? "bg-custom-blue hover:bg-custom-blue-medium"
+              : "bg-gray-400 cursor-not-allowed"
               }`}
           >
-            Cambiar Header
+            {loading[zona.key] ? (
+              <div className="flex items-center justify-center">
+                <div className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
+                <span className="ml-2">Subiendo...</span>
+              </div>
+            ) : (
+              "Cambiar Header"
+            )}
           </button>
         </div>
       ))}

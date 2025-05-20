@@ -16,4 +16,5 @@ export const API_URL = {
   CHANGE_PASSWORD: `${BASE_URL}/api/cambiar-password`,
   CHANGE_PASSWORD_OTHER: `${BASE_URL}/api/usuarios`,
   LISTAR_USUARIOS: `${BASE_URL}/api/usuarios/listar`,
+  GET_LOGISTICA_IMAGES: `${BASE_URL}/api/files/Administrador@gmail.com/2`,
 };
