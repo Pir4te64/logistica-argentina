@@ -32,7 +32,7 @@ const ROUTE_BY_TYPE = {
 };
 
 // === 3) Flag para usar imágenes remotas =================
-const USE_REMOTE_IMAGES = false;   // ← cámbialo a true para testear
+const USE_REMOTE_IMAGES = true;   // ← cámbialo a true para testear
 
 // ========================================================
 export default function Header() {
