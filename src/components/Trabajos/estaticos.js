@@ -15,6 +15,7 @@ export const VEHICLE_OPTIONS = [
         label: "Semis (Scania, Actros, Iveco Stralis, Volvo FM)",
         value: "Semis",
     },
+    
 ];
 
 export const EMPRESAS_OPTIONS = [
