@@ -4,7 +4,7 @@ import CustomSelect from "@/components/Trabajos/CustomSelect";
 import TarjetaAplicar from "@/components/Trabajos/TarjetaAplicar";
 import { useTrabajos } from "@/components/Trabajos/store/useTrabajos";
 import ServicioModal from "@/components/Trabajos/Modal";
-import { EMPRESAS_OPTIONS, VEHICULOS_OPTIONS } from "@/components/Trabajos/text";
+import { EMPRESAS_OPTIONS, VEHICLE_OPTIONS } from "./estaticos";
 
 const Trabajos = () => {
   const { fetchServicios, servicios = [], loading, error } = useTrabajos();
@@ -82,7 +82,7 @@ const Trabajos = () => {
             name="vehiculo"
             value={filters.vehiculo}
             onChange={(v) => handleSelectChange("vehiculo", v)}
-            options={VEHICULOS_OPTIONS}
+            options={VEHICLE_OPTIONS}
           />
           <CustomSelect
             className="flex-1"

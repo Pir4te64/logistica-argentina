@@ -26,4 +26,5 @@ export const EMPRESAS_OPTIONS = [
     { label: "Ocasa", value: "Ocasa" },
     { label: "intermeptro", value: "intermeptro" },
     { label: "Andreani", value: "Andreani" },
+    { label: "QX Logistica", value: "QX Logistica" },
 ]
