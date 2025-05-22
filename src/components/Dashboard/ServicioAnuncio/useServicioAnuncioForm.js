@@ -4,7 +4,7 @@ import axios from "axios";
 import { API_URL } from "@/Api/Api";
 import useBeneficioRepartidor from "@/components/Dashboard/Beneficios/useBeneficioRepartidor";
 import useCategoriaVehiculos from "@/components/Dashboard/Categoria/useCategoriaVehiculos";
-import useResaltarAnuncio from "@/components/Dashboard/ResaltarAnuncio/useResaltarAnuncio";
+import useResaltarAnuncio from "@/components/Dashboard/ResaltarAnuncio/store/useResaltarAnuncio";
 import useEstadoServicio from "@/components/Dashboard/EstadoServicio/useEstadoServicio";
 import Swal from "sweetalert2";
 import { nanoid } from "nanoid";

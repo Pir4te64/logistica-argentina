@@ -2,7 +2,7 @@
 import React, { useState, useMemo } from "react";
 import FileUploader from "@/components/Formulario/FileUploader";
 import { docMapping, documentos } from "@/components/Formulario/estaticos";
-import { submitDocumentation } from "@/components/Formulario/submitDocumentation";
+import { submitDocumentation } from "@/components/Formulario/store/submitDocumentation";
 import { FaSpinner } from "react-icons/fa";
 
 const FormularioDocumentacion = () => {

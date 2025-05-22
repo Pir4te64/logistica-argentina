@@ -3,7 +3,6 @@ import { Route, Routes } from "react-router-dom";
 import Home from "@/pages/Home";
 import Login from "@/pages/Login";
 import Register from "@/pages/Register";
-import RegisterGoogle from "@/pages/RegisterGoogle";
 import FormularioPage from "@/pages/Formulario";
 import Mensaje from "@/pages/Mensaje";
 import FormularioChoferes from "@/pages/FormularioChoferes";
@@ -17,17 +16,27 @@ import RecuperarPasswordPage from "@/pages/RecuperarPassword";
 function App() {
   return (
     <Routes>
+      {/* Página principal de la aplicación */}
       <Route path="/" element={<Home />} />
+
+      {/* Rutas de autenticación */}
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/recuperar" element={<RecuperarPasswordPage />} />
-      <Route path="/register-google" element={<RegisterGoogle />} />
+
+      {/* Rutas de formularios */}
       <Route path="/formulario" element={<FormularioPage />} />
+      <Route path="/formulario-choferes" element={<FormularioChoferes />} />
+      <Route
+        path="/formulario-comisionista"
+        element={<FormularioComisionistaPage />}
+      />
+
+      {/* Rutas de mensajes y notificaciones */}
       <Route path="/mensaje" element={<Mensaje />} />
       <Route path="/mensaje-transportista" element={<MensajeTransportista />} />
-      <Route path="/formulario-choferes" element={<FormularioChoferes />} />
 
-      {/* Dashboard con rutas anidadas */}
+      {/* Dashboard protegido - Solo accesible para usuarios con ID 1 o 2 */}
       <Route
         path="/dashboard/*"
         element={
@@ -37,10 +46,7 @@ function App() {
         }
       />
 
-      <Route
-        path="/formulario-comisionista"
-        element={<FormularioComisionistaPage />}
-      />
+      {/* Ruta para manejar páginas no encontradas (404) */}
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

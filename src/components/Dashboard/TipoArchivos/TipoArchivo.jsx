@@ -1,7 +1,7 @@
 // components/TipoArchivo.jsx
 import React, { useEffect } from "react";
 import { FaPlus, FaTrash, FaEdit } from "react-icons/fa";
-import { useTipoArchivosStore } from "@/components/Dashboard/TipoArchivos/useTipoArchivos";
+import { useTipoArchivosStore } from "@/components/Dashboard/TipoArchivos/store/useTipoArchivos";
 const TipoArchivo = () => {
   const {
     data,
@@ -19,7 +19,7 @@ const TipoArchivo = () => {
     handleEditFormChange,
     handleEditSubmit,
     handleDelete,
-    fetchData
+    fetchData,
   } = useTipoArchivosStore();
 
   useEffect(() => {
@@ -128,7 +128,10 @@ const TipoArchivo = () => {
           <tbody className="divide-y divide-gray-200">
             {data?.length ? (
               data.map((item) => (
-                <tr key={item.id} className="transition-colors hover:bg-gray-100">
+                <tr
+                  key={item.id}
+                  className="transition-colors hover:bg-gray-100"
+                >
                   <td className="px-3 py-4 text-sm text-gray-700 sm:px-6">
                     {item.nombre}
                   </td>

@@ -1,7 +1,7 @@
 // components/ResaltarAnuncio.jsx
 import React from "react";
 import { FaPlus, FaTrash, FaEdit } from "react-icons/fa";
-import useResaltarAnuncio from "@/components/Dashboard/ResaltarAnuncio/useResaltarAnuncio";
+import useResaltarAnuncio from "@/components/Dashboard/ResaltarAnuncio/store/useResaltarAnuncio";
 
 const ResaltarAnuncio = () => {
   const {
@@ -122,8 +122,8 @@ const ResaltarAnuncio = () => {
 
       <div className="w-full overflow-x-auto">
         <table className="w-full table-auto divide-y divide-gray-200 rounded-lg bg-white shadow">
-            <thead className="bg-gray-50">
-                <tr>
+          <thead className="bg-gray-50">
+            <tr>
               <th className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 sm:px-6">
                 Nombre
               </th>
@@ -138,7 +138,10 @@ const ResaltarAnuncio = () => {
           <tbody className="divide-y divide-gray-200">
             {data?.data?.length ? (
               data.data.map((item) => (
-                <tr key={item.id} className="transition-colors hover:bg-gray-100">
+                <tr
+                  key={item.id}
+                  className="transition-colors hover:bg-gray-100"
+                >
                   <td className="px-3 py-4 text-sm text-gray-700 sm:px-6">
                     {item.nombre}
                   </td>

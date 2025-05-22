@@ -3,7 +3,7 @@ import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectFade, Navigation, Autoplay } from "swiper/modules";
 import "swiper/css";
-import "swiper/css/bundle";        // un solo import de estilos
+import "swiper/css/bundle"; // un solo import de estilos
 
 import { useNavigate } from "react-router-dom";
 
@@ -14,16 +14,22 @@ import comision1 from "@/assets/Header/header3.jpg";
 import comision2 from "@/assets/Header/header3-5.jpg";
 import transport1 from "@/assets/Header/header4.jpg";
 import transport2 from "@/assets/Header/header45.jpg";
-import useLogisticaImages from "./useLogisticaImages";
+import useLogisticaImages from "./store/useLogisticaImages";
 
 // === 2) Textos & rutas por tipo =========================
 const TEXT_BY_TYPE = {
-  choferes: ["Chofer y Ayudante",
-    "Postúlate<br/>Si querés trabajar como chofer o ayudante ¿Qué esperás?"],
-  comisionistas: ["Comisionista",
-    "Generá ingresos, si querés ser comisionista<br/>¿Qué esperás?"],
-  transportistas: ["Transportista",
-    "¡Crecé con nosotros! Expandí tu marca: trabajamos en todo el país."],
+  choferes: [
+    "Chofer y Ayudante",
+    "Postúlate<br/>Si querés trabajar como chofer o ayudante ¿Qué esperás?",
+  ],
+  comisionistas: [
+    "Comisionista",
+    "Generá ingresos, si querés ser comisionista<br/>¿Qué esperás?",
+  ],
+  transportistas: [
+    "Transportista",
+    "¡Crecé con nosotros! Expandí tu marca: trabajamos en todo el país.",
+  ],
 };
 
 const ROUTE_BY_TYPE = {
@@ -32,7 +38,7 @@ const ROUTE_BY_TYPE = {
 };
 
 // === 3) Flag para usar imágenes remotas =================
-const USE_REMOTE_IMAGES = true;   // ← cámbialo a true para testear
+const USE_REMOTE_IMAGES = true; // ← cámbialo a true para testear
 
 // ========================================================
 export default function Header() {
@@ -41,12 +47,36 @@ export default function Header() {
 
   // --- Prepara los slides locales -----------------------
   const localSlides = [
-    { img: chofer1, text: TEXT_BY_TYPE.choferes[0], route: ROUTE_BY_TYPE.choferes },
-    { img: chofer2, text: TEXT_BY_TYPE.choferes[1], route: ROUTE_BY_TYPE.choferes },
-    { img: comision1, text: TEXT_BY_TYPE.comisionistas[0], route: ROUTE_BY_TYPE.comisionistas },
-    { img: comision2, text: TEXT_BY_TYPE.comisionistas[1], route: ROUTE_BY_TYPE.comisionistas },
-    { img: transport1, text: TEXT_BY_TYPE.transportistas[0], route: ROUTE_BY_TYPE.transportistas },
-    { img: transport2, text: TEXT_BY_TYPE.transportistas[1], route: ROUTE_BY_TYPE.transportistas },
+    {
+      img: chofer1,
+      text: TEXT_BY_TYPE.choferes[0],
+      route: ROUTE_BY_TYPE.choferes,
+    },
+    {
+      img: chofer2,
+      text: TEXT_BY_TYPE.choferes[1],
+      route: ROUTE_BY_TYPE.choferes,
+    },
+    {
+      img: comision1,
+      text: TEXT_BY_TYPE.comisionistas[0],
+      route: ROUTE_BY_TYPE.comisionistas,
+    },
+    {
+      img: comision2,
+      text: TEXT_BY_TYPE.comisionistas[1],
+      route: ROUTE_BY_TYPE.comisionistas,
+    },
+    {
+      img: transport1,
+      text: TEXT_BY_TYPE.transportistas[0],
+      route: ROUTE_BY_TYPE.transportistas,
+    },
+    {
+      img: transport2,
+      text: TEXT_BY_TYPE.transportistas[1],
+      route: ROUTE_BY_TYPE.transportistas,
+    },
   ];
 
   // --- Prepara los slides remotos -----------------------
@@ -69,7 +99,8 @@ export default function Header() {
   ];
 
   // --- Elige la fuente según el flag --------------------
-  const slides = USE_REMOTE_IMAGES && remoteSlides.length ? remoteSlides : localSlides;
+  const slides =
+    USE_REMOTE_IMAGES && remoteSlides.length ? remoteSlides : localSlides;
 
   return (
     <Swiper

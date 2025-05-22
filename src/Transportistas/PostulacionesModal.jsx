@@ -4,7 +4,7 @@ import Swal from "sweetalert2";
 import { FaTimes } from "react-icons/fa";
 import { useModalStore } from "@/store/useModalStore";
 import { usePostulacionDetail } from "@/Transportistas/usePostulacionDetail";
-import { submitDocumentation } from "@/components/Formulario/submitDocumentation";
+import { submitDocumentation } from "@/components/Formulario/store/submitDocumentation";
 import DocumentosPostulacion from "@/Transportistas/DocumentosPostulacion";
 import CambiarPasswordForm from "@/Transportistas/CambiarPasswordForm"; // Importa el nuevo componente
 

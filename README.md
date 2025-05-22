@@ -1,12 +1,88 @@
-# React + Vite
+# Logística Argentina SRL - Plataforma Web
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Descripción
 
-Currently, two official plugins are available:
+Plataforma web para la gestión de servicios logísticos y transportistas. El sistema permite la gestión de postulaciones, documentación y seguimiento de servicios de transporte.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Características Principales
 
-## Expanding the ESLint configuration
+- Sistema de autenticación y gestión de usuarios
+- Gestión de postulaciones para transportistas
+- Carga y gestión de documentación
+- Sistema de mensajería y notificaciones
+- Integración con WhatsApp para contacto rápido
+- Panel de administración protegido
+- Gestión de vehículos y servicios
 
-If you are developing a production application, we recommend using TypeScript and enable type-aware lint rules. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Estructura del Proyecto
+
+```
+src/
+├── Api/              # Configuración de endpoints y servicios
+├── components/       # Componentes reutilizables
+├── pages/           # Páginas principales de la aplicación
+├── store/           # Estado global (Zustand)
+└── Transportistas/  # Componentes específicos para transportistas
+```
+
+## Tecnologías Utilizadas
+
+- React + Vite
+- React Router para navegación
+- Zustand para manejo de estado
+- Tailwind CSS para estilos
+- API REST para backend
+
+## Endpoints Principales
+
+- Autenticación: `/api/login`, `/api/register`
+- Gestión de Usuarios: `/api/usuarios`
+- Documentación: `/api/upload-file`, `/api/tipo-archivos`
+- Postulaciones: `/api/postulacion`
+- Servicios: `/api/servicio-anuncio`, `/api/estado-servicio`
+
+## Instalación
+
+```bash
+# Clonar el repositorio
+git clone [url-del-repositorio]
+
+# Instalar dependencias
+npm install
+
+# Iniciar servidor de desarrollo
+npm run dev
+```
+
+## Estructura de Componentes
+
+- `Layout`: Estructura base de la aplicación
+  - Navbar: Navegación principal
+  - WhatsAppButton: Contacto rápido
+  - PostulacionesModal: Gestión de postulaciones
+  - Footer: Pie de página
+
+## Rutas Principales
+
+- `/`: Página principal
+- `/login`: Inicio de sesión
+- `/register`: Registro de usuarios
+- `/formulario`: Formularios de gestión
+- `/dashboard`: Panel de administración (protegido)
+- `/mensaje`: Sistema de mensajería
+
+## Desarrollo
+
+Este proyecto utiliza:
+
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react) para Fast Refresh
+- ESLint para linting
+- Tailwind CSS para estilos
+
+## Contribución
+
+1. Fork el proyecto
+2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
+3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
+4. Push a la rama (`git push origin feature/AmazingFeature`)
+5. Abre un Pull Request

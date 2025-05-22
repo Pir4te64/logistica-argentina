@@ -5,8 +5,8 @@ import ServicioAnuncioItemEdit from "@/components/Dashboard/ServicioAnuncio/Serv
 import ServicioAnuncioItemView from "@/components/Dashboard/ServicioAnuncio/ServicioAnuncioItemView";
 import useServicioAnuncioItem from "@/components/Dashboard/ServicioAnuncio/useServicioAnuncioItem";
 import useCategoriaVehiculos from "@/components/Dashboard/Categoria/useCategoriaVehiculos";
-import useResaltarAnuncio from "@/components/Dashboard/ResaltarAnuncio/useResaltarAnuncio";
 import useEstadoServicio from "@/components/Dashboard/EstadoServicio/useEstadoServicio";
+import useResaltarAnuncio from "@/components/Dashboard/ResaltarAnuncio/store/useResaltarAnuncio";
 
 const OMITIR = [
   "created_at",
