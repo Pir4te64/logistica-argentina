@@ -19,7 +19,7 @@ function App() {
       {/* Página principal de la aplicación */}
       <Route path="/" element={<Home />} />
 
-      {/* Rutas de autenticación */}
+      {/* Rutas de autenticación example */}
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/recuperar" element={<RecuperarPasswordPage />} />
