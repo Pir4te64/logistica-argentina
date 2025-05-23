@@ -14,7 +14,7 @@ import comision1 from "@/assets/Header/header3.jpg";
 import comision2 from "@/assets/Header/header3-5.jpg";
 import transport1 from "@/assets/Header/header4.jpg";
 import transport2 from "@/assets/Header/header45.jpg";
-import useLogisticaImages from "./store/useLogisticaImages";
+import useLogisticaImages from "@/components/Header/store/useLogisticaImages";
 
 // === 2) Textos & rutas por tipo =========================
 const TEXT_BY_TYPE = {

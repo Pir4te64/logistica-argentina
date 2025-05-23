@@ -4,7 +4,7 @@ import CustomSelect from "@/components/Trabajos/CustomSelect";
 import TarjetaAplicar from "@/components/Trabajos/TarjetaAplicar";
 import { useTrabajos } from "@/components/Trabajos/store/useTrabajos";
 import ServicioModal from "@/components/Trabajos/Modal";
-import { EMPRESAS_OPTIONS, VEHICLE_OPTIONS } from "./estaticos";
+import { EMPRESAS_OPTIONS, VEHICLE_OPTIONS } from "@/components/Trabajos/estaticos";
 
 const Trabajos = () => {
   const { fetchServicios, servicios = [], loading, error } = useTrabajos();
