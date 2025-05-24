@@ -19,10 +19,10 @@ const ServicioAnuncio = () => {
         );
     }, [servicios, searchInput]);
 
-     const handleInputValue = (value) => {
+    const handleInputValue = (value) => {
         setSearchInput(value.target.value);
     }
-    
+
     if (loading) return <p>Cargando servicios…</p>;
     if (error) return <p>Error cargando servicios.</p>;
     if (!servicios.length && !showForm) return <p>No se encontraron servicios.</p>;
@@ -30,8 +30,9 @@ const ServicioAnuncio = () => {
     return (
         <div className="space-y-8">
             <div className="flex justify-between">
-                
+
                 <InputText
+                    disabled={showForm}
                     name="searchInput"
                     value={searchInput}
                     onChange={handleInputValue}

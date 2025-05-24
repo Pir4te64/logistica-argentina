@@ -18,6 +18,8 @@ export default function useServicioAnuncioItem(servicio, onUpdated) {
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState("");
+  const [imagenes, setImagenes] = useState([]);
+
 
   // 1) inputs básicos, checkboxes y números
   const handleChange = (e) => {
@@ -154,6 +156,7 @@ export default function useServicioAnuncioItem(servicio, onUpdated) {
     };
 
     try {
+      console.log("Payload:", payload);
       const token = localStorage.getItem("token");
       await axios.put(`${API_URL.SERVICIO_ANUNCIO}/${servicio.id}`, payload, {
         headers: { Authorization: `Bearer ${token}` },
@@ -217,6 +220,34 @@ export default function useServicioAnuncioItem(servicio, onUpdated) {
     }
   };
 
+  // 9) manejo de imágenes
+  const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
+  const handleFileChange = (e) => {
+    const files = Array.from(e.target.files);
+    const invalid = files.filter((f) => f.size > MAX_IMAGE_SIZE);
+    if (invalid.length) {
+      Swal.fire({
+        title: "Advertencia",
+        text: "Una o más imágenes superan los 5 MB y no serán subidas.",
+        icon: "warning",
+        confirmButtonText: "Aceptar",
+      });
+    }
+    const valid = files.filter((f) => f.size <= MAX_IMAGE_SIZE);
+    setImagenes((imgs) => [...imgs, ...valid]);
+    setForm((f) => ({
+      ...f,
+      imagenes: [...f.imagenes, ...valid.map((file) => ({ file }))],
+    }));
+  };
+  const removeImage = (i) => {
+    setImagenes((imgs) => imgs.filter((_, idx) => idx !== i));
+    setForm({
+      ...form,
+      imagenes: form.imagenes.filter((_, idx) => idx !== i)
+    })
+  }
+
   return {
     form,
     editMode,
@@ -238,5 +269,8 @@ export default function useServicioAnuncioItem(servicio, onUpdated) {
     handleCancel,
     handleSave,
     handleDelete,
+    imagenes,
+    handleFileChange,
+    removeImage
   };
 }

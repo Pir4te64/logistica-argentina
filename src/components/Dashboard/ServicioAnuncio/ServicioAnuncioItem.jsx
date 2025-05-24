@@ -69,6 +69,9 @@ const ServicioAnuncioItem = ({ servicio, index, onUpdated }) => {
     handlePlazoChange,
     addPlazo,
     removePlazo,
+    imagenes,
+    handleFileChange,
+    removeImage,
   } = useServicioAnuncioItem(servicio, onUpdated);
 
   const { data: catResp } = useCategoriaVehiculos();
@@ -114,6 +117,9 @@ const ServicioAnuncioItem = ({ servicio, index, onUpdated }) => {
           removePlazo={removePlazo}
           EDITABLE_FIELDS={EDITABLE_FIELDS}
           labelize={labelize}
+          imagenes={imagenes}
+          handleFileChange={handleFileChange}
+          removeImage={removeImage}
         />
       ) : (
         <ServicioAnuncioItemView
