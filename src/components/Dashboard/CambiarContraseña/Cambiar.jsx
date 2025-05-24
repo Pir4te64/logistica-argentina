@@ -5,15 +5,21 @@ import { API_URL } from "@/Api/Api";
 import { AuthContext } from "@/Api/AuthContext";
 import { FaSearch, FaEdit, FaUser, FaEnvelope, FaPhone, FaMapMarkerAlt, FaCity, FaMap } from "react-icons/fa";
 import ChangePasswordModal from "@/components/Dashboard/CambiarContraseña/ChangePasswordModal";
+import { InputText } from '@/components/Dashboard/ServicioAnuncio/FormControls';
 
 const Cambiar = () => {
   const [users, setUsers] = useState([]);
   const [query, setQuery] = useState("");
+  const [date, setDate] = useState({
+    startDate: "",
+    endDate: "",
+  });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [editingUserId, setEditingUserId] = useState(null);
   const [itemsToShow, setItemsToShow] = useState(10);
   const { token: contextToken } = useContext(AuthContext);
+  const today = new Date().toISOString().split('T')[0];
 
   // Reset pagination cuando cambian users o query
   useEffect(() => {
@@ -51,11 +57,45 @@ const Cambiar = () => {
   // Filtrado en tiempo real
   const filteredUsers = users.filter((u) => {
     const term = query.toLowerCase();
+    const startDate = new Date(date.startDate);
+    const endDate = new Date(date.endDate);
+    const userDate = new Date(u.created_at); // Cambia esto según el campo de fecha en tu API
+    const isDateInRange =
+      (!date.startDate || userDate >= startDate) &&
+      (!date.endDate || userDate <= endDate);
+    if (date.startDate || date.endDate) {
+      return (
+        isDateInRange &&
+        (u.name?.toLowerCase().includes(term) ||
+          u.email?.toLowerCase().includes(term))
+      );
+    }
+    // Si no hay fechas seleccionadas, solo filtra por nombre o email
     return (
       u.name?.toLowerCase().includes(term) ||
       u.email?.toLowerCase().includes(term)
     );
   });
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setDate((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleReset = () => {
+    setDate({
+      startDate: "",
+      endDate: "",
+    });
+    setQuery("");
+  };
+
+  const validateStartDate = date.startDate ? new Date(date.startDate).toISOString().split('T')[0] : '';
+  const validateEndDate = date.endDate ? new Date(date.endDate).toISOString().split('T')[0] : '';
+
+  console.log({ filteredUsers })
 
   // Usuarios visibles según paginación
   const visibleUsers = filteredUsers.slice(0, itemsToShow);
@@ -66,17 +106,47 @@ const Cambiar = () => {
   return (
     <div>
       <h2 className="mb-4 text-xl font-semibold">Listado de Usuarios</h2>
-
       {/* Buscador */}
-      <div className="relative mb-4">
-        <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 transform text-gray-400" />
+      <div className="mb-4 flex gap-x-5">
+        <div className="relative">
+          <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 transform text-gray-400" />
+          <input
+            type="text"
+            placeholder="Buscar usuarios..."
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            className="w-full rounded border py-2 pl-10 pr-4 focus:border-blue-300 focus:outline-none focus:ring"
+          />
+        </div>
         <input
-          type="text"
-          placeholder="Buscar usuarios..."
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          className="w-full rounded border py-2 pl-10 pr-4 focus:border-blue-300 focus:outline-none focus:ring"
+          className="p-2 border rounded"
+          type="date"
+          name="startDate"
+          value={date.startDate}
+          onChange={handleChange}
+          max={date.endDate ? validateEndDate  :today}
+          
+          placeholder="Selecciona la fecha de inicio"
+          required
         />
+        <input
+          className="p-2 border rounded"
+          type="date"
+          name="endDate"
+          value={date.endDate}
+          onChange={handleChange}
+          max={today}
+          min={validateStartDate}
+          placeholder="Selecciona la fecha de fin"
+          required
+        />
+         <button
+          type="button"
+          onClick={handleReset}
+          className="inline-flex items-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        >
+          Limpiar filtros
+        </button>
       </div>
 
       {/* Lista con botón Editar */}
