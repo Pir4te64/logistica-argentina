@@ -5,7 +5,6 @@ import { API_URL } from "@/Api/Api";
 import { AuthContext } from "@/Api/AuthContext";
 import { FaSearch, FaEdit, FaUser, FaEnvelope, FaPhone, FaMapMarkerAlt, FaCity, FaMap } from "react-icons/fa";
 import ChangePasswordModal from "@/components/Dashboard/CambiarContraseña/ChangePasswordModal";
-import { InputText } from '@/components/Dashboard/ServicioAnuncio/FormControls';
 
 const Cambiar = () => {
   const [users, setUsers] = useState([]);
