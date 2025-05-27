@@ -294,22 +294,25 @@ const ServicioAnuncioItemEdit = ({
         <h3 className="mb-4 text-lg font-semibold text-gray-800">Multimedia</h3>
         {form.imagenes?.length > 0 && (
           <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
-            {form.imagenes.map((file, idx) => (
-              <div key={file.id ? file.id : `file-${idx}`} className="group relative">
-                <img
-                  src={file.id ? `https://backend.logisticaargentinasrl.com.ar/${file.imagen_url}` : URL.createObjectURL(file.file)}
-                  alt={`Preview ${file.id}`}
-                  className="h-32 w-full rounded object-cover"
-                />
-                <button
-                  type="button"
-                  onClick={() => removeImage(idx)}
-                  className="absolute right-1 top-1 rounded-full bg-red-600 p-1 text-white opacity-0 transition group-hover:opacity-100"
-                >
-                  <FaTimes />
-                </button>
-              </div>
-            ))}
+            {form.imagenes.map((file, idx) => {
+                return (
+                  <div key={file.id ? file.id : `file-${idx}`} className="group relative">
+                    <img
+                      src={file.id ? `https://backend.logisticaargentinasrl.com.ar/${file.imagen_url}` : URL.createObjectURL(file.file)}
+                      alt={`Preview ${file.id}`}
+                      className="h-32 w-full rounded object-cover"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => removeImage(idx)}
+                      className="absolute right-1 top-1 rounded-full bg-red-600 p-1 text-white opacity-0 transition group-hover:opacity-100"
+                    >
+                      <FaTimes />
+                    </button>
+                  </div>
+                )
+              }
+            )}
           </div>
         )}
         <input
@@ -319,7 +322,38 @@ const ServicioAnuncioItemEdit = ({
           onChange={handleFileChange}
           className="mt-1 w-full rounded border p-2"
         />
- 
+
+      </section>
+      {/* ───────── 7) BANNER-CARD ───────── */}
+      <section className="mt-6">
+        <h3 className="mb-4 text-lg font-semibold text-gray-800">Banner del Servicio</h3>
+        {form.bannerImage && (
+          <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
+            <div key={form.bannerImage.id ? form.bannerImage.id : `bannerImage`} className="group relative">
+              <img
+                src={form.bannerImage.id ? `https://backend.logisticaargentinasrl.com.ar/${form.bannerImage.imagen_url}` : URL.createObjectURL(form.bannerImage.file)}
+                alt={`Preview ${form.bannerImage.id}`}
+                className="h-32 w-full rounded object-cover"
+              />
+              <button
+                type="button"
+                onClick={() => removeImage(0,'banner')}
+                className="absolute right-1 top-1 rounded-full bg-red-600 p-1 text-white opacity-0 transition group-hover:opacity-100"
+              >
+                <FaTimes />
+              </button>
+            </div>
+          </div>
+        )}
+        <input
+          id="banner-input"
+          type="file"
+          accept="image/*"
+          multiple
+          onChange={(e) => handleFileChange(e, 'banner')}
+          className="mt-1 w-full rounded border p-2"
+        />
+
       </section>
     </>
   );
