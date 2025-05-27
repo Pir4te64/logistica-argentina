@@ -143,7 +143,7 @@ const useServicioAnuncioForm = ({ onSubmit }) => {
     e.preventDefault();
     const anuncioId = nanoid(4);
     const token = localStorage.getItem("token");
-    const tipo_usuario = 2;
+    const tipo_usuario = 2; // el tipo de usuario es el role
 
     // 1) Subir video
     let videoUrl = "";
@@ -151,7 +151,7 @@ const useServicioAnuncioForm = ({ onSubmit }) => {
       const fdV = new FormData();
       fdV.append("file", videoFile);
       fdV.append("filename", videoFile.name);
-      fdV.append("tipo_archivo", 24);
+      fdV.append("tipo_archivo", 24); // Deberia venir una lista de tipos de archivos del backend
       fdV.append("correo", anuncioId);
       fdV.append("tipo_usuario", tipo_usuario);
       const resV = await axios.post(API_URL.UPLOAD_IMAGE, fdV, {
@@ -168,7 +168,7 @@ const useServicioAnuncioForm = ({ onSubmit }) => {
       fd.append("filename", file.name);
       fd.append("tipo_archivo", 23);
       fd.append("correo", anuncioId);
-      fd.append("tipo_usuario", tipo_usuario);
+      fd.append("tipo_usuario", tipo_usuario); // Banner-Card
       const res = await axios.post(API_URL.UPLOAD_IMAGE, fd, {
         headers: { Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data" },
       });
