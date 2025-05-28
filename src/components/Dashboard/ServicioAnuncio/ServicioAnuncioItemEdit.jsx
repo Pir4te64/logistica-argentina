@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { FaTimes } from "react-icons/fa";
 import useBeneficioRepartidor from "@/components/Dashboard/Beneficios/useBeneficioRepartidor";
+import { config } from "@/config";
 
 const ServicioAnuncioItemEdit = ({
   form,
@@ -298,7 +299,7 @@ const ServicioAnuncioItemEdit = ({
                 return (
                   <div key={file.id ? file.id : `file-${idx}`} className="group relative">
                     <img
-                      src={file.id ? `https://backend.logisticaargentinasrl.com.ar/${file.imagen_url}` : URL.createObjectURL(file.file)}
+                      src={file.id ? `${config.baseUrl}/${file.imagen_url}` : URL.createObjectURL(file.file)}
                       alt={`Preview ${file.id}`}
                       className="h-32 w-full rounded object-cover"
                     />
