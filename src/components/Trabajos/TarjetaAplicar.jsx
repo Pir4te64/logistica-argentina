@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import tarjeta from "@/assets/tarjeta.jpg";
 import { API_URL } from "@/Api/Api";
 import { usePostulacionesStore } from "@/components/Dashboard/Postulaciones/store/usePostulacionesStore";
+import { config } from "@/config";
 
 const TarjetaAplicar = ({ servicio, onInfo }) => {
   const {
@@ -17,6 +18,7 @@ const TarjetaAplicar = ({ servicio, onInfo }) => {
     campos_extra = [],
     categoria_vehiculo: { nombre: vehiculoNombre },
     fecha_inicio_servicio,
+    bannerImg,
   } = servicio;
 
   // Formatear tarifa con separador de miles y decimales
@@ -128,7 +130,7 @@ const TarjetaAplicar = ({ servicio, onInfo }) => {
   return (
     <div className="relative h-64 w-full overflow-hidden rounded shadow">
       <img
-        src={tarjeta}
+        src={bannerImg ? `${config.baseUrl}/${bannerImg.imagen_url}` : tarjeta}
         alt="Fondo tarjeta"
         className="absolute inset-0 h-full w-full object-cover"
       />

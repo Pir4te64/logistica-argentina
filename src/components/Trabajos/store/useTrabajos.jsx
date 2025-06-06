@@ -18,8 +18,12 @@ export const useTrabajos = create((set) => ({
           "Content-Type": "application/json",
         },
       });
-      console.log(response.data)
-      set({ servicios: response.data, loading: false });
+      const dataServices = response.data.map((servicio) => ({
+        ...servicio,
+        bannerImg: servicio.imagenes.find(img => img.imagen_url.includes("bannerImg")) || null,
+        imagenes: servicio.imagenes.filter(img => !img.imagen_url.includes("bannerImg")),
+      }));
+      set({ servicios: dataServices, loading: false });
     } catch (err) {
       console.error("❌ Error al cargar servicios:", err);
       set({ error: err, loading: false });

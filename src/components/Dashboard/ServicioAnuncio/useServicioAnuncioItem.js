@@ -1,8 +1,10 @@
 // src/hooks/useServicioAnuncioItem.js
-import { useState } from "react";
+import { useState, useContext } from "react";
 import axios from "axios";
 import { API_URL } from "@/Api/Api";
 import Swal from "sweetalert2";
+import { nanoid } from "nanoid";
+import { AuthContext } from "@/Api/AuthContext";
 
 export default function useServicioAnuncioItem(servicio, onUpdated) {
   const [form, setForm] = useState({
@@ -18,6 +20,9 @@ export default function useServicioAnuncioItem(servicio, onUpdated) {
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState("");
+  const [imagenes, setImagenes] = useState([]);
+    const { user, token } = useContext(AuthContext);
+  
 
   // 1) inputs básicos, checkboxes y números
   const handleChange = (e) => {
@@ -127,6 +132,9 @@ export default function useServicioAnuncioItem(servicio, onUpdated) {
   const handleSave = async () => {
     setSaving(true);
     setError("");
+    const anuncioId = nanoid(4);
+    const tipo_usuario = user.roles[0].id; // el tipo de usuario es el role
+
 
     // Eliminamos relaciones anidadas no deseadas
     const {
@@ -138,6 +146,29 @@ export default function useServicioAnuncioItem(servicio, onUpdated) {
       updated_at,
       ...mainFields
     } = form;
+    // 2) Subir imágenes
+    const imagesUrls = [...form.imagenes, form.bannerImage]
+    let isBannerImage = false;
+    for (const [index, file] of imagesUrls.entries()) {
+      const fd = new FormData();
+      isBannerImage = form.bannerImage?.file && index === imagesUrls.length - 1;
+      if (file.file) {
+        fd.append("file", file.file);
+        fd.append("filename", !isBannerImage ? file.file?.name : 'bannerImg' + file.file?.name);
+        fd.append("tipo_archivo", 23);
+        fd.append("correo", anuncioId);
+        fd.append("tipo_usuario", tipo_usuario); // Banner-Card
+        const res = await axios.post(API_URL.UPLOAD_IMAGE, fd, {
+          headers: { Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data" },
+        });
+        imagesUrls[index] = res.data.url; // Guardamos la URL en el objeto del form
+      } else {
+        imagesUrls[index] = file.imagen_url
+      }
+    }
+    if (!isBannerImage && form.bannerImage?.id) {
+      imagesUrls[imagesUrls.length - 1] = form.bannerImage.imagen_url;
+    }
 
     // Preparamos payload limpio (mainFields ya contiene `orden`)
     const payload = {
@@ -151,10 +182,11 @@ export default function useServicioAnuncioItem(servicio, onUpdated) {
         nombre,
         descripcion,
       })),
+      imagenes: imagesUrls,
     };
 
     try {
-      const token = localStorage.getItem("token");
+      console.log("Payload:", payload);
       await axios.put(`${API_URL.SERVICIO_ANUNCIO}/${servicio.id}`, payload, {
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -217,6 +249,47 @@ export default function useServicioAnuncioItem(servicio, onUpdated) {
     }
   };
 
+  // 9) manejo de imágenes
+  const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
+  const handleFileChange = (e, type) => {
+    const files = Array.from(e.target.files);
+    const invalid = files.filter((f) => f.size > MAX_IMAGE_SIZE);
+    if (invalid.length) {
+      Swal.fire({
+        title: "Advertencia",
+        text: "Una o más imágenes superan los 5 MB y no serán subidas.",
+        icon: "warning",
+        confirmButtonText: "Aceptar",
+      });
+    }
+    const valid = files.filter((f) => f.size <= MAX_IMAGE_SIZE);
+    setImagenes((imgs) => [...imgs, ...valid]);
+    if (!type) {
+      setForm((f) => ({
+        ...f,
+        imagenes: [...f.imagenes, ...valid.map((file) => ({ file }))],
+      }));
+    } else { // aca type === 'banner
+      setForm((f) => ({
+        ...f,
+        bannerImage: valid[0] ? { file: valid[0] } : null
+      }));
+    }
+  };
+  const removeImage = (i, type) => {
+    if (type === "banner") {
+      setForm((f) => ({ ...f, bannerImage: null }));
+      const bannerInput = document.getElementById('banner-input');
+      if (bannerInput) bannerInput.value = '';
+      return;
+    }
+    setImagenes((imgs) => imgs.filter((_, idx) => idx !== i));
+    setForm({
+      ...form,
+      imagenes: form.imagenes.filter((_, idx) => idx !== i)
+    })
+  }
+
   return {
     form,
     editMode,
@@ -238,5 +311,8 @@ export default function useServicioAnuncioItem(servicio, onUpdated) {
     handleCancel,
     handleSave,
     handleDelete,
+    imagenes,
+    handleFileChange,
+    removeImage
   };
 }

@@ -46,6 +46,7 @@ const ServicioAnuncioForm = ({ onSubmit }) => {
     handleSubmit,
     imagenes,
     videoFile,
+    imgBanner
   } = useServicioAnuncioForm({ onSubmit });
 
   const handleVideoSelect = (e) => {
@@ -169,6 +170,7 @@ const ServicioAnuncioForm = ({ onSubmit }) => {
 
         <label className="mt-4 block font-medium">Imágenes</label>
         <input
+        id="images-input"
           type="file"
           accept="image/*"
           multiple
@@ -195,6 +197,34 @@ const ServicioAnuncioForm = ({ onSubmit }) => {
             ))}
           </div>
         )}
+
+         <label className="mt-4 block font-medium">Banner del Anuncio</label>
+        <input
+          id="banner-input"
+          type="file"
+          accept="image/*"
+          onChange={(e) => handleFileChange(e, 'banner')}
+          className="mt-1 w-full rounded border p-2"
+        />
+        {imgBanner && (
+          <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
+              <div key={imgBanner.name} className="group relative">
+                <img
+                  src={URL.createObjectURL(imgBanner)}
+                  alt={`Preview Banner`}
+                  className="h-32 w-full rounded object-cover"
+                />
+                <button
+                  type="button"
+                  onClick={() => removeImage(0, 'banner')}
+                  className="absolute right-1 top-1 rounded-full bg-red-600 p-1 text-white opacity-0 transition group-hover:opacity-100"
+                >
+                  <FaTimes />
+                </button>
+              </div>
+          </div>
+        )}
+        
       </Section>
 
       {/* 9: Configuración (selects) */}

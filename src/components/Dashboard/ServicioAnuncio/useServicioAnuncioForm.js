@@ -49,6 +49,7 @@ const useServicioAnuncioForm = ({ onSubmit }) => {
 
   // Multimedia
   const [imagenes, setImagenes] = useState([]);
+  const [imgBanner, setImgBanner] = useState(null);
   const [videoFile, setVideoFile] = useState(null);
 
   // Servicios dinámicos
@@ -114,7 +115,7 @@ const useServicioAnuncioForm = ({ onSubmit }) => {
 
   // Manejo de imágenes
   const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
-  const handleFileChange = (e) => {
+  const handleFileChange = (e, type) => {
     const files = Array.from(e.target.files);
     const invalid = files.filter((f) => f.size > MAX_IMAGE_SIZE);
     if (invalid.length) {
@@ -126,10 +127,22 @@ const useServicioAnuncioForm = ({ onSubmit }) => {
       });
     }
     const valid = files.filter((f) => f.size <= MAX_IMAGE_SIZE);
-    setImagenes((imgs) => [...imgs, ...valid]);
+    if (type === "banner") {
+      setImgBanner(valid[0] || null);
+    } else {
+      setImagenes((imgs) => [...imgs, ...valid]);
+    }
+
   };
-  const removeImage = (i) =>
+  const removeImage = (i, type) => {
+    if (type === "banner") {
+      setImgBanner(null);
+      const bannerInput = document.getElementById('banner-input');
+      if (bannerInput) bannerInput.value = '';
+      return;
+    }
     setImagenes((imgs) => imgs.filter((_, idx) => idx !== i));
+  }
 
   // Manejo de video
   const handleVideoChange = (e) => {
@@ -143,7 +156,7 @@ const useServicioAnuncioForm = ({ onSubmit }) => {
     e.preventDefault();
     const anuncioId = nanoid(4);
     const token = localStorage.getItem("token");
-    const tipo_usuario = 2;
+    const tipo_usuario = 2; // el tipo de usuario es el role
 
     // 1) Subir video
     let videoUrl = "";
@@ -151,7 +164,7 @@ const useServicioAnuncioForm = ({ onSubmit }) => {
       const fdV = new FormData();
       fdV.append("file", videoFile);
       fdV.append("filename", videoFile.name);
-      fdV.append("tipo_archivo", 24);
+      fdV.append("tipo_archivo", 24); // Deberia venir una lista de tipos de archivos del backend
       fdV.append("correo", anuncioId);
       fdV.append("tipo_usuario", tipo_usuario);
       const resV = await axios.post(API_URL.UPLOAD_IMAGE, fdV, {
@@ -162,13 +175,15 @@ const useServicioAnuncioForm = ({ onSubmit }) => {
 
     // 2) Subir imágenes
     const imagenUrls = [];
-    for (const file of imagenes) {
+    const imagenData = [...imagenes, imgBanner];
+    for (const [index, file] of imagenData.entries()) {
       const fd = new FormData();
+      const isBannerImage = index === imagenData.length - 1 && imgBanner;
       fd.append("file", file);
-      fd.append("filename", file.name);
+      fd.append("filename", !isBannerImage ? file.name : `bannerImg${file.name}}`);
       fd.append("tipo_archivo", 23);
       fd.append("correo", anuncioId);
-      fd.append("tipo_usuario", tipo_usuario);
+      fd.append("tipo_usuario", tipo_usuario); // Banner-Card
       const res = await axios.post(API_URL.UPLOAD_IMAGE, fd, {
         headers: { Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data" },
       });
@@ -263,6 +278,7 @@ const useServicioAnuncioForm = ({ onSubmit }) => {
     imagenes,
     videoFile,
     handleSubmit,
+    imgBanner
   };
 };
 

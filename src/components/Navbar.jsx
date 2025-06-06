@@ -22,7 +22,6 @@ const Navbar = () => {
     user &&
     user.roles &&
     user.roles.some((role) => role.name.toLowerCase() === "transportistas");
-
   // Link dinámico del logo
   const logoLink =
     hideHashLinks && location.pathname.startsWith("/dashboard")
@@ -95,10 +94,10 @@ const Navbar = () => {
             <>
               {user.roles.some((role) => role.id === 1 || role.id === 2) && (
                 <Link
-                  to="/dashboard"
+                  to={location.pathname === "/dashboard" ? "/" : "/dashboard"}
                   className="rounded bg-custom-red px-4 py-2 transition-colors hover:bg-custom-red/80"
                 >
-                  Dashboard
+                  {location.pathname === "/dashboard" ? "Inicio" : "Dashboard"}
                 </Link>
               )}
               <button
