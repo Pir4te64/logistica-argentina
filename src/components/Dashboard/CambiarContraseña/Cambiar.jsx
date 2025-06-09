@@ -169,14 +169,14 @@ const Cambiar = () => {
           <button
             type="button"
             onClick={handleReset}
-            className="inline-flex items-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="transition-all duration-300 inline-flex items-center rounded-md bg-transparent border-2 border-gray-700 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-700/15 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           >
             Limpiar filtros
           </button>
           <button
             type="button"
             onClick={handleExportUsers}
-            className="inline-flex items-center rounded-md bg-green-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
+            className="transition-all duration-300 inline-flex items-center rounded-md bg-transparent border-2 border-gray-700 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-700/15 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           >
             Descargar Excel
           </button>
