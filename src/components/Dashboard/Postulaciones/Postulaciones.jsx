@@ -38,15 +38,19 @@ const Postulaciones = () => {
   const filteredPostulaciones = postulaciones.filter((u) => {
     const startDate = new Date(date.startDate);
     const endDate = new Date(date.endDate);
-    const userDate = new Date(u.created_at); // Cambia esto según el campo de fecha en tu API
+    const userDate = new Date(u.fecha_inicio_servicio); // Cambia esto según el campo de fecha en tu API
+    console.log({
+      userDate,
+      startDate,
+      endDate,
+    })
     const isDateInRange =
       (!date.startDate || userDate >= startDate) &&
       (!date.endDate || userDate <= endDate);
     if (date.startDate || date.endDate) {
       return isDateInRange
     }
-    return postulaciones
-
+    return true
   });
   const handleChange = (e) => {
     const { name, value } = e.target;
