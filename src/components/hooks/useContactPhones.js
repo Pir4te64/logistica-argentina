@@ -15,13 +15,9 @@ const useContactPhones = () => {
       const response = await axios.get(API_URL.NUMEROS_SOPORTE, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      if (!response.data.length) return setData([{
-        id: '+58 424 123 4567',
-        nombre: '+58 424 123 4567'
-      }]);
-      const list = response.data.map(num => ({
-        id: num,
-        nombre: num
+      const list = response.data.data.map(num => ({
+        id: num.telefono,
+        nombre: num.telefono
       }));
       setData(list);
     } catch (err) {

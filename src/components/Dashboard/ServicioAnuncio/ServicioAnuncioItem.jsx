@@ -49,7 +49,6 @@ const labelize = (key) =>
   key.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
 
 const ServicioAnuncioItem = ({ servicio, index, onUpdated }) => {
-  console.log("ServicioAnuncioItem renderizado", servicio);
   const {
     form,
     editMode,

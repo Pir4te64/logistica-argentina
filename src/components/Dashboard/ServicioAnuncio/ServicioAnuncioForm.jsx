@@ -144,14 +144,15 @@ const ServicioAnuncioForm = ({ onSubmit }) => {
 
       {/* 8: Multimedia */}
       <Section title="Multimedia *">
-        <label className="block font-medium">Video (máx 2 MB)</label>
-        <input
-          type="file"
-          accept="video/*"
-          onChange={handleVideoSelect}
-          className="mt-1 w-full rounded border p-2"
+        <InputText
+          name="video_url"
+          label="Video"
+          type="text"
+          value={form.video_url}
+          onChange={handleChange}
+          placeholder="Ingresa la URL del video"
         />
-        {videoFile && (
+        {/* {videoFile && (
           <div className="group relative mt-4">
             <video
               src={URL.createObjectURL(videoFile)}
@@ -166,7 +167,7 @@ const ServicioAnuncioForm = ({ onSubmit }) => {
               <FaTimes />
             </button>
           </div>
-        )}
+        )} */}
 
         <label className="mt-4 block font-medium">Imágenes</label>
         <input

@@ -1,16 +1,17 @@
 import React, { useState, useContext } from "react";
 import { FaBars, FaSignOutAlt } from "react-icons/fa";
 import Logo from "@/assets/Logo.png";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { HashLink } from "react-router-hash-link";
 import { AuthContext } from "@/Api/AuthContext";
 import { useModalStore } from "@/store/useModalStore";
 
-const Navbar = () => {
+const Navbar = ({ selected, setFormSelect }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const { user, logout } = useContext(AuthContext);
   const openPost = useModalStore((s) => s.openPostulaciones);
   const location = useLocation();
+  const navigate = useNavigate();
 
   // Roles
   const hideHashLinks =
@@ -27,6 +28,13 @@ const Navbar = () => {
     hideHashLinks && location.pathname.startsWith("/dashboard")
       ? "/dashboard"
       : "/";
+
+  const handleOnChange = (e) => {
+    setFormSelect(e.target.value);
+    window.localStorage.setItem("formSelect", e.target.value);
+    if (e.target.value === "formulario-choferes") navigate('/formulario-choferes');
+    if (e.target.value === "formulario-comisionista") navigate('/formulario-comisionista');
+  }
 
   return (
     <nav className="bg-custom-dark text-white">
@@ -63,6 +71,23 @@ const Navbar = () => {
               >
                 Testimonios
               </HashLink>
+              <select
+                name="forms"
+                id="formSelect"
+                className="bg-custom-dark text-white rounded px-3 py-2 transition-colors hover:bg-gray-700 focus:outline-none"
+                value={selected}
+                onChange={handleOnChange}
+              >
+                <option value="" disabled>
+                  Formularios
+                </option>
+                <option value="formulario-choferes">
+                  Chofer
+                </option>
+                <option value="formulario-comisionista">
+                  Comisionista
+                </option>
+              </select>
             </>
           )}
 
@@ -147,6 +172,25 @@ const Navbar = () => {
               >
                 Testimonios
               </HashLink>
+
+              <select
+                name="forms"
+                id="formSelect"
+                className="bg-custom-dark text-white rounded pr-3 py-2 transition-colors hover:bg-gray-700 focus:outline-none"
+                value={selected}
+                onChange={handleOnChange}
+              >
+                <option value="" disabled>
+                  Formularios
+                </option>
+                <option value="formulario-choferes">
+                  Chofer
+                </option>
+                <option value="formulario-comisionista">
+                  Comisionista
+                </option>
+              </select>
+
             </>
           )}
 

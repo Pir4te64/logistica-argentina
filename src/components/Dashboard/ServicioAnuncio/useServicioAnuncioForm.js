@@ -194,7 +194,7 @@ const useServicioAnuncioForm = ({ onSubmit }) => {
     const extras = form.camposExtra.filter(
       (c) => c.nombre.trim() !== "" || c.valor.trim() !== ""
     );
-
+    console.log({ form })
     // 4) Armar payload
     const payload = {
       empresa: form.empresa,
@@ -205,6 +205,7 @@ const useServicioAnuncioForm = ({ onSubmit }) => {
       direccion_recogida: form.direccion_recogida,
       direccion_entrega: form.direccion_entrega,
       telefono_contacto: form.telefono_contacto,
+      soporte_telefonico: form.soporte_telefonico,
       ciudad: form.ciudad,
       cantidad_productos: Number(form.cantidad_productos),
       cantidad_vehiculos: Number(form.cantidad_vehiculos),
@@ -213,8 +214,8 @@ const useServicioAnuncioForm = ({ onSubmit }) => {
       fragil: form.fragil,
       liquido: form.liquido,
       requiere_refrigeracion: form.requiere_refrigeracion,
-      orden: Number(form.orden),            // ← enviamos orden
-      video_url: videoUrl,
+      orden: Number(form.orden),
+      video_url: form.video_url,
       categoria_vehiculo_id: Number(form.categoriaVehiculoId),
       resaltador_anuncio_id: Number(form.resaltarId),
       estado_servicio_id: Number(form.estadoServicioId),

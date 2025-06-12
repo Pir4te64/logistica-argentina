@@ -1,6 +1,9 @@
 // src/components/Dashboard/ServicioAnuncio/ServicioAnuncioItemEdit.jsx
 import React from "react";
 import { FaTimes } from "react-icons/fa";
+import {
+  InputText,
+} from "@/components/Dashboard/ServicioAnuncio/FormControls";
 import useBeneficioRepartidor from "@/components/Dashboard/Beneficios/useBeneficioRepartidor";
 import { config } from "@/config";
 
@@ -88,18 +91,18 @@ const ServicioAnuncioItemEdit = ({
                   ? categorias
                   : type === "select_contacto"
                     ? contactPhones
-                  : type === "select_resaltador"
-                    ? resaltadores
-                    : estados;
+                    : type === "select_resaltador"
+                      ? resaltadores
+                      : estados;
 
               const nameKey =
                 type === "select_categoria"
                   ? "categoria_vehiculo_id"
                   : type === "select_contacto"
                     ? "soporte_telefonico"
-                  : type === "select_resaltador"
-                    ? "resaltador_anuncio_id"
-                    : "estado_servicio_id";
+                    : type === "select_resaltador"
+                      ? "resaltador_anuncio_id"
+                      : "estado_servicio_id";
 
               return (
                 <div key={k} className="flex flex-col">
@@ -295,26 +298,34 @@ const ServicioAnuncioItemEdit = ({
       {/* ───────── 6) MULTIMEDIA ───────── */}
       <section className="mt-6">
         <h3 className="mb-4 text-lg font-semibold text-gray-800">Multimedia</h3>
+        <InputText
+          name="video_url"
+          label="Video"
+          type="text"
+          value={form.video_url}
+          onChange={handleChange}
+          placeholder="Ingresa la URL del video"
+        />
         {form.imagenes?.length > 0 && (
           <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
             {form.imagenes.map((file, idx) => {
-                return (
-                  <div key={file.id ? file.id : `file-${idx}`} className="group relative">
-                    <img
-                      src={file.id ? `${config.baseUrl}/${file.imagen_url}` : URL.createObjectURL(file.file)}
-                      alt={`Preview ${file.id}`}
-                      className="h-32 w-full rounded object-cover"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => removeImage(idx)}
-                      className="absolute right-1 top-1 rounded-full bg-red-600 p-1 text-white opacity-0 transition group-hover:opacity-100"
-                    >
-                      <FaTimes />
-                    </button>
-                  </div>
-                )
-              }
+              return (
+                <div key={file.id ? file.id : `file-${idx}`} className="group relative">
+                  <img
+                    src={file.id ? `${config.baseUrl}/${file.imagen_url}` : URL.createObjectURL(file.file)}
+                    alt={`Preview ${file.id}`}
+                    className="h-32 w-full rounded object-cover"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => removeImage(idx)}
+                    className="absolute right-1 top-1 rounded-full bg-red-600 p-1 text-white opacity-0 transition group-hover:opacity-100"
+                  >
+                    <FaTimes />
+                  </button>
+                </div>
+              )
+            }
             )}
           </div>
         )}
@@ -340,7 +351,7 @@ const ServicioAnuncioItemEdit = ({
               />
               <button
                 type="button"
-                onClick={() => removeImage(0,'banner')}
+                onClick={() => removeImage(0, 'banner')}
                 className="absolute right-1 top-1 rounded-full bg-red-600 p-1 text-white opacity-0 transition group-hover:opacity-100"
               >
                 <FaTimes />

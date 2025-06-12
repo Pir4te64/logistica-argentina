@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import PostulacionesModal from "@/Transportistas/PostulacionesModal";
+import { useLocation } from "react-router-dom";
 
 /**
  * Componente Layout que define la estructura base de la aplicación.
@@ -18,10 +19,25 @@ import PostulacionesModal from "@/Transportistas/PostulacionesModal";
  * @returns {JSX.Element} Layout completo de la aplicación
  */
 const Layout = ({ children }) => {
+  const location = useLocation();
+  
+  const [formSelect, setFormSelect] = useState("");
+  useEffect(() => {
+    const path = location.pathname;
+    if (path === '/') {
+      window.localStorage.removeItem("formSelect");
+      setFormSelect("");
+      return;
+    }
+    const selectedValue = window.localStorage.getItem("formSelect") || "";
+    setFormSelect(selectedValue);
+    
+  }, [])
+
   return (
     <div className="flex flex-col min-h-screen">
       {/* Barra de navegación superior */}
-      <Navbar />
+      <Navbar selected={formSelect} setFormSelect={setFormSelect} />
 
       {/* Botón flotante de WhatsApp para contacto rápido */}
       <WhatsAppButton />
