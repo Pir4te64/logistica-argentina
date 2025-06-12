@@ -36,6 +36,7 @@ export default function useServicioAnuncioItem(servicio, onUpdated) {
     } else {
       parsed = value;
     }
+    console.log(`Campo cambiado: ${name} = ${parsed}`);
     setForm((f) => ({
       ...f,
       [name]: parsed,

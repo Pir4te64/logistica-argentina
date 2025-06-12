@@ -1,5 +1,5 @@
 // src/components/Dashboard/ServicioAnuncio/ServicioAnuncioItemEdit.jsx
-import React, { useState } from "react";
+import React from "react";
 import { FaTimes } from "react-icons/fa";
 import useBeneficioRepartidor from "@/components/Dashboard/Beneficios/useBeneficioRepartidor";
 import { config } from "@/config";
@@ -9,6 +9,7 @@ const ServicioAnuncioItemEdit = ({
   handleChange,
   toggleBeneficio,
   categorias,
+  contactPhones,
   resaltadores,
   estados,
   handleExtraChange,
@@ -22,15 +23,12 @@ const ServicioAnuncioItemEdit = ({
   removePlazo,
   EDITABLE_FIELDS,
   labelize,
-  imagenes,
   handleFileChange,
   removeImage,
 }) => {
-  const { data: benResp, loading: loadingBen } = useBeneficioRepartidor();
+  const { data: benResp } = useBeneficioRepartidor();
   const beneficiosOpc = benResp?.data || [];
   const today = new Date().toISOString().split("T")[0];
-  console.log("form", form);
-  console.log({ imagenes })
 
   return (
     <>
@@ -88,6 +86,8 @@ const ServicioAnuncioItemEdit = ({
               const options =
                 type === "select_categoria"
                   ? categorias
+                  : type === "select_contacto"
+                    ? contactPhones
                   : type === "select_resaltador"
                     ? resaltadores
                     : estados;
@@ -95,6 +95,8 @@ const ServicioAnuncioItemEdit = ({
               const nameKey =
                 type === "select_categoria"
                   ? "categoria_vehiculo_id"
+                  : type === "select_contacto"
+                    ? "soporte_telefonico"
                   : type === "select_resaltador"
                     ? "resaltador_anuncio_id"
                     : "estado_servicio_id";

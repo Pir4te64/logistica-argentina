@@ -24,6 +24,7 @@ export const API_URL = {
   // Endpoints de gestión de vehículos y servicios
   CATEGORIA_VEHICULOS: `${BASE_URL}/api/categoria-vehiculos`,   // Categorías de vehículos
   ESTADO_SERVICIO: `${BASE_URL}/api/estado-servicio`,           // Estados de los servicios
+  NUMEROS_SOPORTE: `${BASE_URL}/api/numeros-soporte`,           // Estados de los servicios
 
   // Endpoints de gestión de anuncios
   RESALTADOR_ANUNCIO: `${BASE_URL}/api/resaltador-anuncio`,     // Resaltado de anuncios

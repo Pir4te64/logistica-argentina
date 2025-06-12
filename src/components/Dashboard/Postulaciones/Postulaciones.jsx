@@ -39,11 +39,6 @@ const Postulaciones = () => {
     const startDate = new Date(date.startDate);
     const endDate = new Date(date.endDate);
     const userDate = new Date(u.fecha_inicio_servicio); // Cambia esto según el campo de fecha en tu API
-    console.log({
-      userDate,
-      startDate,
-      endDate,
-    })
     const isDateInRange =
       (!date.startDate || userDate >= startDate) &&
       (!date.endDate || userDate <= endDate);

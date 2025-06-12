@@ -7,7 +7,7 @@ import useServicioAnuncioItem from "@/components/Dashboard/ServicioAnuncio/useSe
 import useCategoriaVehiculos from "@/components/Dashboard/Categoria/useCategoriaVehiculos";
 import useEstadoServicio from "@/components/Dashboard/EstadoServicio/useEstadoServicio";
 import useResaltarAnuncio from "@/components/Dashboard/ResaltarAnuncio/store/useResaltarAnuncio";
-
+import useContactPhones from "../../hooks/useContactPhones";
 const OMITIR = [
   "created_at",
   "updated_at",
@@ -29,6 +29,7 @@ const EDITABLE_FIELDS = {
   periodo_valor: "number",
   direccion_recogida: "text",
   direccion_entrega: "text",
+  soporte_telefonico: "select_contacto",
   telefono_contacto: "text",
   cantidad_productos: "number",
   cantidad_vehiculos: "number",
@@ -48,6 +49,7 @@ const labelize = (key) =>
   key.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
 
 const ServicioAnuncioItem = ({ servicio, index, onUpdated }) => {
+  console.log("ServicioAnuncioItem renderizado", servicio);
   const {
     form,
     editMode,
@@ -77,6 +79,8 @@ const ServicioAnuncioItem = ({ servicio, index, onUpdated }) => {
   const { data: catResp } = useCategoriaVehiculos();
   const { data: resResp } = useResaltarAnuncio();
   const { data: estResp } = useEstadoServicio();
+  const { data: phonesResp } = useContactPhones();
+  const contactPhones = phonesResp || [];
   const categorias = catResp?.data || [];
   const resaltadores = resResp?.data || [];
   const estados = estResp?.data || [];
@@ -104,6 +108,7 @@ const ServicioAnuncioItem = ({ servicio, index, onUpdated }) => {
           handleChange={handleChange}
           toggleBeneficio={toggleBeneficio}
           categorias={categorias}
+          contactPhones={contactPhones}
           resaltadores={resaltadores}
           estados={estados}
           handleExtraChange={handleExtraChange}

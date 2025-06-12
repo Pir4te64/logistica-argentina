@@ -1,10 +1,12 @@
 // src/components/Dashboard/ServicioAnuncio/GeneralInfoSections.jsx
 import React from 'react';
-import { Section, InputText } from '@/components/Dashboard/ServicioAnuncio/FormControls';
+import { Section, InputText, Select } from '@/components/Dashboard/ServicioAnuncio/FormControls';
+import useContactPhones from '../../hooks/useContactPhones';
+
 
 const GeneralInfoSections = ({ form, handleChange }) => {
     const today = new Date().toISOString().split('T')[0];
-
+    const { data: contactPhoneOptions, loading: loadingContactPhones } = useContactPhones();
     return (
         <>
             {/* 1. Datos básicos */}
@@ -96,6 +98,20 @@ const GeneralInfoSections = ({ form, handleChange }) => {
                         value={form.ciudad}
                         onChange={handleChange}
                         placeholder="Ej. Posadas"
+                    />
+                </div>
+            </Section>
+
+            {/* 4.1 Soporte */}
+            <Section title="Soporte*">
+                <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-4">
+                    <Select
+                        label="Número de soporte telefónico"
+                        name="soporte_telefonico"
+                        value={form.soporte_telefonico}
+                        onChange={handleChange}
+                        loading={loadingContactPhones}
+                        options={contactPhoneOptions}
                     />
                 </div>
             </Section>
