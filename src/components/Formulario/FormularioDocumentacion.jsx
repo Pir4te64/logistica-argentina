@@ -3,11 +3,27 @@ import React, { useState, useMemo } from "react";
 import FileUploader from "@/components/Formulario/FileUploader";
 import { docMapping, documentos } from "@/components/Formulario/estaticos";
 import { submitDocumentation } from "@/components/Formulario/store/submitDocumentation";
-import { FaSpinner } from "react-icons/fa";
+import { FaSpinner, FaWhatsapp } from "react-icons/fa";
+import { config } from "../../config";
+import axios from "axios";
+import { API_URL } from "@/Api/Api";
 
-const FormularioDocumentacion = () => {
+
+
+const FormularioDocumentacion = ({ service }) => {
+  console.log("Servicio recibido:", service);
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const phoneNumber = service.soporte_telefonico || config.phoneNumberDefault;
+  const whatsappLink = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${encodeURIComponent(
+    'Hola, me gustaría obtener más información sobre el servicio de ' +
+    service.empresa +
+    '. ¿Podrías ayudarme?'
+  )}`;
+  const storedUser = localStorage.getItem("user");
+  const token = localStorage.getItem("token");
+  const user = storedUser ? JSON.parse(storedUser) : null;
+
 
   // — Sólo nos interesan los primeros 3 documentos:
   const requiredDocs = useMemo(() => documentos.slice(0, 3), []);
@@ -44,7 +60,6 @@ const FormularioDocumentacion = () => {
   );
   const totalFields = requiredFields.length;
   const progressPercent = Math.round((uploadedCount / totalFields) * 100);
-  const allUploaded = uploadedCount === totalFields;
 
   const handleFileAccepted = (docTitle, campo, fileData) => {
     const id = getDocId(docTitle, campo);
@@ -61,10 +76,27 @@ const FormularioDocumentacion = () => {
   };
 
   const handleSubmit = async () => {
-    if (!allUploaded) return;
-    setIsSubmitting(true);
     try {
-      await submitDocumentation(uploadedFiles);
+      setIsSubmitting(true);
+      const payload = {
+        servicios_id: service.id,
+        users_id: user.id,
+        email: user.email,
+        fecha_inicio_servicio: service.fecha_inicio_servicio,
+        fecha_fin_servicio: service.fecha_inicio_servicio,
+        cumple_requisitos: false,
+        asignado: false,
+        puntos: 0,
+      };
+      await submitDocumentation(uploadedFiles, false);
+      await axios.post(API_URL.POSTULACIONES, payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      window.location.href = "/mensaje-transportista";
+
     } catch (err) {
       console.error(err);
     } finally {
@@ -72,9 +104,24 @@ const FormularioDocumentacion = () => {
     }
   };
 
+  const handleWhatsappClick = () => {
+    window.open(whatsappLink, "_blank", "noopener,noreferrer");
+  };
+
   return (
     <div className="p-4 max-w-7xl mx-auto">
-      <h2 className="text-center text-2xl mb-6">Documentación Requerida</h2>
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-center text-2xl">Documentación Requerida</h2>
+        <button
+          type="button"
+          onClick={handleWhatsappClick}
+          className="cursor-pointer flex gap-2 rounded-md bg-green-500 py-2 px-4 text-white shadow-lg transition-transform hover:bg-green-600"
+          aria-label="Chat en WhatsApp"
+        >
+          <FaWhatsapp className="h-6 w-6" />
+          Más información
+        </button>
+      </div>
 
       {/* Barra de progreso */}
       <div className="mb-6">
@@ -91,7 +138,7 @@ const FormularioDocumentacion = () => {
 
       {/* Grid de uploaders */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {documentos.map((doc, idx) => (
+        {documentos.map((doc) => (
           <div key={doc.title} className="bg-white shadow-lg p-4 rounded-md">
             <h3 className="text-lg font-bold text-center mb-4">{doc.title}</h3>
 
@@ -126,18 +173,15 @@ const FormularioDocumentacion = () => {
       <div className="text-center w-full flex justify-center mt-6">
         <button
           onClick={handleSubmit}
-          disabled={!allUploaded || isSubmitting}
+          disabled={isSubmitting}
           className={`
-    py-2 px-6 rounded transition-colors flex items-center justify-center
-    ${
-      allUploaded
-        ? isSubmitting
-          ? "bg-gray-500 cursor-wait"
-          : "bg-red-500 hover:bg-red-600"
-        : "bg-gray-300 cursor-not-allowed"
-    }
-    text-white
-  `}
+              py-2 px-6 rounded transition-colors flex items-center justify-center
+              ${isSubmitting
+                        ? "bg-gray-500 cursor-wait"
+                        : "bg-red-500 hover:bg-red-600"
+                      }
+              text-white
+            `}
         >
           {isSubmitting ? (
             <FaSpinner className="animate-spin h-5 w-5" />

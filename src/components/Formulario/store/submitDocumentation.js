@@ -42,6 +42,7 @@ export const submitDocumentation = async (
     formData.append("correo", data.correo);
 
     try {
+      console.log({ formData })
       await axios.post(API_URL.UPLOAD_IMAGE, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
@@ -50,6 +51,7 @@ export const submitDocumentation = async (
       // aquí podrías decidir abortar o seguir con los siguientes
     }
   }
+
 
 
   // 4) Redirección opcional

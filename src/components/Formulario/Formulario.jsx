@@ -20,7 +20,6 @@ const Formulario = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const servicio = location.state?.servicio;
-
   useEffect(() => {
     window.scrollTo(0, 0);
     const token = localStorage.getItem("token");
@@ -126,7 +125,7 @@ const Formulario = () => {
 
       {/* Sección Inferior: Documentación */}
       <div className="p-4 max-w-7xl mx-auto">
-        <FormularioDocumentacion servicioId={servicio?.id} />
+        <FormularioDocumentacion service={servicio} />
       </div>
     </div>
   );
