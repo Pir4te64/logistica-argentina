@@ -36,3 +36,10 @@ body {
 .animate-fadeIn {
   animation: fadeIn 0.2s ease-out;
 }
+
+
+.cropper-image {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover;
+}

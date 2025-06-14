@@ -10,7 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@cropper/element-canvas": "^2.0.0",
     "axios": "^1.8.4",
+    "cropperjs": "^2.0.0",
     "exceljs": "^4.4.0",
     "file-saver": "^2.0.5",
     "formik": "^2.4.6",
