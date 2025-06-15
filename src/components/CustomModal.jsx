@@ -15,7 +15,7 @@ const CustomModal = ({ children, onClose }) => {
             <FaTimes size={18} />
           </button>
         </div>
-        <div className="text-gray-700 h-full">{children}</div>
+        <div className="text-gray-700 h-[calc(100%-58px)]">{children}</div>
       </div>
     </div>
   )

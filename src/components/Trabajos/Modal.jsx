@@ -4,6 +4,8 @@ import { FaTimes, FaSpinner } from "react-icons/fa";
 import { BASE_URL } from "@/Api/Api";
 import 'cropperjs';
 import CustomModal from "@/components/CustomModal.jsx";
+import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
+
 
 // Componente auxiliar para manejar el loader
 const ImageWithLoader = ({ src, alt, className, imgOpenedFn }) => {
@@ -28,6 +30,8 @@ const ImageWithLoader = ({ src, alt, className, imgOpenedFn }) => {
     </div>
   );
 };
+
+
 
 
 
@@ -193,19 +197,13 @@ const ServicioModal = ({ servicio, onClose }) => {
 
       {imgOpened && (
         <CustomModal onClose={() => setImgOpened(null)}>
-          {/* <iframe
-            loading="lazy"
-            height="100%"
-            src={imgOpened}
-            title="Video del Servicio"
-            className="w-full h-[calc(100%-58px)] rounded-lg"
-            frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-
-          /> */}
-          <cropper-canvas className="w-full h-[calc(100%-58px)] rounded-lg overflow-scroll">
-            <cropper-image className="w-full h-full rounded-lg object-cover cropper-image" initial-center-size="cover" src={imgOpened} alt="Picture" scalable></cropper-image>
-          </cropper-canvas>
+          <TransformWrapper onInit={0} minScale={0} initialScale={1}
+            initialPositionX={0}
+            initialPositionY={0}>
+            <TransformComponent >
+              <img className="object-contain h-full w-full" src={imgOpened} alt="Imagen del servicio" />
+            </TransformComponent>
+          </TransformWrapper>
         </CustomModal>
       )}
     </>

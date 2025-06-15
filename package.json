@@ -10,9 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@cropper/element-canvas": "^2.0.0",
     "axios": "^1.8.4",
-    "cropperjs": "^2.0.0",
     "exceljs": "^4.4.0",
     "file-saver": "^2.0.5",
     "formik": "^2.4.6",
@@ -26,6 +24,7 @@
     "react-router-hash-link": "^2.4.3",
     "react-select": "^5.10.1",
     "react-slick": "^0.30.3",
+    "react-zoom-pan-pinch": "^3.7.0",
     "slick-carousel": "^1.8.1",
     "sweetalert2": "^11.19.1",
     "swiper": "^11.2.5",

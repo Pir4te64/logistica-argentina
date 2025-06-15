@@ -43,3 +43,8 @@ body {
   height: 100% !important;
   object-fit: cover;
 }
+
+.react-transform-wrapper, .react-transform-component {
+  height: 100% !important;
+  width: 100% !important;
+}
