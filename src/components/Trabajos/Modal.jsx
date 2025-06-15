@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 import { FaTimes, FaSpinner } from "react-icons/fa";
 import { BASE_URL } from "@/Api/Api";
-import 'cropperjs';
 import CustomModal from "@/components/CustomModal.jsx";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 
